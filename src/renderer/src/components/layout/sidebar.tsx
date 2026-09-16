@@ -6,8 +6,8 @@ import { Button } from '@/components/ui/button'
 import { useUiStore, ViewType } from '@/stores/ui-store'
 import { useProjectStore } from '@/stores/project-store'
 import { useTagStore } from '@/stores/tag-store'
+import { useTaskStore } from '@/stores/task-store'
 import { cn } from '@/lib/utils'
-import type { TaskStats } from '@shared/types'
 import { ProjectDialog } from '../project/project-dialog'
 
 export function Sidebar() {
@@ -19,14 +19,13 @@ export function Sidebar() {
   const projects = useProjectStore(s => s.projects)
   const tags = useTagStore(s => s.tags)
   
-  const [stats, setStats] = useState<TaskStats | null>(null)
+  const stats = useTaskStore(s => s.stats)
+  const fetchStats = useTaskStore(s => s.fetchStats)
   const [projectDialogOpen, setProjectDialogOpen] = useState(false)
 
   useEffect(() => {
-    if (window.api?.tasks?.getStats) {
-      window.api.tasks.getStats().then(setStats).catch(console.error)
-    }
-  }, [currentView])
+    fetchStats()
+  }, [fetchStats, currentView])
 
   const navItems: { id: ViewType; label: string; icon: typeof InboxIcon; count?: number }[] = [
     { id: 'inbox', label: t('navigation:inbox'), icon: InboxIcon, count: stats?.active },

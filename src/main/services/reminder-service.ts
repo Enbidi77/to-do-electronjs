@@ -1,6 +1,6 @@
 import { db } from '../database/connection';
-import { reminders } from '../database/schema';
-import { eq, desc, and, isNull, lte } from 'drizzle-orm';
+import { reminders, tasks } from '../database/schema';
+import { eq, desc, and, isNull, isNotNull, lte } from 'drizzle-orm';
 import { nanoid } from 'nanoid';
 import type { Reminder, CreateReminderInput, UpdateReminderInput, SnoozeDuration } from '@shared/types';
 
@@ -114,6 +114,85 @@ export class ReminderService {
 
   markFired(id: string): void {
     db.update(reminders).set({ firedAt: new Date().toISOString() }).where(eq(reminders.id, id)).run();
+  }
+
+  deleteForTask(taskId: string): void {
+    db.delete(reminders).where(eq(reminders.taskId, taskId)).run();
+  }
+
+  syncTaskReminder(task: {
+    id: string;
+    title: string;
+    description?: string | null;
+    status?: string | null;
+    dueDate?: string | null;
+    dueTime?: string | null;
+  }): Reminder | null {
+    // If task is not active or has no dueDate, remove any unfired reminders
+    if (task.status !== 'active' || !task.dueDate) {
+      db.delete(reminders)
+        .where(and(eq(reminders.taskId, task.id), isNull(reminders.firedAt)))
+        .run();
+      return null;
+    }
+
+    // Compute scheduledAt from dueDate (YYYY-MM-DD) and dueTime (HH:mm)
+    const [y, m, d] = task.dueDate.split('-').map(Number);
+    let dateObj: Date;
+    if (task.dueTime) {
+      const [h, min] = task.dueTime.split(':').map(Number);
+      dateObj = new Date(y, m - 1, d, h || 0, min || 0, 0);
+    } else {
+      // Default to 09:00 local time on the due date
+      dateObj = new Date(y, m - 1, d, 9, 0, 0);
+    }
+
+    const scheduledAt = dateObj.toISOString();
+    const bodyText = task.description
+      ? `${task.description} (${task.dueDate})`
+      : `Due: ${task.dueDate}`;
+
+    // Check if a reminder already exists for this task
+    const existing = db
+      .select()
+      .from(reminders)
+      .where(eq(reminders.taskId, task.id))
+      .get();
+
+    if (existing) {
+      const scheduledChanged = existing.scheduledAt !== scheduledAt;
+      db.update(reminders)
+        .set({
+          scheduledAt,
+          notificationTitle: task.title,
+          notificationBody: bodyText,
+          enabled: 1,
+          firedAt: scheduledChanged ? null : existing.firedAt
+        })
+        .where(eq(reminders.id, existing.id))
+        .run();
+      return this.get(existing.id);
+    } else {
+      return this.create({
+        taskId: task.id,
+        scheduledAt,
+        notificationTitle: task.title,
+        notificationBody: bodyText,
+        enabled: true
+      });
+    }
+  }
+
+  syncAllTaskReminders(): void {
+    const activeTasksWithDueDate = db
+      .select()
+      .from(tasks)
+      .where(and(eq(tasks.status, 'active'), isNotNull(tasks.dueDate)))
+      .all();
+
+    for (const task of activeTasksWithDueDate) {
+      this.syncTaskReminder(task);
+    }
   }
 }
 

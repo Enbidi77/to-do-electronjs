@@ -1,6 +1,7 @@
 import { Notification, BrowserWindow, app } from 'electron';
 import path from 'path';
 import { Reminder } from '@shared/types';
+import { SettingsService } from '../services/settings-service';
 import { createLogger } from '../system/logger';
 
 const logger = createLogger('Notification');
@@ -9,6 +10,7 @@ export class NotificationService {
   private static instance: NotificationService;
   private shownNotifications: Set<string> = new Set();
   private mainWindow: BrowserWindow | null = null;
+  private settingsService = new SettingsService();
 
   public static getInstance(): NotificationService {
     if (!NotificationService.instance) {
@@ -22,6 +24,12 @@ export class NotificationService {
   }
 
   show(title: string, body: string, taskId?: string): void {
+    const settings = this.settingsService.getAll();
+    if (!settings.notificationsEnabled) {
+      logger.info('Notifications are disabled in settings');
+      return;
+    }
+
     if (!Notification.isSupported()) {
       logger.warn('Notifications are not supported on this system');
       return;
@@ -31,10 +39,13 @@ export class NotificationService {
       ? path.join(process.resourcesPath, 'icon.ico')
       : path.join(__dirname, '../../resources/icon.ico');
 
+    logger.info(`Triggering Windows notification: "${title}" - "${body}"`);
+
     const notification = new Notification({
       title,
       body,
-      icon: iconPath
+      icon: iconPath,
+      silent: !settings.notificationSound
     });
 
     notification.on('click', () => {
@@ -57,7 +68,17 @@ export class NotificationService {
     if (this.shownNotifications.has(notifKey)) return;
 
     this.shownNotifications.add(notifKey);
-    this.show(reminder.notificationTitle, reminder.notificationBody || '', reminder.taskId);
+
+    const settings = this.settingsService.getAll();
+    const isOverdue = new Date(reminder.scheduledAt).getTime() < Date.now();
+    let body = reminder.notificationBody || '';
+    if (isOverdue) {
+      const isVi = settings.language === 'vi';
+      const prefix = isVi ? 'Quá hạn' : 'Overdue';
+      body = body ? `[${prefix}] ${body}` : `[${prefix}]`;
+    }
+
+    this.show(reminder.notificationTitle, body, reminder.taskId);
     
     // Clean up old keys to prevent memory leak
     if (this.shownNotifications.size > 1000) {

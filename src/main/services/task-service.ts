@@ -14,6 +14,8 @@ import type {
   TaskPriority
 } from '@shared/types'
 import { createLogger } from '../system/logger'
+import { reminderService } from './reminder-service'
+import { ReminderScheduler } from '../scheduler/reminder-scheduler'
 
 const logger = createLogger('TaskService')
 
@@ -246,7 +248,15 @@ export class TaskService {
       db.insert(taskTags).values(tagValues).run()
     }
 
-    return this.get(id) as Task
+    const createdTask = this.get(id) as Task
+    try {
+      reminderService.syncTaskReminder(createdTask)
+      ReminderScheduler.getInstance().tick()
+    } catch (err) {
+      logger.warn('Failed to sync reminder on task creation', err)
+    }
+
+    return createdTask
   }
 
   /** Update an existing task */
@@ -281,7 +291,16 @@ export class TaskService {
     }
 
     logger.info(`Task updated: ${id}`)
-    return this.get(id) as Task
+    const updatedTask = this.get(id) as Task
+
+    try {
+      reminderService.syncTaskReminder(updatedTask)
+      ReminderScheduler.getInstance().tick()
+    } catch (err) {
+      logger.warn('Failed to sync reminder on task update', err)
+    }
+
+    return updatedTask
   }
 
   /** Delete a task and its subtasks */
@@ -296,7 +315,7 @@ export class TaskService {
     db.delete(taskTags).where(eq(taskTags.taskId, id)).run()
 
     // Delete reminders
-    db.delete(reminders).where(eq(reminders.taskId, id)).run()
+    reminderService.deleteForTask(id)
 
     // Delete task
     db.delete(tasks).where(eq(tasks.id, id)).run()
@@ -309,6 +328,9 @@ export class TaskService {
     if (!task) throw new Error(`Task not found: ${id}`)
 
     const now = new Date().toISOString()
+
+    // Clean up pending reminders for completed task
+    reminderService.deleteForTask(id)
 
     // Handle recurring tasks
     if (task.recurrenceRule) {
@@ -343,7 +365,14 @@ export class TaskService {
 
   /** Uncomplete a task */
   uncomplete(id: string): Task {
-    return this.update(id, { status: 'active', completedAt: null } as UpdateTaskInput)
+    const uncompletedTask = this.update(id, { status: 'active', completedAt: null } as UpdateTaskInput)
+    try {
+      reminderService.syncTaskReminder(uncompletedTask)
+      ReminderScheduler.getInstance().tick()
+    } catch (err) {
+      logger.warn('Failed to sync reminder on task uncomplete', err)
+    }
+    return uncompletedTask
   }
 
   /** Archive a task */

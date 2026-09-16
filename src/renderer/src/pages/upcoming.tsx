@@ -20,6 +20,7 @@ export default function UpcomingPage() {
   const { t } = useTranslation(['tasks', 'navigation', 'notifications', 'errors', 'common'])
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
+  const tasksVersion = useTaskStore(s => s.tasksVersion)
   const completeTask = useTaskStore(s => s.completeTask)
   const uncompleteTask = useTaskStore(s => s.uncompleteTask)
   const deleteTask = useTaskStore(s => s.deleteTask)
@@ -28,7 +29,6 @@ export default function UpcomingPage() {
 
   const loadTasks = useCallback(async () => {
     try {
-      setLoading(true)
       if (window.api?.tasks?.list) {
         const data = await window.api.tasks.list({
           filter: { status: 'active' },
@@ -45,7 +45,7 @@ export default function UpcomingPage() {
 
   useEffect(() => {
     loadTasks()
-  }, [loadTasks])
+  }, [loadTasks, tasksVersion])
 
   const handleComplete = async (id: string, completed: boolean) => {
     try {

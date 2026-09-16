@@ -25,7 +25,7 @@ if (!gotTheLock) {
 } else {
   // Set Application User Model ID for Windows toast notifications
   if (process.platform === 'win32') {
-    app.setAppUserModelId('com.todoapp.desktop')
+    app.setAppUserModelId(app.isPackaged ? 'com.todoapp.desktop' : process.execPath)
   }
 
   app.on('second-instance', () => {

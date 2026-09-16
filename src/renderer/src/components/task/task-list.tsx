@@ -29,7 +29,7 @@ export function TaskList({ tasks, isLoading, onComplete, onDelete, title }: Task
     estimateSize: () => 37,
   })
 
-  if (isLoading) {
+  if (isLoading && tasks.length === 0) {
     return (
       <div className="flex flex-col gap-1.5 p-3">
         {[1, 2, 3, 4, 5, 6].map(i => (
@@ -89,6 +89,7 @@ export function TaskList({ tasks, isLoading, onComplete, onDelete, title }: Task
         >
           {rowVirtualizer.getVirtualItems().map((virtualItem) => {
             const task = tasks[virtualItem.index]
+            if (!task) return null
             return (
               <div
                 key={task.id}

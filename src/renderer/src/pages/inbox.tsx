@@ -10,13 +10,13 @@ export default function InboxPage() {
   const { t } = useTranslation(['navigation', 'notifications', 'errors', 'common'])
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
+  const tasksVersion = useTaskStore(s => s.tasksVersion)
   const completeTask = useTaskStore(s => s.completeTask)
   const uncompleteTask = useTaskStore(s => s.uncompleteTask)
   const deleteTask = useTaskStore(s => s.deleteTask)
 
   const fetchTasks = useCallback(async () => {
     try {
-      setLoading(true)
       if (window.api?.tasks?.list) {
         const data = await window.api.tasks.list({
           filter: { status: 'active', projectId: null },
@@ -33,7 +33,7 @@ export default function InboxPage() {
 
   useEffect(() => {
     fetchTasks()
-  }, [fetchTasks])
+  }, [fetchTasks, tasksVersion])
 
   const handleComplete = async (id: string, completed: boolean) => {
     try {

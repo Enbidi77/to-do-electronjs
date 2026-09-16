@@ -18,13 +18,15 @@ export function TaskEditor({ projectId = null, onCreated }: TaskEditorProps) {
   const handleKeyDown = async (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' && title.trim()) {
       e.preventDefault()
+      const taskTitle = title.trim()
+      setTitle('')
       try {
-        await createTask({ title: title.trim(), projectId })
-        setTitle('')
+        await createTask({ title: taskTitle, projectId })
         toast.success(t('notifications:taskCreated'))
         onCreated?.()
       } catch (err) {
         console.error('Failed to create task', err)
+        setTitle(taskTitle)
         toast.error(t('errors:saveTaskFailed'))
       }
     }

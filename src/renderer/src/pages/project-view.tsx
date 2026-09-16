@@ -16,6 +16,7 @@ export default function ProjectViewPage() {
   const completeTask = useTaskStore(s => s.completeTask)
   const uncompleteTask = useTaskStore(s => s.uncompleteTask)
   const deleteTask = useTaskStore(s => s.deleteTask)
+  const tasksVersion = useTaskStore(s => s.tasksVersion)
 
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
@@ -28,7 +29,6 @@ export default function ProjectViewPage() {
     }
 
     try {
-      setLoading(true)
       if (window.api?.tasks?.list) {
         const data = await window.api.tasks.list({
           filter: { status: 'active', projectId: currentProjectId },
@@ -45,7 +45,7 @@ export default function ProjectViewPage() {
 
   useEffect(() => {
     fetchTasks()
-  }, [fetchTasks])
+  }, [fetchTasks, tasksVersion])
 
   const handleComplete = async (id: string, completed: boolean) => {
     try {

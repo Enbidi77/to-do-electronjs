@@ -10,6 +10,7 @@ import { useProjectStore } from '@/stores/project-store'
 import { useTagStore } from '@/stores/tag-store'
 import { useSettingsStore } from '@/stores/settings-store'
 import { useUiStore } from '@/stores/ui-store'
+import { useTaskStore } from '@/stores/task-store'
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts'
 
 export default function App() {
@@ -20,6 +21,7 @@ export default function App() {
   const fetchProjects = useProjectStore(s => s.fetchProjects)
   const fetchTags = useTagStore(s => s.fetchTags)
   const fetchSettings = useSettingsStore(s => s.fetchSettings)
+  const fetchStats = useTaskStore(s => s.fetchStats)
 
   // Register global in-app keyboard shortcuts
   useKeyboardShortcuts()
@@ -34,6 +36,7 @@ export default function App() {
     fetchProjects().catch(console.error)
     fetchTags().catch(console.error)
     fetchSettings().catch(console.error)
+    fetchStats().catch(console.error)
 
     // Listen for IPC events from Main process
     const cleanups: (() => void)[] = []
@@ -47,12 +50,17 @@ export default function App() {
         useUiStore.getState().setQuickAddOpen(true)
       }))
     }
+    if (window.api?.on?.taskUpdated) {
+      cleanups.push(window.api.on.taskUpdated(() => {
+        useTaskStore.getState().notifyTaskChanged()
+      }))
+    }
 
     return () => {
       window.removeEventListener('hashchange', handleHashChange)
       cleanups.forEach(fn => fn())
     }
-  }, [fetchProjects, fetchTags, fetchSettings])
+  }, [fetchProjects, fetchTags, fetchSettings, fetchStats])
 
   if (isQuickAddWindow) {
     return (

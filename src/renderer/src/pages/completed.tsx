@@ -11,12 +11,12 @@ export default function CompletedPage() {
   const { t } = useTranslation(['tasks', 'navigation', 'common', 'notifications', 'errors'])
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
+  const tasksVersion = useTaskStore(s => s.tasksVersion)
   const uncompleteTask = useTaskStore(s => s.uncompleteTask)
   const deleteTask = useTaskStore(s => s.deleteTask)
 
   const fetchTasks = useCallback(async () => {
     try {
-      setLoading(true)
       if (window.api?.tasks?.list) {
         const data = await window.api.tasks.list({
           filter: { status: 'completed' },
@@ -33,7 +33,7 @@ export default function CompletedPage() {
 
   useEffect(() => {
     fetchTasks()
-  }, [fetchTasks])
+  }, [fetchTasks, tasksVersion])
 
   const handleComplete = async (id: string, completed: boolean) => {
     try {

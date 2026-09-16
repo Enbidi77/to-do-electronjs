@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import type { Task, TaskFilter, TaskSort } from '@shared/types'
+import type { Task, TaskFilter, TaskSort, TaskStats } from '@shared/types'
 
 export interface TaskState {
   tasks: Task[]
@@ -7,14 +7,18 @@ export interface TaskState {
   error: string | null
   filter: TaskFilter
   sort: TaskSort
+  stats: TaskStats | null
+  tasksVersion: number
 
   fetchTasks: (options?: any) => Promise<void>
-  createTask: (input: any) => Promise<void>
-  updateTask: (id: string, input: any) => Promise<void>
+  fetchStats: () => Promise<void>
+  notifyTaskChanged: () => void
+  createTask: (input: any) => Promise<Task>
+  updateTask: (id: string, input: any) => Promise<Task>
   deleteTask: (id: string) => Promise<void>
-  completeTask: (id: string) => Promise<void>
-  uncompleteTask: (id: string) => Promise<void>
-  archiveTask: (id: string) => Promise<void>
+  completeTask: (id: string) => Promise<Task>
+  uncompleteTask: (id: string) => Promise<Task>
+  archiveTask: (id: string) => Promise<Task>
   reorderTasks: (ids: string[]) => Promise<void>
   setFilter: (filter: TaskFilter) => void
   setSort: (sort: TaskSort) => void
@@ -27,6 +31,8 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   error: null,
   filter: {},
   sort: { field: 'createdAt', direction: 'desc' } as TaskSort,
+  stats: null,
+  tasksVersion: 0,
 
   fetchTasks: async (options) => {
     set({ loading: true, error: null })
@@ -37,88 +43,144 @@ export const useTaskStore = create<TaskState>((set, get) => ({
       set({ error: err.message || 'Failed to fetch tasks', loading: false })
     }
   },
+
+  fetchStats: async () => {
+    try {
+      if (window.api?.tasks?.getStats) {
+        const stats = await window.api.tasks.getStats()
+        set({ stats })
+      }
+    } catch (err: any) {
+      console.error('Failed to fetch task stats', err)
+    }
+  },
+
+  notifyTaskChanged: () => {
+    set((state) => ({ tasksVersion: state.tasksVersion + 1 }))
+    get().fetchStats()
+  },
+
   createTask: async (input) => {
     try {
       const newTask = await window.api.tasks.create(input)
-      set((state) => ({ tasks: [newTask, ...state.tasks] }))
+      set((state) => ({
+        tasks: [newTask, ...state.tasks],
+        tasksVersion: state.tasksVersion + 1
+      }))
+      get().fetchStats()
+      return newTask
     } catch (err: any) {
       set({ error: err.message || 'Failed to create task' })
+      throw err
     }
   },
+
   updateTask: async (id, input) => {
     try {
       const updatedTask = await window.api.tasks.update(id, input)
       set((state) => ({
-        tasks: state.tasks.map((t) => (t.id === id ? updatedTask : t))
+        tasks: state.tasks.map((t) => (t.id === id ? updatedTask : t)),
+        tasksVersion: state.tasksVersion + 1
       }))
+      get().fetchStats()
+      return updatedTask
     } catch (err: any) {
       set({ error: err.message || 'Failed to update task' })
+      throw err
     }
   },
+
   deleteTask: async (id) => {
     try {
       await window.api.tasks.delete(id)
       set((state) => ({
-        tasks: state.tasks.filter((t) => t.id !== id)
+        tasks: state.tasks.filter((t) => t.id !== id),
+        tasksVersion: state.tasksVersion + 1
       }))
+      get().fetchStats()
     } catch (err: any) {
       set({ error: err.message || 'Failed to delete task' })
+      throw err
     }
   },
+
   completeTask: async (id) => {
     // Optimistic update
     set((state) => ({
-      tasks: state.tasks.map((t) => (t.id === id ? { ...t, status: 'completed', completedAt: new Date().toISOString() } : t))
+      tasks: state.tasks.map((t) => (t.id === id ? { ...t, status: 'completed', completedAt: new Date().toISOString() } : t)),
+      tasksVersion: state.tasksVersion + 1
     }))
     try {
       const updated = await window.api.tasks.complete(id)
       set((state) => ({
         tasks: state.tasks.map((t) => (t.id === id ? updated : t))
       }))
+      get().fetchStats()
+      return updated
     } catch (err: any) {
       // Revert on error
       set((state) => ({
         tasks: state.tasks.map((t) => (t.id === id ? { ...t, status: 'active', completedAt: null } : t)),
+        tasksVersion: state.tasksVersion + 1,
         error: err.message || 'Failed to complete task'
       }))
+      get().fetchStats()
+      throw err
     }
   },
+
   uncompleteTask: async (id) => {
     // Optimistic update
     set((state) => ({
-      tasks: state.tasks.map((t) => (t.id === id ? { ...t, status: 'active', completedAt: null } : t))
+      tasks: state.tasks.map((t) => (t.id === id ? { ...t, status: 'active', completedAt: null } : t)),
+      tasksVersion: state.tasksVersion + 1
     }))
     try {
       const updated = await window.api.tasks.uncomplete(id)
       set((state) => ({
         tasks: state.tasks.map((t) => (t.id === id ? updated : t))
       }))
+      get().fetchStats()
+      return updated
     } catch (err: any) {
       // Revert on error
       set((state) => ({
         tasks: state.tasks.map((t) => (t.id === id ? { ...t, status: 'completed', completedAt: new Date().toISOString() } : t)),
+        tasksVersion: state.tasksVersion + 1,
         error: err.message || 'Failed to uncomplete task'
       }))
+      get().fetchStats()
+      throw err
     }
   },
+
   archiveTask: async (id) => {
     try {
       const archived = await window.api.tasks.archive(id)
       set((state) => ({
-        tasks: state.tasks.map((t) => (t.id === id ? archived : t))
+        tasks: state.tasks.map((t) => (t.id === id ? archived : t)),
+        tasksVersion: state.tasksVersion + 1
       }))
+      get().fetchStats()
+      return archived
     } catch (err: any) {
       set({ error: err.message || 'Failed to archive task' })
+      throw err
     }
   },
+
   reorderTasks: async (ids) => {
     try {
       await window.api.tasks.reorder(ids)
+      set((state) => ({ tasksVersion: state.tasksVersion + 1 }))
       await get().fetchTasks()
+      get().fetchStats()
     } catch (err: any) {
       set({ error: err.message || 'Failed to reorder tasks' })
+      throw err
     }
   },
+
   setFilter: (filter) => set({ filter }),
   setSort: (sort) => set({ sort }),
   searchTasks: async (query) => {

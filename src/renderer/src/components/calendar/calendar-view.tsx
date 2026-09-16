@@ -14,6 +14,7 @@ export default function CalendarView() {
   const [date, setDate] = useState<Date | undefined>(new Date())
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(false)
+  const tasksVersion = useTaskStore(s => s.tasksVersion)
   const completeTask = useTaskStore(s => s.completeTask)
   const uncompleteTask = useTaskStore(s => s.uncompleteTask)
   const deleteTask = useTaskStore(s => s.deleteTask)
@@ -44,7 +45,7 @@ export default function CalendarView() {
 
   useEffect(() => {
     fetchTasksForDate()
-  }, [fetchTasksForDate])
+  }, [fetchTasksForDate, tasksVersion])
 
   const handleComplete = async (id: string, completed: boolean) => {
     try {

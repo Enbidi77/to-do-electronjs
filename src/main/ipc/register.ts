@@ -1,4 +1,4 @@
-import { ipcMain } from 'electron'
+import { ipcMain, BrowserWindow } from 'electron'
 import { IPC_CHANNELS } from '@shared/types'
 import { TaskService } from '../services/task-service'
 import { ProjectService } from '../services/project-service'
@@ -8,6 +8,14 @@ import { SettingsService } from '../services/settings-service'
 import { createLogger } from '../system/logger'
 
 const logger = createLogger('IPC')
+
+function broadcastTaskUpdated(task?: any): void {
+  BrowserWindow.getAllWindows().forEach((win) => {
+    if (!win.isDestroyed()) {
+      win.webContents.send(IPC_CHANNELS.EVENT_TASK_UPDATED, task)
+    }
+  })
+}
 
 function registerTaskHandlers(): void {
   const service = new TaskService()
@@ -23,37 +31,65 @@ function registerTaskHandlers(): void {
   })
 
   ipcMain.handle(IPC_CHANNELS.TASKS_CREATE, async (_event, input) => {
-    try { return service.create(input) }
+    try {
+      const result = service.create(input)
+      broadcastTaskUpdated(result)
+      return result
+    }
     catch (error) { logger.error('tasks:create failed', error); throw error }
   })
 
   ipcMain.handle(IPC_CHANNELS.TASKS_UPDATE, async (_event, id: string, input) => {
-    try { return service.update(id, input) }
+    try {
+      const result = service.update(id, input)
+      broadcastTaskUpdated(result)
+      return result
+    }
     catch (error) { logger.error('tasks:update failed', error); throw error }
   })
 
   ipcMain.handle(IPC_CHANNELS.TASKS_DELETE, async (_event, id: string) => {
-    try { return service.delete(id) }
+    try {
+      const result = service.delete(id)
+      broadcastTaskUpdated()
+      return result
+    }
     catch (error) { logger.error('tasks:delete failed', error); throw error }
   })
 
   ipcMain.handle(IPC_CHANNELS.TASKS_COMPLETE, async (_event, id: string) => {
-    try { return service.complete(id) }
+    try {
+      const result = service.complete(id)
+      broadcastTaskUpdated(result)
+      return result
+    }
     catch (error) { logger.error('tasks:complete failed', error); throw error }
   })
 
   ipcMain.handle(IPC_CHANNELS.TASKS_UNCOMPLETE, async (_event, id: string) => {
-    try { return service.uncomplete(id) }
+    try {
+      const result = service.uncomplete(id)
+      broadcastTaskUpdated(result)
+      return result
+    }
     catch (error) { logger.error('tasks:uncomplete failed', error); throw error }
   })
 
   ipcMain.handle(IPC_CHANNELS.TASKS_ARCHIVE, async (_event, id: string) => {
-    try { return service.archive(id) }
+    try {
+      const result = service.archive(id)
+      broadcastTaskUpdated(result)
+      return result
+    }
     catch (error) { logger.error('tasks:archive failed', error); throw error }
   })
 
   ipcMain.handle(IPC_CHANNELS.TASKS_REORDER, async (_event, ids: string[]) => {
-    try { return service.reorder(ids) }
+    try {
+      const result = service.reorder(ids)
+      broadcastTaskUpdated()
+      return result
+    }
     catch (error) { logger.error('tasks:reorder failed', error); throw error }
   })
 

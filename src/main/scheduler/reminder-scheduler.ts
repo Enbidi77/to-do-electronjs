@@ -1,5 +1,6 @@
 import { reminderService } from '../services/reminder-service';
 import { NotificationService } from '../notifications/notification-service';
+import { SettingsService } from '../services/settings-service';
 import { createLogger } from '../system/logger';
 
 const logger = createLogger('Scheduler');
@@ -8,6 +9,7 @@ const SCHEDULER_TICK_INTERVAL_MS = 30000;
 export class ReminderScheduler {
   private static instance: ReminderScheduler;
   private intervalId: NodeJS.Timeout | null = null;
+  private settingsService = new SettingsService();
 
   public static getInstance(): ReminderScheduler {
     if (!ReminderScheduler.instance) {
@@ -23,6 +25,13 @@ export class ReminderScheduler {
     }
     
     logger.info('Starting reminder scheduler');
+    // Ensure reminders are synced for all active tasks with due dates
+    try {
+      reminderService.syncAllTaskReminders();
+    } catch (err) {
+      logger.error('Failed to sync task reminders on startup', err);
+    }
+
     this.tick(); // Initial tick
     this.intervalId = setInterval(() => this.tick(), SCHEDULER_TICK_INTERVAL_MS);
   }
@@ -37,6 +46,11 @@ export class ReminderScheduler {
 
   tick(): void {
     try {
+      const settings = this.settingsService.getAll();
+      if (!settings.notificationsEnabled) {
+        return;
+      }
+
       const overdueReminders = reminderService.getOverdue();
       
       if (overdueReminders.length > 0) {
@@ -44,6 +58,12 @@ export class ReminderScheduler {
       }
 
       for (const reminder of overdueReminders) {
+        const isPastDue = new Date(reminder.scheduledAt).getTime() < Date.now();
+        if (!settings.showOverdueReminders && isPastDue) {
+          reminderService.markFired(reminder.id);
+          continue;
+        }
+
         NotificationService.getInstance().showReminder(reminder);
         reminderService.markFired(reminder.id);
       }

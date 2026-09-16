@@ -12,6 +12,7 @@ export default function TodayPage() {
   const [stats, setStats] = useState<TaskStats | null>(null)
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
+  const tasksVersion = useTaskStore(s => s.tasksVersion)
   const completeTask = useTaskStore(s => s.completeTask)
   const uncompleteTask = useTaskStore(s => s.uncompleteTask)
   const deleteTask = useTaskStore(s => s.deleteTask)
@@ -20,7 +21,6 @@ export default function TodayPage() {
 
   const loadData = useCallback(async () => {
     try {
-      setLoading(true)
       if (window.api?.tasks?.getStats) {
         const statsData = await window.api.tasks.getStats()
         setStats(statsData)
@@ -49,7 +49,7 @@ export default function TodayPage() {
 
   useEffect(() => {
     loadData()
-  }, [loadData])
+  }, [loadData, tasksVersion])
 
   const handleComplete = async (id: string, completed: boolean) => {
     try {
