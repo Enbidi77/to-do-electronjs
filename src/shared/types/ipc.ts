@@ -7,7 +7,11 @@ import type {
   TaskWithRelations,
   CreateTaskInput,
   UpdateTaskInput,
-  TaskListOptions
+  TaskListOptions,
+  ReorderTaskInput,
+  MoveTaskInput,
+  ChangeTaskStatusInput,
+  MakeSubtaskInput
 } from './task'
 import type { Project, CreateProjectInput, UpdateProjectInput } from './project'
 import type { Tag, CreateTagInput, UpdateTagInput } from './tag'
@@ -34,6 +38,10 @@ export const IPC_CHANNELS = {
   TASKS_UNCOMPLETE: 'tasks:uncomplete',
   TASKS_ARCHIVE: 'tasks:archive',
   TASKS_REORDER: 'tasks:reorder',
+  TASKS_REORDER_TASK: 'tasks:reorderTask',
+  TASKS_MOVE: 'tasks:move',
+  TASKS_CHANGE_STATUS: 'tasks:changeStatus',
+  TASKS_MAKE_SUBTASK: 'tasks:makeSubtask',
   TASKS_GET_SUBTASKS: 'tasks:getSubtasks',
   TASKS_GET_STATS: 'tasks:getStats',
   TASKS_SEARCH: 'tasks:search',
@@ -155,6 +163,10 @@ export interface IpcApi {
     uncomplete(id: string): Promise<Task>
     archive(id: string): Promise<Task>
     reorder(ids: string[]): Promise<void>
+    reorderTask(input: ReorderTaskInput): Promise<Task>
+    move(input: MoveTaskInput): Promise<Task>
+    changeStatus(input: ChangeTaskStatusInput): Promise<Task>
+    makeSubtask(input: MakeSubtaskInput): Promise<Task>
     getSubtasks(parentId: string): Promise<Task[]>
     getStats(): Promise<TaskStats>
     search(query: string): Promise<Task[]>
@@ -233,6 +245,7 @@ export interface TodoWindowApi {
 
 export interface TodoApi {
   window: TodoWindowApi
+  tasks: IpcApi['tasks']
 }
 
 

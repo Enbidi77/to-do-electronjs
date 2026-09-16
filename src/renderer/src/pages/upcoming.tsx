@@ -4,7 +4,10 @@ import { isToday, isTomorrow, isThisWeek, isBefore, startOfToday, addWeeks, pars
 import { useTranslation } from 'react-i18next'
 import { useTaskStore } from '@/stores/task-store'
 import { useUiStore } from '@/stores/ui-store'
-import { TaskItem } from '@/components/task/task-item'
+import { SortableTaskItem } from '@/components/drag-drop/SortableTaskItem'
+import { DroppableContainer } from '@/components/drag-drop/DroppableContainer'
+import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable'
+import { TaskContextMenu } from '@/components/task/task-context-menu'
 import { Skeleton } from '@/components/ui/skeleton'
 import { EmptyState } from '@/components/common/empty-state'
 import { Calendar as CalendarIcon } from 'lucide-react'
@@ -146,32 +149,49 @@ export default function UpcomingPage() {
             />
           </div>
         ) : (
-          groups.map(group => (
-            <div key={group.id} className="space-y-1.5">
-              <div className="flex items-center justify-between pb-1 border-b border-border/50">
-                <h2
-                  className={`text-xs font-medium tracking-wide ${
-                    group.id === 'overdue' ? 'text-destructive font-semibold' : 'text-foreground'
-                  }`}
-                >
-                  {group.title}
-                </h2>
-                <span className="text-[11px] text-muted-foreground">{group.tasks.length}</span>
-              </div>
-              <div className="divide-y divide-border/60 border border-border/60 rounded-lg overflow-hidden bg-card">
-                {group.tasks.map(task => (
-                  <TaskItem
-                    key={task.id}
-                    task={task}
-                    onComplete={handleComplete}
-                    onDelete={handleDelete}
-                    onSelect={openDetails}
-                    isSelected={selectedTaskId === task.id}
-                  />
-                ))}
-              </div>
-            </div>
-          ))
+          groups.map(group => {
+            const groupTaskIds = group.tasks.map(t => t.id)
+            return (
+              <DroppableContainer
+                key={group.id}
+                id={`dateGroup:${group.id}`}
+                className="space-y-1.5 rounded-lg transition-colors p-1"
+                activeClassName="bg-primary/10 ring-1 ring-primary/40"
+              >
+                <div className="flex items-center justify-between pb-1 border-b border-border/50">
+                  <h2
+                    className={`text-xs font-medium tracking-wide ${
+                      group.id === 'overdue' ? 'text-destructive font-semibold' : 'text-foreground'
+                    }`}
+                  >
+                    {group.title}
+                  </h2>
+                  <span className="text-[11px] text-muted-foreground">{group.tasks.length}</span>
+                </div>
+                <SortableContext items={groupTaskIds} strategy={verticalListSortingStrategy}>
+                  <div className="divide-y divide-border/60 border border-border/60 rounded-lg overflow-hidden bg-card">
+                    {group.tasks.map((task, index) => (
+                      <TaskContextMenu key={task.id} task={task}>
+                        <SortableTaskItem
+                          task={task}
+                          index={index}
+                          onComplete={handleComplete}
+                          onDelete={handleDelete}
+                          onSelect={openDetails}
+                          isSelected={selectedTaskId === task.id}
+                        />
+                      </TaskContextMenu>
+                    ))}
+                    {group.tasks.length === 0 && (
+                      <div className="p-3 text-center text-xs text-muted-foreground/60 italic">
+                        Drop tasks here to schedule for {group.title}
+                      </div>
+                    )}
+                  </div>
+                </SortableContext>
+              </DroppableContainer>
+            )
+          })
         )}
       </div>
     </div>

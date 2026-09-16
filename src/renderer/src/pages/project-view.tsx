@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from 'react'
 import { TaskList } from '@/components/task/task-list'
+import { TaskBoard } from '@/components/task/task-board'
 import { TaskEditor } from '@/components/task/task-editor'
 import type { Task } from '@shared/types'
 import { useUiStore } from '@/stores/ui-store'
@@ -12,6 +13,7 @@ import { Folder } from 'lucide-react'
 export default function ProjectViewPage() {
   const { t } = useTranslation(['projects', 'tasks', 'common', 'notifications', 'errors'])
   const currentProjectId = useUiStore(s => s.currentProjectId)
+  const taskViewMode = useUiStore(s => s.taskViewMode)
   const project = useProjectStore(s => s.projects.find(p => p.id === currentProjectId))
   const completeTask = useTaskStore(s => s.completeTask)
   const uncompleteTask = useTaskStore(s => s.uncompleteTask)
@@ -101,12 +103,22 @@ export default function ProjectViewPage() {
         <TaskEditor projectId={project.id} onCreated={fetchTasks} />
       </div>
       <div className="flex-1 overflow-hidden p-5 pt-2">
-        <TaskList
-          tasks={tasks}
-          isLoading={loading}
-          onComplete={handleComplete}
-          onDelete={handleDelete}
-        />
+        {taskViewMode === 'board' ? (
+          <TaskBoard
+            tasks={tasks}
+            onComplete={handleComplete}
+            onDelete={handleDelete}
+            title={project.name}
+          />
+        ) : (
+          <TaskList
+            tasks={tasks}
+            isLoading={loading}
+            onComplete={handleComplete}
+            onDelete={handleDelete}
+            title={project.name}
+          />
+        )}
       </div>
     </div>
   )

@@ -6,7 +6,7 @@ import type { Project } from './project'
 import type { Tag } from './tag'
 import type { Reminder } from './reminder'
 
-export type TaskStatus = 'active' | 'completed' | 'archived'
+export type TaskStatus = 'active' | 'in_progress' | 'completed' | 'archived'
 export type TaskPriority = 'none' | 'low' | 'medium' | 'high' | 'urgent'
 
 export interface Task {
@@ -27,6 +27,53 @@ export interface Task {
   updatedAt: string
   archivedAt: string | null
   sortOrder: number
+}
+
+export interface ReorderTaskInput {
+  taskId: string
+  parentTaskId?: string | null
+  projectId?: string | null
+  targetIndex?: number
+  targetSortOrder?: number
+  beforeTaskId?: string | null
+  afterTaskId?: string | null
+}
+
+export interface MoveTaskInput {
+  taskId: string
+  targetProjectId: string | null
+}
+
+export interface ChangeTaskStatusInput {
+  taskId: string
+  status: TaskStatus
+}
+
+export interface MakeSubtaskInput {
+  taskId: string
+  parentTaskId: string
+}
+
+export type TaskDragOperationType =
+  | 'reorder'
+  | 'move-project'
+  | 'change-status'
+  | 'make-subtask'
+  | 'move-date'
+  | 'move-group'
+
+export interface TaskDragOperation {
+  taskId: string
+  sourceProjectId: string | null
+  sourceParentTaskId: string | null
+  sourceStatus: TaskStatus
+  sourceIndex: number
+  targetProjectId?: string | null
+  targetParentTaskId?: string | null
+  targetStatus?: TaskStatus
+  targetIndex?: number
+  targetDate?: string | null
+  operation: TaskDragOperationType
 }
 
 export interface TaskWithRelations extends Task {

@@ -8,6 +8,9 @@ import { useTranslation } from 'react-i18next'
 import { useTaskStore } from '@/stores/task-store'
 import { toast } from 'sonner'
 import { formatFullDate } from '@/lib/date-format'
+import { DroppableContainer } from '@/components/drag-drop/DroppableContainer'
+import { useTaskDnd } from '@/components/drag-drop/TaskDndContext'
+import { Calendar as CalendarIcon } from 'lucide-react'
 
 export default function CalendarView() {
   const { t } = useTranslation(['tasks', 'common', 'notifications', 'errors'])
@@ -73,15 +76,36 @@ export default function CalendarView() {
     }
   }
 
+  const { isDragging } = useTaskDnd()
+
   return (
     <div className="flex flex-col lg:flex-row h-full bg-background overflow-hidden">
-      <div className="p-4 border-b lg:border-b-0 lg:border-r border-border/60 flex justify-center shrink-0 bg-sidebar">
+      <div className="p-4 border-b lg:border-b-0 lg:border-r border-border/60 flex flex-col items-center justify-start shrink-0 bg-sidebar gap-3">
         <CalendarUI
           mode="single"
           selected={date}
           onSelect={setDate}
           className="rounded-lg border border-border/60 shadow-none bg-card"
         />
+
+        {dateStr && (
+          <DroppableContainer
+            id={`date:${dateStr}`}
+            className="w-full rounded-lg border border-dashed border-border/70 p-3 text-center transition-all"
+            activeClassName="border-primary bg-primary/15 ring-2 ring-primary/30"
+          >
+            {(isOver) => (
+              <div className="flex items-center justify-center gap-2 text-xs text-muted-foreground">
+                <CalendarIcon className="h-3.5 w-3.5 text-primary" />
+                <span>
+                  {isDragging && isOver
+                    ? `Drop to schedule for ${dateStr}`
+                    : `Drop task here to schedule for ${dateStr}`}
+                </span>
+              </div>
+            )}
+          </DroppableContainer>
+        )}
       </div>
       <div className="flex-1 overflow-hidden p-5 flex flex-col">
         <div className="mb-3">

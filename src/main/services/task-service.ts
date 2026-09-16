@@ -11,7 +11,11 @@ import type {
   TaskListOptions,
   TaskStats,
   TaskStatus,
-  TaskPriority
+  TaskPriority,
+  ReorderTaskInput,
+  MoveTaskInput,
+  ChangeTaskStatusInput,
+  MakeSubtaskInput
 } from '@shared/types'
 import { createLogger } from '../system/logger'
 import { reminderService } from './reminder-service'
@@ -381,12 +385,180 @@ export class TaskService {
     return this.update(id, { status: 'archived', archivedAt: now } as UpdateTaskInput)
   }
 
-  /** Reorder tasks */
+  /** Check if potentialDescendantId is a descendant of ancestorId */
+  isDescendant(ancestorId: string, potentialDescendantId: string): boolean {
+    if (ancestorId === potentialDescendantId) return true
+    let currentId: string | null = potentialDescendantId
+    const visited = new Set<string>()
+    while (currentId) {
+      if (currentId === ancestorId) return true
+      if (visited.has(currentId)) break
+      visited.add(currentId)
+      const row = db.select({ parentTaskId: tasks.parentTaskId }).from(tasks).where(eq(tasks.id, currentId)).get()
+      currentId = row?.parentTaskId ?? null
+    }
+    return false
+  }
+
+  /** Renormalize sort orders of sibling tasks with 1000 spacing */
+  renormalizeSortOrders(parentTaskId: string | null = null, projectId: string | null = null): void {
+    const conditions = []
+    if (parentTaskId) {
+      conditions.push(eq(tasks.parentTaskId, parentTaskId))
+    } else {
+      conditions.push(isNull(tasks.parentTaskId))
+    }
+    if (projectId) {
+      conditions.push(eq(tasks.projectId, projectId))
+    }
+
+    const siblings = db
+      .select({ id: tasks.id, sortOrder: tasks.sortOrder })
+      .from(tasks)
+      .where(and(...conditions))
+      .orderBy(desc(tasks.sortOrder), desc(tasks.createdAt))
+      .all()
+
+    const now = new Date().toISOString()
+    siblings.forEach((s, idx) => {
+      const newOrder = (siblings.length - idx) * 1000
+      db.update(tasks)
+        .set({ sortOrder: newOrder, updatedAt: now })
+        .where(eq(tasks.id, s.id))
+        .run()
+    })
+    logger.info(`Renormalized sort orders for ${siblings.length} tasks`)
+  }
+
+  /** Reorder a single task with fractional ordering and persistence */
+  reorderTask(input: ReorderTaskInput): Task {
+    const task = this.get(input.taskId)
+    if (!task) throw new Error(`Task not found: ${input.taskId}`)
+
+    let newSortOrder = input.targetSortOrder
+
+    if (newSortOrder === undefined) {
+      let beforeOrder: number | null = null
+      let afterOrder: number | null = null
+
+      if (input.beforeTaskId) {
+        const beforeRow = db.select({ sortOrder: tasks.sortOrder }).from(tasks).where(eq(tasks.id, input.beforeTaskId)).get()
+        if (beforeRow) beforeOrder = beforeRow.sortOrder ?? 0
+      }
+      if (input.afterTaskId) {
+        const afterRow = db.select({ sortOrder: tasks.sortOrder }).from(tasks).where(eq(tasks.id, input.afterTaskId)).get()
+        if (afterRow) afterOrder = afterRow.sortOrder ?? 0
+      }
+
+      if (beforeOrder !== null && afterOrder !== null) {
+        if (Math.abs(beforeOrder - afterOrder) < 1) {
+          this.renormalizeSortOrders(input.parentTaskId ?? task.parentTaskId, input.projectId ?? task.projectId)
+          const bRow = db.select({ sortOrder: tasks.sortOrder }).from(tasks).where(eq(tasks.id, input.beforeTaskId!)).get()
+          const aRow = db.select({ sortOrder: tasks.sortOrder }).from(tasks).where(eq(tasks.id, input.afterTaskId!)).get()
+          beforeOrder = bRow?.sortOrder ?? 0
+          afterOrder = aRow?.sortOrder ?? 0
+        }
+        newSortOrder = Math.round((beforeOrder + afterOrder) / 2)
+      } else if (beforeOrder !== null) {
+        // Place after beforeTask (lower in sortOrder)
+        newSortOrder = beforeOrder - 1000
+      } else if (afterOrder !== null) {
+        // Place before afterTask (higher in sortOrder)
+        newSortOrder = afterOrder + 1000
+      } else {
+        newSortOrder = 1000
+      }
+    }
+
+    const updateData: UpdateTaskInput = {
+      sortOrder: newSortOrder
+    }
+    if (input.parentTaskId !== undefined) {
+      updateData.parentTaskId = input.parentTaskId
+    }
+    if (input.projectId !== undefined) {
+      updateData.projectId = input.projectId
+    }
+
+    return this.update(input.taskId, updateData)
+  }
+
+  /** Move a task to a different project */
+  move(input: MoveTaskInput): Task {
+    const task = this.get(input.taskId)
+    if (!task) throw new Error(`Task not found: ${input.taskId}`)
+
+    // Get max sort order in target project
+    const maxRow = db
+      .select({ maxOrder: tasks.sortOrder })
+      .from(tasks)
+      .where(input.targetProjectId ? eq(tasks.projectId, input.targetProjectId) : isNull(tasks.projectId))
+      .orderBy(desc(tasks.sortOrder))
+      .limit(1)
+      .get()
+
+    const newSortOrder = (maxRow?.maxOrder ?? 0) + 1000
+
+    return this.update(input.taskId, {
+      projectId: input.targetProjectId,
+      parentTaskId: null,
+      sortOrder: newSortOrder
+    })
+  }
+
+  /** Change a task's status */
+  changeStatus(input: ChangeTaskStatusInput): Task {
+    const task = this.get(input.taskId)
+    if (!task) throw new Error(`Task not found: ${input.taskId}`)
+
+    if (input.status === 'completed') {
+      return this.complete(input.taskId)
+    }
+
+    if (task.status === 'completed') {
+      this.uncomplete(input.taskId)
+    }
+
+    return this.update(input.taskId, { status: input.status })
+  }
+
+  /** Make a task a subtask of another task, preventing circular hierarchies */
+  makeSubtask(input: MakeSubtaskInput): Task {
+    if (input.taskId === input.parentTaskId) {
+      throw new Error('Cannot make a task a subtask of itself')
+    }
+
+    if (this.isDescendant(input.taskId, input.parentTaskId)) {
+      throw new Error('Cannot create circular task hierarchy')
+    }
+
+    const parent = this.get(input.parentTaskId)
+    if (!parent) throw new Error(`Parent task not found: ${input.parentTaskId}`)
+
+    // Get max sort order among siblings
+    const maxRow = db
+      .select({ maxOrder: tasks.sortOrder })
+      .from(tasks)
+      .where(eq(tasks.parentTaskId, input.parentTaskId))
+      .orderBy(desc(tasks.sortOrder))
+      .limit(1)
+      .get()
+
+    const newSortOrder = (maxRow?.maxOrder ?? 0) + 1000
+
+    return this.update(input.taskId, {
+      parentTaskId: input.parentTaskId,
+      projectId: parent.projectId,
+      sortOrder: newSortOrder
+    })
+  }
+
+  /** Reorder tasks (legacy array format) */
   reorder(ids: string[]): void {
     const now = new Date().toISOString()
     ids.forEach((id, index) => {
       db.update(tasks)
-        .set({ sortOrder: ids.length - index, updatedAt: now })
+        .set({ sortOrder: (ids.length - index) * 1000, updatedAt: now })
         .where(eq(tasks.id, id))
         .run()
     })

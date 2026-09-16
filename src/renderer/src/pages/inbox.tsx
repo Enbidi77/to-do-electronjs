@@ -1,9 +1,11 @@
 import { useEffect, useState, useCallback } from 'react'
 import { TaskEditor } from '@/components/task/task-editor'
 import { TaskList } from '@/components/task/task-list'
+import { TaskBoard } from '@/components/task/task-board'
 import type { Task } from '@shared/types'
 import { useTranslation } from 'react-i18next'
 import { useTaskStore } from '@/stores/task-store'
+import { useUiStore } from '@/stores/ui-store'
 import { toast } from 'sonner'
 
 export default function InboxPage() {
@@ -11,6 +13,7 @@ export default function InboxPage() {
   const [tasks, setTasks] = useState<Task[]>([])
   const [loading, setLoading] = useState(true)
   const tasksVersion = useTaskStore(s => s.tasksVersion)
+  const taskViewMode = useUiStore(s => s.taskViewMode)
   const completeTask = useTaskStore(s => s.completeTask)
   const uncompleteTask = useTaskStore(s => s.uncompleteTask)
   const deleteTask = useTaskStore(s => s.deleteTask)
@@ -68,12 +71,22 @@ export default function InboxPage() {
         <TaskEditor onCreated={fetchTasks} />
       </div>
       <div className="flex-1 overflow-hidden p-5 pt-2">
-        <TaskList
-          tasks={tasks}
-          isLoading={loading}
-          onComplete={handleComplete}
-          onDelete={handleDelete}
-        />
+        {taskViewMode === 'board' ? (
+          <TaskBoard
+            tasks={tasks}
+            onComplete={handleComplete}
+            onDelete={handleDelete}
+            title={t('navigation:inbox')}
+          />
+        ) : (
+          <TaskList
+            tasks={tasks}
+            isLoading={loading}
+            onComplete={handleComplete}
+            onDelete={handleDelete}
+            title={t('navigation:inbox')}
+          />
+        )}
       </div>
     </div>
   )

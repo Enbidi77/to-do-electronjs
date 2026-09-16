@@ -13,6 +13,7 @@ export interface UiState {
   searchQuery: string
   commandPaletteOpen: boolean
   quickAddOpen: boolean
+  taskViewMode: 'list' | 'board'
 
   toggleSidebar: () => void
   setSidebarCollapsed: (collapsed: boolean) => void
@@ -25,6 +26,8 @@ export interface UiState {
   setSearchQuery: (query: string) => void
   setCommandPaletteOpen: (open: boolean) => void
   setQuickAddOpen: (open: boolean) => void
+  setTaskViewMode: (mode: 'list' | 'board') => void
+  toggleTaskViewMode: () => void
 }
 
 export const useUiStore = create<UiState>((set) => ({
@@ -38,6 +41,7 @@ export const useUiStore = create<UiState>((set) => ({
   searchQuery: '',
   commandPaletteOpen: false,
   quickAddOpen: false,
+  taskViewMode: 'list',
 
   toggleSidebar: () => set((state) => ({ sidebarCollapsed: !state.sidebarCollapsed })),
   setSidebarCollapsed: (collapsed) => set({ sidebarCollapsed: collapsed }),
@@ -63,5 +67,7 @@ export const useUiStore = create<UiState>((set) => ({
   setSearchOpen: (open) => set({ searchOpen: open }),
   setSearchQuery: (query) => set({ searchQuery: query }),
   setCommandPaletteOpen: (open) => set({ commandPaletteOpen: open }),
-  setQuickAddOpen: (open) => set({ quickAddOpen: open })
+  setQuickAddOpen: (open) => set({ quickAddOpen: open }),
+  setTaskViewMode: (mode) => set({ taskViewMode: mode }),
+  toggleTaskViewMode: () => set((state) => ({ taskViewMode: state.taskViewMode === 'list' ? 'board' : 'list' }))
 }))

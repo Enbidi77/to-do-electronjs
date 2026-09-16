@@ -1,8 +1,10 @@
 import { useEffect, useState, useCallback } from 'react'
 import { TaskList } from '@/components/task/task-list'
+import { TaskBoard } from '@/components/task/task-board'
 import type { Task, TaskStats } from '@shared/types'
 import { useTranslation } from 'react-i18next'
 import { useTaskStore } from '@/stores/task-store'
+import { useUiStore } from '@/stores/ui-store'
 import { toast } from 'sonner'
 import { CheckCircle2, Clock, AlertCircle, Calendar } from 'lucide-react'
 import { formatHeaderDate } from '@/lib/date-format'
@@ -88,6 +90,8 @@ export default function TodayPage() {
   const totalToday = (stats?.dueToday ?? 0) + (stats?.completed ?? 0)
   const completionPercent = totalToday > 0 ? Math.round(((stats?.completed ?? 0) / totalToday) * 100) : 0
 
+  const taskViewMode = useUiStore(s => s.taskViewMode)
+
   return (
     <div className="flex flex-col h-full overflow-hidden">
       <div className="p-5 pb-2 shrink-0">
@@ -159,13 +163,22 @@ export default function TodayPage() {
       </div>
 
       <div className="px-5 flex-1 overflow-hidden pb-3">
-        <TaskList
-          title={`${t('tasks:groups.today')} & ${t('tasks:groups.overdue')}`}
-          tasks={tasks}
-          isLoading={loading}
-          onComplete={handleComplete}
-          onDelete={handleDelete}
-        />
+        {taskViewMode === 'board' ? (
+          <TaskBoard
+            title={`${t('tasks:groups.today')} & ${t('tasks:groups.overdue')}`}
+            tasks={tasks}
+            onComplete={handleComplete}
+            onDelete={handleDelete}
+          />
+        ) : (
+          <TaskList
+            title={`${t('tasks:groups.today')} & ${t('tasks:groups.overdue')}`}
+            tasks={tasks}
+            isLoading={loading}
+            onComplete={handleComplete}
+            onDelete={handleDelete}
+          />
+        )}
       </div>
     </div>
   )

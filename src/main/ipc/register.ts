@@ -93,6 +93,42 @@ function registerTaskHandlers(): void {
     catch (error) { logger.error('tasks:reorder failed', error); throw error }
   })
 
+  ipcMain.handle(IPC_CHANNELS.TASKS_REORDER_TASK, async (_event, input) => {
+    try {
+      const result = service.reorderTask(input)
+      broadcastTaskUpdated(result)
+      return result
+    }
+    catch (error) { logger.error('tasks:reorderTask failed', error); throw error }
+  })
+
+  ipcMain.handle(IPC_CHANNELS.TASKS_MOVE, async (_event, input) => {
+    try {
+      const result = service.move(input)
+      broadcastTaskUpdated(result)
+      return result
+    }
+    catch (error) { logger.error('tasks:move failed', error); throw error }
+  })
+
+  ipcMain.handle(IPC_CHANNELS.TASKS_CHANGE_STATUS, async (_event, input) => {
+    try {
+      const result = service.changeStatus(input)
+      broadcastTaskUpdated(result)
+      return result
+    }
+    catch (error) { logger.error('tasks:changeStatus failed', error); throw error }
+  })
+
+  ipcMain.handle(IPC_CHANNELS.TASKS_MAKE_SUBTASK, async (_event, input) => {
+    try {
+      const result = service.makeSubtask(input)
+      broadcastTaskUpdated(result)
+      return result
+    }
+    catch (error) { logger.error('tasks:makeSubtask failed', error); throw error }
+  })
+
   ipcMain.handle(IPC_CHANNELS.TASKS_GET_SUBTASKS, async (_event, parentId: string) => {
     try { return service.getSubtasks(parentId) }
     catch (error) { logger.error('tasks:getSubtasks failed', error); throw error }

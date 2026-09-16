@@ -8,6 +8,15 @@ const mockApi = {
     create: vi.fn(),
     update: vi.fn(),
     delete: vi.fn(),
+    complete: vi.fn(),
+    uncomplete: vi.fn(),
+    archive: vi.fn(),
+    reorder: vi.fn(),
+    reorderTask: vi.fn(),
+    move: vi.fn(),
+    changeStatus: vi.fn(),
+    makeSubtask: vi.fn(),
+    getSubtasks: vi.fn(),
     search: vi.fn(),
     getStats: vi.fn()
   },
@@ -68,7 +77,8 @@ const mockApi = {
 window.api = mockApi
 // @ts-ignore
 window.todo = {
-  window: mockApi.window
+  window: mockApi.window,
+  tasks: mockApi.tasks
 }
 
 Object.defineProperty(window, 'matchMedia', {

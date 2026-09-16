@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { isToday, isPast } from 'date-fns'
-import { Edit, Trash2 } from 'lucide-react'
+import { Edit, Trash2, GripVertical } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import type { Task } from '@shared/types'
 import { PRIORITY_CONFIG } from '@shared/constants'
@@ -16,9 +16,19 @@ type TaskItemProps = {
   onSelect: (id: string) => void
   onDelete: (id: string) => void
   isSelected: boolean
+  isDragging?: boolean
+  dragHandleProps?: Record<string, unknown>
 }
 
-export const TaskItem = memo(function TaskItem({ task, onComplete, onSelect, onDelete, isSelected }: TaskItemProps) {
+export const TaskItem = memo(function TaskItem({
+  task,
+  onComplete,
+  onSelect,
+  onDelete,
+  isSelected,
+  isDragging = false,
+  dragHandleProps
+}: TaskItemProps) {
   const { t } = useTranslation(['tasks', 'common'])
   const priorityConfig = PRIORITY_CONFIG[task.priority] || PRIORITY_CONFIG.none
 
@@ -56,6 +66,22 @@ export const TaskItem = memo(function TaskItem({ task, onComplete, onSelect, onD
         />
       </div>
 
+      <div
+        {...dragHandleProps}
+        className={cn(
+          "shrink-0 flex items-center justify-center p-0.5 rounded cursor-grab text-muted-foreground/60 transition-opacity",
+          "hover:text-foreground hover:bg-muted/60 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring",
+          isDragging ? "cursor-grabbing opacity-100 text-primary" : "opacity-0 group-hover:opacity-100"
+        )}
+        onClick={(e) => e.stopPropagation()}
+        title={t('common:actions.drag', { defaultValue: 'Drag to reorder' })}
+        aria-label="Drag handle"
+        role="button"
+        tabIndex={0}
+      >
+        <GripVertical className="h-3.5 w-3.5" />
+      </div>
+
       <div 
         className="w-1.5 h-1.5 rounded-full shrink-0 transition-transform group-hover:scale-125" 
         style={{ backgroundColor: priorityConfig.color }}
@@ -91,31 +117,33 @@ export const TaskItem = memo(function TaskItem({ task, onComplete, onSelect, onD
           </Badge>
         )}
 
-        <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-6 w-6 text-muted-foreground hover:text-foreground hover:bg-muted/60"
-            title={t('common:actions.edit')}
-            aria-label={t('common:actions.edit')}
-            onClick={(e) => {
-              e.stopPropagation()
-              onSelect(task.id)
-            }}
-          >
-            <Edit className="h-3 w-3" />
-          </Button>
-          <Button
-            variant="ghost"
-            size="icon"
-            className="h-6 w-6 text-destructive hover:bg-destructive/15"
-            title={t('common:actions.delete')}
-            aria-label={t('common:actions.delete')}
-            onClick={handleDelete}
-          >
-            <Trash2 className="h-3 w-3" />
-          </Button>
-        </div>
+        {!isDragging && (
+          <div className="flex items-center gap-0.5 opacity-0 group-hover:opacity-100 transition-opacity">
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6 text-muted-foreground hover:text-foreground hover:bg-muted/60"
+              title={t('common:actions.edit')}
+              aria-label={t('common:actions.edit')}
+              onClick={(e) => {
+                e.stopPropagation()
+                onSelect(task.id)
+              }}
+            >
+              <Edit className="h-3 w-3" />
+            </Button>
+            <Button
+              variant="ghost"
+              size="icon"
+              className="h-6 w-6 text-destructive hover:bg-destructive/15"
+              title={t('common:actions.delete')}
+              aria-label={t('common:actions.delete')}
+              onClick={handleDelete}
+            >
+              <Trash2 className="h-3 w-3" />
+            </Button>
+          </div>
+        )}
       </div>
     </div>
   )

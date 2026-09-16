@@ -1,5 +1,14 @@
 import { create } from 'zustand'
-import type { Task, TaskFilter, TaskSort, TaskStats } from '@shared/types'
+import type {
+  Task,
+  TaskFilter,
+  TaskSort,
+  TaskStats,
+  ReorderTaskInput,
+  MoveTaskInput,
+  ChangeTaskStatusInput,
+  MakeSubtaskInput
+} from '@shared/types'
 
 export interface TaskState {
   tasks: Task[]
@@ -20,6 +29,10 @@ export interface TaskState {
   uncompleteTask: (id: string) => Promise<Task>
   archiveTask: (id: string) => Promise<Task>
   reorderTasks: (ids: string[]) => Promise<void>
+  reorderTask: (input: ReorderTaskInput) => Promise<Task>
+  moveTask: (input: MoveTaskInput) => Promise<Task>
+  changeTaskStatus: (input: ChangeTaskStatusInput) => Promise<Task>
+  makeSubtask: (input: MakeSubtaskInput) => Promise<Task>
   setFilter: (filter: TaskFilter) => void
   setSort: (sort: TaskSort) => void
   searchTasks: (query: string) => Promise<Task[]>
@@ -177,6 +190,96 @@ export const useTaskStore = create<TaskState>((set, get) => ({
       get().fetchStats()
     } catch (err: any) {
       set({ error: err.message || 'Failed to reorder tasks' })
+      throw err
+    }
+  },
+
+  reorderTask: async (input) => {
+    // Optimistic local update
+    if (input.targetSortOrder !== undefined) {
+      set((state) => ({
+        tasks: state.tasks.map((t) =>
+          t.id === input.taskId ? { ...t, sortOrder: input.targetSortOrder! } : t
+        ),
+        tasksVersion: state.tasksVersion + 1
+      }))
+    }
+    try {
+      const updated = await window.api.tasks.reorderTask(input)
+      set((state) => ({
+        tasks: state.tasks.map((t) => (t.id === input.taskId ? updated : t)),
+        tasksVersion: state.tasksVersion + 1
+      }))
+      get().fetchStats()
+      return updated
+    } catch (err: any) {
+      set({ error: err.message || 'Failed to reorder task' })
+      throw err
+    }
+  },
+
+  moveTask: async (input) => {
+    // Optimistic local update
+    set((state) => ({
+      tasks: state.tasks.map((t) =>
+        t.id === input.taskId ? { ...t, projectId: input.targetProjectId, parentTaskId: null } : t
+      ),
+      tasksVersion: state.tasksVersion + 1
+    }))
+    try {
+      const updated = await window.api.tasks.move(input)
+      set((state) => ({
+        tasks: state.tasks.map((t) => (t.id === input.taskId ? updated : t)),
+        tasksVersion: state.tasksVersion + 1
+      }))
+      get().fetchStats()
+      return updated
+    } catch (err: any) {
+      set({ error: err.message || 'Failed to move task' })
+      throw err
+    }
+  },
+
+  changeTaskStatus: async (input) => {
+    // Optimistic local update
+    set((state) => ({
+      tasks: state.tasks.map((t) =>
+        t.id === input.taskId ? { ...t, status: input.status } : t
+      ),
+      tasksVersion: state.tasksVersion + 1
+    }))
+    try {
+      const updated = await window.api.tasks.changeStatus(input)
+      set((state) => ({
+        tasks: state.tasks.map((t) => (t.id === input.taskId ? updated : t)),
+        tasksVersion: state.tasksVersion + 1
+      }))
+      get().fetchStats()
+      return updated
+    } catch (err: any) {
+      set({ error: err.message || 'Failed to change task status' })
+      throw err
+    }
+  },
+
+  makeSubtask: async (input) => {
+    // Optimistic local update
+    set((state) => ({
+      tasks: state.tasks.map((t) =>
+        t.id === input.taskId ? { ...t, parentTaskId: input.parentTaskId } : t
+      ),
+      tasksVersion: state.tasksVersion + 1
+    }))
+    try {
+      const updated = await window.api.tasks.makeSubtask(input)
+      set((state) => ({
+        tasks: state.tasks.map((t) => (t.id === input.taskId ? updated : t)),
+        tasksVersion: state.tasksVersion + 1
+      }))
+      get().fetchStats()
+      return updated
+    } catch (err: any) {
+      set({ error: err.message || 'Failed to make subtask' })
       throw err
     }
   },

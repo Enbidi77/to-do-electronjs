@@ -5,6 +5,7 @@ import { ContentArea } from './content-area'
 import { useUiStore } from '@/stores/ui-store'
 import { cn } from '@/lib/utils'
 import { TaskDetails } from '../task/task-details'
+import { TaskDndProvider } from '@/components/drag-drop/TaskDndContext'
 
 export function AppLayout() {
   const sidebarCollapsed = useUiStore(s => s.sidebarCollapsed)
@@ -30,23 +31,24 @@ export function AppLayout() {
   }, [setSidebarCollapsed])
 
   return (
-    <div ref={containerRef} className="flex h-full w-full flex-col overflow-hidden bg-background">
-      <TitleBar />
-      <div className="flex flex-1 overflow-hidden">
-        <div 
-          className={cn(
-            "transition-all duration-300 ease-in-out border-r border-sidebar-border bg-sidebar flex-shrink-0",
-            sidebarCollapsed ? "w-0 overflow-hidden border-none" : "w-[240px]"
-          )}
-        >
-          <Sidebar />
+    <TaskDndProvider>
+      <div ref={containerRef} className="flex h-full w-full flex-col overflow-hidden bg-background">
+        <TitleBar />
+        <div className="flex flex-1 overflow-hidden">
+          <div 
+            className={cn(
+              "transition-all duration-300 ease-in-out border-r border-sidebar-border bg-sidebar flex-shrink-0",
+              sidebarCollapsed ? "w-0 overflow-hidden border-none" : "w-[240px]"
+            )}
+          >
+            <Sidebar />
+          </div>
+          <main className="flex-1 overflow-hidden relative bg-background">
+            <ContentArea />
+          </main>
         </div>
-        <main className="flex-1 overflow-hidden relative bg-background">
-          <ContentArea />
-        </main>
+        <TaskDetails />
       </div>
-      <TaskDetails />
-    </div>
+    </TaskDndProvider>
   )
 }
-

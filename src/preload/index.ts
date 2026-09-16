@@ -14,6 +14,10 @@ import type {
   SettingKey,
   AppSettings,
   ExportOptions,
+  ReorderTaskInput,
+  MoveTaskInput,
+  ChangeTaskStatusInput,
+  MakeSubtaskInput,
   Task,
   Reminder
 } from '@shared/types'
@@ -30,6 +34,10 @@ const api: IpcApi = {
     uncomplete: (id: string) => ipcRenderer.invoke(IPC_CHANNELS.TASKS_UNCOMPLETE, id),
     archive: (id: string) => ipcRenderer.invoke(IPC_CHANNELS.TASKS_ARCHIVE, id),
     reorder: (ids: string[]) => ipcRenderer.invoke(IPC_CHANNELS.TASKS_REORDER, ids),
+    reorderTask: (input: ReorderTaskInput) => ipcRenderer.invoke(IPC_CHANNELS.TASKS_REORDER_TASK, input),
+    move: (input: MoveTaskInput) => ipcRenderer.invoke(IPC_CHANNELS.TASKS_MOVE, input),
+    changeStatus: (input: ChangeTaskStatusInput) => ipcRenderer.invoke(IPC_CHANNELS.TASKS_CHANGE_STATUS, input),
+    makeSubtask: (input: MakeSubtaskInput) => ipcRenderer.invoke(IPC_CHANNELS.TASKS_MAKE_SUBTASK, input),
     getSubtasks: (parentId: string) => ipcRenderer.invoke(IPC_CHANNELS.TASKS_GET_SUBTASKS, parentId),
     getStats: () => ipcRenderer.invoke(IPC_CHANNELS.TASKS_GET_STATS),
     search: (query: string) => ipcRenderer.invoke(IPC_CHANNELS.TASKS_SEARCH, query)
@@ -148,7 +156,7 @@ const api: IpcApi = {
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('api', api)
-    contextBridge.exposeInMainWorld('todo', { window: api.window })
+    contextBridge.exposeInMainWorld('todo', { window: api.window, tasks: api.tasks })
   } catch (error) {
     console.error('Failed to expose context bridge in main world', error)
   }
@@ -156,5 +164,5 @@ if (process.contextIsolated) {
   // @ts-ignore
   window.api = api
   // @ts-ignore
-  window.todo = { window: api.window }
+  window.todo = { window: api.window, tasks: api.tasks }
 }

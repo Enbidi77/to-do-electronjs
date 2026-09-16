@@ -9,6 +9,8 @@ import { useTagStore } from '@/stores/tag-store'
 import { useTaskStore } from '@/stores/task-store'
 import { cn } from '@/lib/utils'
 import { ProjectDialog } from '../project/project-dialog'
+import { DroppableContainer } from '@/components/drag-drop/DroppableContainer'
+import { useTaskDnd } from '@/components/drag-drop/TaskDndContext'
 
 export function Sidebar() {
   const { t } = useTranslation(['navigation', 'projects', 'common'])
@@ -18,6 +20,7 @@ export function Sidebar() {
   const setView = useUiStore(s => s.setView)
   const projects = useProjectStore(s => s.projects)
   const tags = useTagStore(s => s.tags)
+  const { isDragging } = useTaskDnd()
   
   const stats = useTaskStore(s => s.stats)
   const fetchStats = useTaskStore(s => s.fetchStats)
@@ -41,28 +44,41 @@ export function Sidebar() {
           {navItems.map((item) => {
             const isActive = currentView === item.id
             return (
-              <Button
+              <DroppableContainer
                 key={item.id}
-                variant="ghost"
-                className={cn(
-                  "w-full justify-start h-8 px-2.5 text-xs font-normal relative transition-colors rounded-md",
-                  isActive
-                    ? "bg-primary/12 text-foreground font-medium shadow-none before:absolute before:left-0 before:top-2 before:bottom-2 before:w-0.5 before:rounded-r before:bg-primary"
-                    : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
-                )}
-                onClick={() => setView(item.id)}
+                id={`view:${item.id}`}
+                className="rounded-md transition-all"
+                activeClassName="bg-primary/20 ring-1 ring-primary/60 scale-[1.02]"
               >
-                <item.icon className={cn("mr-2.5 h-3.5 w-3.5 shrink-0 transition-colors", isActive ? "text-primary" : "text-muted-foreground")} />
-                <span className="truncate">{item.label}</span>
-                {typeof item.count === 'number' && item.count > 0 && (
-                  <span className={cn(
-                    "ml-auto text-[10px] font-mono px-1.5 py-0.5 rounded",
-                    isActive ? "text-primary bg-primary/15" : "text-muted-foreground bg-muted/60"
-                  )}>
-                    {item.count}
-                  </span>
+                {(isOver) => (
+                  <Button
+                    variant="ghost"
+                    className={cn(
+                      "w-full justify-start h-8 px-2.5 text-xs font-normal relative transition-colors rounded-md",
+                      isActive
+                        ? "bg-primary/12 text-foreground font-medium shadow-none before:absolute before:left-0 before:top-2 before:bottom-2 before:w-0.5 before:rounded-r before:bg-primary"
+                        : "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
+                      isOver && "bg-primary/20 text-primary font-medium"
+                    )}
+                    onClick={() => setView(item.id)}
+                  >
+                    <item.icon className={cn("mr-2.5 h-3.5 w-3.5 shrink-0 transition-colors", isActive ? "text-primary" : "text-muted-foreground")} />
+                    <span className="truncate">{item.label}</span>
+                    {isDragging && isOver ? (
+                      <span className="ml-auto text-[10px] font-medium text-primary bg-primary/20 px-1.5 py-0.5 rounded">
+                        Drop here
+                      </span>
+                    ) : typeof item.count === 'number' && item.count > 0 ? (
+                      <span className={cn(
+                        "ml-auto text-[10px] font-mono px-1.5 py-0.5 rounded",
+                        isActive ? "text-primary bg-primary/15" : "text-muted-foreground bg-muted/60"
+                      )}>
+                        {item.count}
+                      </span>
+                    ) : null}
+                  </Button>
                 )}
-              </Button>
+              </DroppableContainer>
             )
           })}
         </div>
@@ -86,23 +102,37 @@ export function Sidebar() {
           {projects.map(project => {
             const isActive = currentView === 'project' && currentProjectId === project.id
             return (
-              <Button
+              <DroppableContainer
                 key={project.id}
-                variant="ghost"
-                className={cn(
-                  "w-full justify-start h-8 px-2.5 text-xs font-normal relative transition-colors rounded-md",
-                  isActive
-                    ? "bg-primary/12 text-foreground font-medium shadow-none before:absolute before:left-0 before:top-2 before:bottom-2 before:w-0.5 before:rounded-r before:bg-primary"
-                    : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
-                )}
-                onClick={() => setView('project', project.id)}
+                id={`project:${project.id}`}
+                className="rounded-md transition-all"
+                activeClassName="bg-primary/20 ring-1 ring-primary/60 scale-[1.02]"
               >
-                <div 
-                  className="mr-2.5 h-2 w-2 rounded-full shrink-0" 
-                  style={{ backgroundColor: project.color || '#8ab4f8' }} 
-                />
-                <span className="truncate">{project.name}</span>
-              </Button>
+                {(isOver) => (
+                  <Button
+                    variant="ghost"
+                    className={cn(
+                      "w-full justify-start h-8 px-2.5 text-xs font-normal relative transition-colors rounded-md",
+                      isActive
+                        ? "bg-primary/12 text-foreground font-medium shadow-none before:absolute before:left-0 before:top-2 before:bottom-2 before:w-0.5 before:rounded-r before:bg-primary"
+                        : "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
+                      isOver && "bg-primary/20 text-primary font-medium"
+                    )}
+                    onClick={() => setView('project', project.id)}
+                  >
+                    <div 
+                      className="mr-2.5 h-2 w-2 rounded-full shrink-0" 
+                      style={{ backgroundColor: project.color || '#8ab4f8' }} 
+                    />
+                    <span className="truncate">{project.name}</span>
+                    {isDragging && isOver && (
+                      <span className="ml-auto text-[10px] font-medium text-primary bg-primary/20 px-1.5 py-0.5 rounded">
+                        Drop task here
+                      </span>
+                    )}
+                  </Button>
+                )}
+              </DroppableContainer>
             )
           })}
         </div>
