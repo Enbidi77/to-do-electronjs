@@ -68,7 +68,7 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   completeTask: async (id) => {
     // Optimistic update
     set((state) => ({
-      tasks: state.tasks.map((t) => (t.id === id ? { ...t, status: 'completed' } : t))
+      tasks: state.tasks.map((t) => (t.id === id ? { ...t, status: 'completed', completedAt: new Date().toISOString() } : t))
     }))
     try {
       const updated = await window.api.tasks.complete(id)
@@ -78,7 +78,7 @@ export const useTaskStore = create<TaskState>((set, get) => ({
     } catch (err: any) {
       // Revert on error
       set((state) => ({
-        tasks: state.tasks.map((t) => (t.id === id ? { ...t, status: 'active' } : t)),
+        tasks: state.tasks.map((t) => (t.id === id ? { ...t, status: 'active', completedAt: null } : t)),
         error: err.message || 'Failed to complete task'
       }))
     }
@@ -86,7 +86,7 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   uncompleteTask: async (id) => {
     // Optimistic update
     set((state) => ({
-      tasks: state.tasks.map((t) => (t.id === id ? { ...t, status: 'active' } : t))
+      tasks: state.tasks.map((t) => (t.id === id ? { ...t, status: 'active', completedAt: null } : t))
     }))
     try {
       const updated = await window.api.tasks.uncomplete(id)
@@ -96,7 +96,7 @@ export const useTaskStore = create<TaskState>((set, get) => ({
     } catch (err: any) {
       // Revert on error
       set((state) => ({
-        tasks: state.tasks.map((t) => (t.id === id ? { ...t, status: 'completed' } : t)),
+        tasks: state.tasks.map((t) => (t.id === id ? { ...t, status: 'completed', completedAt: new Date().toISOString() } : t)),
         error: err.message || 'Failed to uncomplete task'
       }))
     }

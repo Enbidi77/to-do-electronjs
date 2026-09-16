@@ -24,10 +24,11 @@ export const TaskItem = memo(function TaskItem({ task, onComplete, onSelect, onD
 
   const isOverdue = task.dueDate && isPast(new Date(task.dueDate)) && !isToday(new Date(task.dueDate))
   const isDueToday = task.dueDate && isToday(new Date(task.dueDate))
+  const isCompleted = !!task.completedAt || task.status === 'completed'
 
   const handleCheckboxClick = (e: React.MouseEvent) => {
     e.stopPropagation()
-    onComplete(task.id, !task.completedAt)
+    onComplete(task.id, !isCompleted)
   }
 
   const handleDelete = (e: React.MouseEvent) => {
@@ -44,13 +45,13 @@ export const TaskItem = memo(function TaskItem({ task, onComplete, onSelect, onD
         "group flex items-center gap-2.5 px-3.5 py-2 border-b border-border/50 cursor-pointer transition-colors select-none text-xs",
         "hover:bg-muted/30",
         isSelected && "bg-primary/10 text-foreground border-l-2 border-l-primary pl-[12px]",
-        task.completedAt && "opacity-65"
+        isCompleted && "opacity-65"
       )}
     >
       <div onClick={handleCheckboxClick} className="shrink-0 flex items-center justify-center">
         <Checkbox
-          checked={!!task.completedAt}
-          aria-label={task.completedAt ? t('tasks:reopen') : t('tasks:complete')}
+          checked={isCompleted}
+          aria-label={isCompleted ? t('tasks:reopen') : t('tasks:complete')}
           className="h-4 w-4"
         />
       </div>
@@ -64,11 +65,11 @@ export const TaskItem = memo(function TaskItem({ task, onComplete, onSelect, onD
       <div className="flex-1 min-w-0 pr-2">
         <div className={cn(
           "truncate text-xs tracking-tight transition-colors",
-          task.completedAt ? "line-through text-muted-foreground font-normal" : "text-foreground font-medium"
+          isCompleted ? "line-through text-muted-foreground font-normal" : "text-foreground font-medium"
         )}>
           {task.title}
         </div>
-        {task.description && !task.completedAt && (
+        {task.description && !isCompleted && (
           <div className="truncate text-[11px] text-muted-foreground mt-0.5 font-normal">
             {task.description}
           </div>

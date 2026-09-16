@@ -266,6 +266,8 @@ export class TaskService {
     if (input.reminderTime !== undefined) updateData.reminderTime = input.reminderTime
     if (input.recurrenceRule !== undefined) updateData.recurrenceRule = input.recurrenceRule
     if (input.sortOrder !== undefined) updateData.sortOrder = input.sortOrder
+    if (input.completedAt !== undefined) updateData.completedAt = input.completedAt
+    if (input.archivedAt !== undefined) updateData.archivedAt = input.archivedAt
 
     db.update(tasks).set(updateData).where(eq(tasks.id, id)).run()
 
@@ -341,7 +343,7 @@ export class TaskService {
 
   /** Uncomplete a task */
   uncomplete(id: string): Task {
-    return this.update(id, { status: 'active' } as UpdateTaskInput)
+    return this.update(id, { status: 'active', completedAt: null } as UpdateTaskInput)
   }
 
   /** Archive a task */

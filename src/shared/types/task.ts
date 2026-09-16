@@ -65,6 +65,8 @@ export interface UpdateTaskInput {
   recurrenceRule?: string | null
   sortOrder?: number
   tagIds?: string[]
+  completedAt?: string | null
+  archivedAt?: string | null
 }
 
 export interface TaskFilter {
