@@ -323,6 +323,16 @@ function registerAppHandlers(): void {
     const service = new BackupService()
     return service.restoreBackup(filename)
   })
+
+  ipcMain.handle(IPC_CHANNELS.APP_SHOW_NOTIFICATION, async (_event, options: { title: string; body: string; taskId?: string }) => {
+    try {
+      const { NotificationService } = await import('../notifications/notification-service')
+      NotificationService.getInstance().show(options.title, options.body, options.taskId)
+    } catch (error) {
+      logger.error('app:showNotification failed', error)
+      throw error
+    }
+  })
 }
 
 /** Register all IPC handlers for the application */

@@ -35,11 +35,11 @@ export const TAG_COLORS = [
 
 // Priority configuration
 export const PRIORITY_CONFIG = {
-  none: { label: 'None', color: '#6b7280', icon: null, sortWeight: 0 },
-  low: { label: 'Low', color: '#3b82f6', icon: '↓', sortWeight: 1 },
-  medium: { label: 'Medium', color: '#f59e0b', icon: '→', sortWeight: 2 },
-  high: { label: 'High', color: '#ef4444', icon: '↑', sortWeight: 3 },
-  urgent: { label: 'Urgent', color: '#dc2626', icon: '⇑', sortWeight: 4 }
+  none: { label: 'None', color: '#9aa0a6', icon: null, sortWeight: 0 },
+  low: { label: 'Low', color: '#8ab4f8', icon: '↓', sortWeight: 1 },
+  medium: { label: 'Medium', color: '#fdd663', icon: '→', sortWeight: 2 },
+  high: { label: 'High', color: '#f28b82', icon: '↑', sortWeight: 3 },
+  urgent: { label: 'Urgent', color: '#ee675c', icon: '⇑', sortWeight: 4 }
 } as const
 
 // Scheduler

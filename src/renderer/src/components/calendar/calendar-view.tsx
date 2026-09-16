@@ -74,12 +74,12 @@ export default function CalendarView() {
 
   return (
     <div className="flex flex-col lg:flex-row h-full bg-background overflow-hidden">
-      <div className="p-4 border-b lg:border-b-0 lg:border-r border-border/80 flex justify-center shrink-0 bg-sidebar/50">
+      <div className="p-4 border-b lg:border-b-0 lg:border-r border-border/60 flex justify-center shrink-0 bg-sidebar">
         <CalendarUI
           mode="single"
           selected={date}
           onSelect={setDate}
-          className="rounded-lg border border-border/80 shadow-none bg-card"
+          className="rounded-lg border border-border/60 shadow-none bg-card"
         />
       </div>
       <div className="flex-1 overflow-hidden p-5 flex flex-col">

@@ -101,8 +101,8 @@ export function TaskDetails() {
 
   return (
     <Sheet open={detailsPanelOpen} onOpenChange={setDetailsPanelOpen}>
-      <SheetContent className="w-[420px] sm:w-[540px] flex flex-col p-0 bg-background border-l border-border/80 shadow-xl" side="right">
-        <SheetHeader className="p-3.5 border-b border-border/80 shrink-0 flex flex-row items-center justify-between space-y-0 bg-muted/20">
+      <SheetContent className="w-[420px] sm:w-[540px] flex flex-col p-0 bg-card border-l border-border/80 shadow-2xl" side="right">
+        <SheetHeader className="p-3.5 border-b border-border/60 shrink-0 flex flex-row items-center justify-between space-y-0 bg-muted/30">
           <SheetTitle className="sr-only">{t('tasks:details')}</SheetTitle>
           <div className="flex items-center gap-2">
             <Button
@@ -119,7 +119,7 @@ export function TaskDetails() {
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7 text-muted-foreground hover:text-foreground"
+              className="h-7 w-7 text-muted-foreground hover:text-foreground hover:bg-muted/60"
               title={t('tasks:archive')}
               aria-label={t('tasks:archive')}
               onClick={handleArchive}
@@ -129,7 +129,7 @@ export function TaskDetails() {
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7 text-destructive hover:bg-destructive/10"
+              className="h-7 w-7 text-destructive hover:bg-destructive/15"
               title={t('tasks:delete')}
               aria-label={t('tasks:delete')}
               onClick={handleDelete}
@@ -144,7 +144,7 @@ export function TaskDetails() {
             <Input
               value={task.title}
               onChange={(e) => handleTitleChange(e.target.value)}
-              className="text-base font-semibold border-none focus-visible:ring-0 px-0 h-auto shadow-none text-foreground"
+              className="text-base font-semibold border-none focus-visible:ring-0 px-0 h-auto shadow-none text-foreground bg-transparent"
               placeholder={t('tasks:titlePlaceholder')}
             />
           </div>
@@ -154,7 +154,7 @@ export function TaskDetails() {
               value={task.description || ''}
               onChange={(e) => handleDescriptionChange(e.target.value)}
               placeholder={t('tasks:descriptionPlaceholder')}
-              className="min-h-[100px] resize-none border-none focus-visible:ring-0 px-0 text-xs shadow-none text-muted-foreground focus:text-foreground"
+              className="min-h-[100px] resize-none border-none focus-visible:ring-0 px-0 text-xs shadow-none text-muted-foreground focus:text-foreground bg-transparent"
             />
           </div>
 
@@ -166,7 +166,7 @@ export function TaskDetails() {
                 <span>{t('projects:project')}</span>
               </div>
               <Select value={task.projectId || 'none'} onValueChange={handleProjectChange}>
-                <SelectTrigger className="w-[170px] h-7 text-xs border-border/80 bg-background">
+                <SelectTrigger className="w-[170px] h-7 text-xs border-border/70 bg-muted/30">
                   <SelectValue placeholder={t('navigation:inbox')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -174,7 +174,7 @@ export function TaskDetails() {
                   {projects.map(p => (
                     <SelectItem key={p.id} value={p.id}>
                       <div className="flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: p.color || '#3b82f6' }} />
+                        <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: p.color || '#8ab4f8' }} />
                         <span className="truncate">{p.name}</span>
                       </div>
                     </SelectItem>
@@ -200,7 +200,7 @@ export function TaskDetails() {
                 type="date"
                 value={task.dueDate || ''}
                 onChange={handleDueDateChange}
-                className="h-7 rounded-md border border-border/80 bg-background px-2 text-xs focus:outline-none focus:ring-1 focus:ring-ring text-foreground"
+                className="h-7 rounded-md border border-border/70 bg-muted/30 px-2 text-xs focus:outline-none focus:ring-1 focus:ring-ring text-foreground"
               />
             </div>
           </div>
@@ -211,12 +211,12 @@ export function TaskDetails() {
           </div>
         </div>
 
-        <div className="p-3.5 border-t border-border/80 text-[11px] text-muted-foreground shrink-0 flex justify-between items-center bg-muted/20">
+        <div className="p-3.5 border-t border-border/60 text-[11px] text-muted-foreground shrink-0 flex justify-between items-center bg-muted/30">
           <span>
             {task.createdAt ? `${t('common:appName')}: ${formatLocalized(task.createdAt, 'PP')}` : ''}
           </span>
           {task.completedAt && (
-            <span className="text-emerald-600 dark:text-emerald-400 font-medium">
+            <span className="text-success font-medium">
               {t('tasks:completed')}: {formatLocalized(task.completedAt, 'PP')}
             </span>
           )}

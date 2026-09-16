@@ -85,22 +85,22 @@ export default function ProjectViewPage() {
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <div className="p-6 pb-2 shrink-0">
-        <div className="flex items-center gap-3 mb-4">
+      <div className="p-5 pb-2 shrink-0">
+        <div className="flex items-center gap-2.5 mb-3">
           <div
-            className="w-4 h-4 rounded-full shrink-0"
-            style={{ backgroundColor: project.color || '#3b82f6' }}
+            className="w-3 h-3 rounded-full shrink-0"
+            style={{ backgroundColor: project.color || '#8ab4f8' }}
           />
           <div>
-            <h1 className="text-2xl font-bold tracking-tight">{project.name}</h1>
+            <h1 className="text-xl font-bold tracking-tight text-foreground">{project.name}</h1>
             {project.description && (
-              <p className="text-sm text-muted-foreground mt-0.5">{project.description}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{project.description}</p>
             )}
           </div>
         </div>
         <TaskEditor projectId={project.id} onCreated={fetchTasks} />
       </div>
-      <div className="flex-1 overflow-hidden p-6 pt-2">
+      <div className="flex-1 overflow-hidden p-5 pt-2">
         <TaskList
           tasks={tasks}
           isLoading={loading}

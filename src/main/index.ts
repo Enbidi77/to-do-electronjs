@@ -23,6 +23,11 @@ const gotTheLock = app.requestSingleInstanceLock()
 if (!gotTheLock) {
   app.quit()
 } else {
+  // Set Application User Model ID for Windows toast notifications
+  if (process.platform === 'win32') {
+    app.setAppUserModelId('com.todoapp.desktop')
+  }
+
   app.on('second-instance', () => {
     if (mainWindow) {
       if (mainWindow.isMinimized()) mainWindow.restore()

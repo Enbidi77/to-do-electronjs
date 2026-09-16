@@ -147,18 +147,18 @@ export default function UpcomingPage() {
           </div>
         ) : (
           groups.map(group => (
-            <div key={group.id} className="space-y-1">
-              <div className="flex items-center justify-between pb-1 border-b">
+            <div key={group.id} className="space-y-1.5">
+              <div className="flex items-center justify-between pb-1 border-b border-border/50">
                 <h2
-                  className={`text-sm font-semibold tracking-wide ${
-                    group.id === 'overdue' ? 'text-rose-500 font-bold' : 'text-foreground'
+                  className={`text-xs font-medium tracking-wide ${
+                    group.id === 'overdue' ? 'text-destructive font-semibold' : 'text-foreground'
                   }`}
                 >
                   {group.title}
                 </h2>
-                <span className="text-xs text-muted-foreground">{group.tasks.length}</span>
+                <span className="text-[11px] text-muted-foreground">{group.tasks.length}</span>
               </div>
-              <div className="divide-y border rounded-lg overflow-hidden bg-card">
+              <div className="divide-y divide-border/60 border border-border/60 rounded-lg overflow-hidden bg-card">
                 {group.tasks.map(task => (
                   <TaskItem
                     key={task.id}

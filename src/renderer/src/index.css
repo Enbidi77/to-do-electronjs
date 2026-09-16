@@ -37,35 +37,35 @@
   }
 
   .dark {
-    --background: 224 71% 4%;
-    --foreground: 210 40% 98%;
-    --card: 222 47% 7%;
-    --card-foreground: 210 40% 98%;
-    --popover: 222 47% 7%;
-    --popover-foreground: 210 40% 98%;
-    --primary: 217 91% 60%;
-    --primary-foreground: 224 71% 4%;
-    --secondary: 217 33% 17%;
-    --secondary-foreground: 210 40% 98%;
-    --muted: 217 33% 17%;
-    --muted-foreground: 215 20% 65%;
-    --accent: 217 33% 17%;
-    --accent-foreground: 210 40% 98%;
-    --destructive: 0 63% 31%;
-    --destructive-foreground: 210 40% 98%;
-    --border: 217 33% 17%;
-    --input: 217 33% 17%;
-    --ring: 224 76% 48%;
-    --sidebar: 222 47% 7%;
-    --sidebar-background: 222 47% 7%;
-    --sidebar-foreground: 213 31% 91%;
-    --sidebar-border: 217 33% 17%;
-    --sidebar-accent: 217 33% 15%;
-    --sidebar-accent-foreground: 210 40% 98%;
-    --warning: 48 96% 89%;
-    --warning-foreground: 38 92% 50%;
-    --success: 142 76% 36%;
-    --success-foreground: 138 76% 97%;
+    --background: 220 6% 13%;
+    --foreground: 218 11% 92%;
+    --card: 220 4% 17%;
+    --card-foreground: 218 11% 92%;
+    --popover: 220 4% 20%;
+    --popover-foreground: 218 11% 92%;
+    --primary: 217 89% 76%;
+    --primary-foreground: 220 6% 13%;
+    --secondary: 220 4% 20%;
+    --secondary-foreground: 218 11% 92%;
+    --muted: 220 4% 20%;
+    --muted-foreground: 213 6% 63%;
+    --accent: 217 28% 22%;
+    --accent-foreground: 218 11% 92%;
+    --destructive: 5 81% 73%;
+    --destructive-foreground: 220 6% 13%;
+    --border: 216 5% 25%;
+    --input: 216 5% 25%;
+    --ring: 217 89% 76%;
+    --sidebar: 220 5% 16%;
+    --sidebar-background: 220 5% 16%;
+    --sidebar-foreground: 216 8% 76%;
+    --sidebar-border: 216 5% 23%;
+    --sidebar-accent: 217 28% 22%;
+    --sidebar-accent-foreground: 218 11% 92%;
+    --warning: 45 97% 69%;
+    --warning-foreground: 220 6% 13%;
+    --success: 137 41% 65%;
+    --success-foreground: 220 6% 13%;
   }
 }
 
@@ -110,3 +110,24 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Subtle, clean desktop scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border) / 0.7);
+  border-radius: 9999px;
+  transition: background-color 150ms ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+

@@ -141,19 +141,19 @@ export function TitleBar() {
         </span>
       </div>
 
-      {/* Center: Search trigger (VS Code style pill in titlebar) */}
+      {/* Center: Search trigger (Google style pill in titlebar) */}
       <div className="flex-1 max-w-sm px-2 flex justify-center">
         <button
           type="button"
           onClick={() => setSearchOpen(true)}
           style={{ WebkitAppRegion: 'no-drag' } as React.CSSProperties}
-          className="flex h-6 w-full max-w-[280px] items-center justify-between rounded-md border border-border/80 bg-background/70 px-2 text-[11px] text-muted-foreground hover:bg-background hover:text-foreground transition-all shadow-none"
+          className="flex h-6 w-full max-w-[280px] items-center justify-between rounded-md border border-border/70 bg-muted/40 px-2.5 text-[11px] text-muted-foreground hover:bg-muted/70 hover:border-border hover:text-foreground transition-all shadow-none"
         >
           <div className="flex items-center gap-1.5 truncate">
             <Search className="h-3 w-3 shrink-0 opacity-70" />
             <span className="truncate">{t('navigation:searchPlaceholder')}</span>
           </div>
-          <kbd className="pointer-events-none rounded border bg-muted/60 px-1 font-mono text-[9px] text-muted-foreground">
+          <kbd className="pointer-events-none rounded border border-border/60 bg-muted/60 px-1 font-mono text-[9px] text-muted-foreground">
             Ctrl+F
           </kbd>
         </button>
@@ -167,7 +167,7 @@ export function TitleBar() {
             variant="ghost"
             size="icon"
             onClick={() => setQuickAddOpen(true)}
-            className="h-6 w-6 text-primary hover:bg-sidebar-accent"
+            className="h-6 w-6 text-primary hover:bg-muted/60"
             title={`${t('navigation:quickAdd')} (Ctrl+N)`}
             aria-label={t('navigation:quickAdd')}
           >
@@ -178,7 +178,7 @@ export function TitleBar() {
             variant="ghost"
             size="icon"
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
-            className="h-6 w-6 text-muted-foreground hover:text-foreground hover:bg-sidebar-accent"
+            className="h-6 w-6 text-muted-foreground hover:text-foreground hover:bg-muted/60"
             title={t('settings:appearance.theme')}
             aria-label={t('settings:appearance.theme')}
           >
@@ -189,7 +189,7 @@ export function TitleBar() {
             variant="ghost"
             size="icon"
             onClick={() => setView('settings')}
-            className="h-6 w-6 text-muted-foreground hover:text-foreground hover:bg-sidebar-accent"
+            className="h-6 w-6 text-muted-foreground hover:text-foreground hover:bg-muted/60"
             title={`${t('navigation:settings')} (Ctrl+,)`}
             aria-label={t('navigation:settings')}
           >
@@ -202,7 +202,7 @@ export function TitleBar() {
           <button
             type="button"
             onClick={handleMinimize}
-            className="flex h-full w-11 items-center justify-center text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-colors"
+            className="flex h-full w-11 items-center justify-center text-muted-foreground hover:bg-muted/70 hover:text-foreground transition-colors"
             title={t('common:windowControls.minimize')}
             aria-label={t('common:windowControls.minimize')}
           >
@@ -212,7 +212,7 @@ export function TitleBar() {
           <button
             type="button"
             onClick={handleToggleMaximize}
-            className="flex h-full w-11 items-center justify-center text-muted-foreground hover:bg-sidebar-accent hover:text-foreground transition-colors"
+            className="flex h-full w-11 items-center justify-center text-muted-foreground hover:bg-muted/70 hover:text-foreground transition-colors"
             title={isMaximized ? t('common:windowControls.restore') : t('common:windowControls.maximize')}
             aria-label={isMaximized ? t('common:windowControls.restore') : t('common:windowControls.maximize')}
           >
@@ -226,7 +226,7 @@ export function TitleBar() {
           <button
             type="button"
             onClick={handleClose}
-            className="flex h-full w-11 items-center justify-center text-muted-foreground hover:bg-[#e81123] hover:text-white transition-colors"
+            className="flex h-full w-11 items-center justify-center text-muted-foreground hover:bg-[#d93025] hover:text-white transition-colors"
             title={t('common:windowControls.close')}
             aria-label={t('common:windowControls.close')}
           >

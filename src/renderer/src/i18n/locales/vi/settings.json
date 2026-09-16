@@ -50,7 +50,14 @@
     "defaultSnooze": "Thời gian báo lại mặc định",
     "defaultSnoozeDesc": "Thời gian mặc định hoãn lời nhắc",
     "overdueReminders": "Hiển thị lời nhắc quá hạn",
-    "overdueRemindersDesc": "Thông báo khi mở ứng dụng nếu có công việc quá hạn"
+    "overdueRemindersDesc": "Thông báo khi mở ứng dụng nếu có công việc quá hạn",
+    "testNotification": "Thử nghiệm thông báo",
+    "testNotificationDesc": "Kích hoạt thông báo mẫu của Windows để kiểm tra cảnh báo hệ thống",
+    "sendTest": "Gửi thông báo thử",
+    "testTitle": "Thông báo Todo",
+    "testBody": "Thông báo Windows đang hoạt động bình thường!",
+    "testSent": "Đã gửi thông báo thử",
+    "testFailed": "Gửi thông báo thất bại"
   },
   "data": {
     "exportTitle": "Xuất dữ liệu",

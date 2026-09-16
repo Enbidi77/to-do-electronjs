@@ -50,7 +50,14 @@
     "defaultSnooze": "Default snooze duration",
     "defaultSnoozeDesc": "How long reminders are postponed by default",
     "overdueReminders": "Show overdue reminders",
-    "overdueRemindersDesc": "Alert when opening the app if tasks are overdue"
+    "overdueRemindersDesc": "Alert when opening the app if tasks are overdue",
+    "testNotification": "Test notification",
+    "testNotificationDesc": "Trigger a sample Windows notification to test system alerts",
+    "sendTest": "Send Test Notification",
+    "testTitle": "Todo Notification",
+    "testBody": "Windows notifications are working correctly!",
+    "testSent": "Test notification sent",
+    "testFailed": "Failed to send test notification"
   },
   "data": {
     "exportTitle": "Export Data",

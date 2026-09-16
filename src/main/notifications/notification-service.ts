@@ -1,4 +1,5 @@
-import { Notification, BrowserWindow } from 'electron';
+import { Notification, BrowserWindow, app } from 'electron';
+import path from 'path';
 import { Reminder } from '@shared/types';
 import { createLogger } from '../system/logger';
 
@@ -26,9 +27,14 @@ export class NotificationService {
       return;
     }
 
+    const iconPath = app.isPackaged
+      ? path.join(process.resourcesPath, 'icon.ico')
+      : path.join(__dirname, '../../resources/icon.ico');
+
     const notification = new Notification({
       title,
       body,
+      icon: iconPath
     });
 
     notification.on('click', () => {

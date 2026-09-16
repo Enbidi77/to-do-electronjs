@@ -9,7 +9,8 @@ import { useTheme } from '@/components/theme-provider'
 import type { AppInfo } from '@shared/types'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { Download, Database, Globe } from 'lucide-react'
+import { Download, Database, Globe, Bell, Keyboard } from 'lucide-react'
+import { KEYBOARD_SHORTCUTS } from '@shared/constants'
 
 export default function SettingsPage() {
   const { t } = useTranslation(['settings', 'common', 'notifications', 'errors', 'reminders', 'navigation'])
@@ -79,21 +80,44 @@ export default function SettingsPage() {
     }
   }
 
+  const [isSendingNotification, setIsSendingNotification] = useState(false)
+
+  const handleSendTestNotification = async () => {
+    try {
+      setIsSendingNotification(true)
+      if (window.api?.app?.showNotification) {
+        await window.api.app.showNotification({
+          title: t('settings:notifications.testTitle') || 'Todo Notification',
+          body: t('settings:notifications.testBody') || 'Windows notifications are working correctly!'
+        })
+        toast.success(t('settings:notifications.testSent') || 'Test notification sent')
+      } else {
+        toast.error('Notification API is not available')
+      }
+    } catch (error) {
+      console.error('Failed to send test notification:', error)
+      toast.error(t('settings:notifications.testFailed') || 'Failed to send test notification')
+    } finally {
+      setIsSendingNotification(false)
+    }
+  }
+
   return (
     <div className="flex flex-col h-full overflow-y-auto">
       <div className="max-w-3xl w-full mx-auto p-8 space-y-6">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t('settings:title')}</h1>
-          <p className="text-sm text-muted-foreground">{t('settings:subtitle')}</p>
+          <h1 className="text-xl font-bold tracking-tight text-foreground">{t('settings:title')}</h1>
+          <p className="text-xs text-muted-foreground mt-0.5">{t('settings:subtitle')}</p>
         </div>
 
         <Tabs defaultValue="general" className="w-full">
-          <TabsList className="mb-6 grid grid-cols-5 w-full">
-            <TabsTrigger value="general">{t('settings:tabs.general')}</TabsTrigger>
-            <TabsTrigger value="appearance">{t('settings:tabs.appearance')}</TabsTrigger>
-            <TabsTrigger value="notifications">{t('settings:tabs.notifications')}</TabsTrigger>
-            <TabsTrigger value="data">{t('settings:tabs.data')}</TabsTrigger>
-            <TabsTrigger value="about">{t('settings:tabs.about')}</TabsTrigger>
+          <TabsList className="mb-6 grid grid-cols-6 w-full h-8 p-0.5 bg-muted/40 border border-border/50">
+            <TabsTrigger value="general" className="text-xs">{t('settings:tabs.general')}</TabsTrigger>
+            <TabsTrigger value="notifications" className="text-xs">{t('settings:tabs.notifications')}</TabsTrigger>
+            <TabsTrigger value="appearance" className="text-xs">{t('settings:tabs.appearance')}</TabsTrigger>
+            <TabsTrigger value="keyboard" className="text-xs">{t('common:shortcuts.title', { defaultValue: 'Keyboard' })}</TabsTrigger>
+            <TabsTrigger value="data" className="text-xs">{t('settings:tabs.data')}</TabsTrigger>
+            <TabsTrigger value="about" className="text-xs">{t('settings:tabs.about')}</TabsTrigger>
           </TabsList>
 
           {/* GENERAL */}
@@ -267,12 +291,64 @@ export default function SettingsPage() {
                 onCheckedChange={(checked) => updateSetting('showOverdueReminders', checked)}
               />
             </div>
+
+            <div className="flex items-center justify-between pt-2">
+              <div className="space-y-0.5">
+                <h3 className="font-medium text-sm">{t('settings:notifications.testNotification')}</h3>
+                <p className="text-xs text-muted-foreground">
+                  {t('settings:notifications.testNotificationDesc')}
+                </p>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleSendTestNotification}
+                disabled={isSendingNotification}
+              >
+                <Bell className="w-4 h-4 mr-2" />
+                {t('settings:notifications.sendTest')}
+              </Button>
+            </div>
+          </TabsContent>
+
+          {/* KEYBOARD SHORTCUTS */}
+          <TabsContent value="keyboard" className="space-y-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2">
+                <Keyboard className="h-4 w-4 text-muted-foreground" />
+                <h3 className="font-medium text-sm text-foreground">{t('common:shortcuts.title', { defaultValue: 'Keyboard Shortcuts' })}</h3>
+              </div>
+              <p className="text-xs text-muted-foreground">{t('common:shortcuts.description', { defaultValue: 'Global and application navigation shortcuts' })}</p>
+            </div>
+
+            <div className="divide-y divide-border/60 border border-border/60 rounded-lg overflow-hidden bg-card text-xs">
+              {Object.entries(KEYBOARD_SHORTCUTS).map(([actionKey, sc]) => {
+                const keys: string[] = []
+                if ('ctrlKey' in sc && sc.ctrlKey) keys.push('Ctrl')
+                if ('shiftKey' in sc && sc.shiftKey) keys.push('Shift')
+                if ('altKey' in sc && (sc as { altKey?: boolean }).altKey) keys.push('Alt')
+                keys.push(sc.key === ' ' ? 'Space' : sc.key.toUpperCase())
+
+                return (
+                  <div key={actionKey} className="flex items-center justify-between px-4 py-2.5 hover:bg-muted/30 transition-colors">
+                    <span className="text-foreground font-normal">{sc.label}</span>
+                    <div className="flex items-center gap-1">
+                      {keys.map((k, i) => (
+                        <kbd key={i} className="px-1.5 py-0.5 rounded border border-border/70 bg-muted/60 font-mono text-[10px] text-muted-foreground font-medium">
+                          {k}
+                        </kbd>
+                      ))}
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
           </TabsContent>
 
           {/* DATA & BACKUP */}
           <TabsContent value="data" className="space-y-6">
-            <div className="space-y-3 border-b pb-4">
-              <h3 className="font-medium text-sm">{t('settings:data.exportTitle')}</h3>
+            <div className="space-y-3 border-b border-border/60 pb-4">
+              <h3 className="font-medium text-sm text-foreground">{t('settings:data.exportTitle')}</h3>
               <p className="text-xs text-muted-foreground">
                 {t('settings:data.exportDesc')}
               </p>
@@ -286,9 +362,9 @@ export default function SettingsPage() {
               </div>
             </div>
 
-            <div className="space-y-3 border-b pb-4">
-              <h3 className="font-medium text-sm">{t('settings:data.backupTitle')}</h3>
-              <div className="text-xs text-muted-foreground bg-muted p-2.5 rounded font-mono break-all">
+            <div className="space-y-3 border-b border-border/60 pb-4">
+              <h3 className="font-medium text-sm text-foreground">{t('settings:data.backupTitle')}</h3>
+              <div className="text-xs text-muted-foreground bg-muted/40 border border-border/50 p-2.5 rounded-md font-mono break-all">
                 {appInfo?.databasePath || 'Local SQLite database'}
               </div>
               <div className="flex gap-2 pt-1">
@@ -309,42 +385,42 @@ export default function SettingsPage() {
 
           {/* ABOUT */}
           <TabsContent value="about" className="space-y-4">
-            <div className="rounded-xl border p-5 bg-card text-card-foreground space-y-3">
+            <div className="rounded-lg border border-border/60 p-5 bg-card text-card-foreground space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-600 flex items-center justify-center text-white font-bold text-lg shadow-md">
+                <div className="w-10 h-10 rounded-lg bg-primary/15 border border-primary/25 flex items-center justify-center text-primary font-bold text-base">
                   ✓
                 </div>
                 <div>
-                  <h2 className="text-base font-bold">Todo Desktop</h2>
-                  <p className="text-xs text-muted-foreground">Professional commercial task manager for Windows</p>
+                  <h2 className="text-sm font-bold text-foreground">Todo Desktop</h2>
+                  <p className="text-xs text-muted-foreground">Productivity task manager for Windows</p>
                 </div>
               </div>
 
-              <div className="divide-y text-xs pt-2">
+              <div className="divide-y divide-border/50 text-xs pt-1">
                 <div className="py-2 flex justify-between">
                   <span className="text-muted-foreground">{t('settings:about.version')}</span>
-                  <span className="font-medium">{appInfo?.version || '1.0.0'}</span>
+                  <span className="font-medium text-foreground">{appInfo?.version || '1.0.0'}</span>
                 </div>
                 <div className="py-2 flex justify-between">
                   <span className="text-muted-foreground">{t('settings:about.electronVersion')}</span>
-                  <span className="font-medium">{appInfo?.electronVersion || '32.3.3'}</span>
+                  <span className="font-medium text-foreground">{appInfo?.electronVersion || '32.3.3'}</span>
                 </div>
                 <div className="py-2 flex justify-between">
                   <span className="text-muted-foreground">{t('settings:about.nodeVersion')}</span>
-                  <span className="font-medium">{appInfo?.nodeVersion || '20.18.1'}</span>
+                  <span className="font-medium text-foreground">{appInfo?.nodeVersion || '20.18.1'}</span>
                 </div>
                 <div className="py-2 flex justify-between">
                   <span className="text-muted-foreground">{t('settings:about.chromeVersion')}</span>
-                  <span className="font-medium">{appInfo?.chromeVersion || '128.0'}</span>
+                  <span className="font-medium text-foreground">{appInfo?.chromeVersion || '128.0'}</span>
                 </div>
                 <div className="py-2 flex justify-between">
                   <span className="text-muted-foreground">{t('settings:about.platform')}</span>
-                  <span className="font-medium">{appInfo?.platform || 'win32'}</span>
+                  <span className="font-medium text-foreground">{appInfo?.platform || 'win32'}</span>
                 </div>
                 {appInfo?.databasePath && (
                   <div className="py-2 flex justify-between gap-4">
                     <span className="text-muted-foreground shrink-0">{t('settings:about.databasePath')}</span>
-                    <span className="font-mono text-[11px] truncate">{appInfo.databasePath}</span>
+                    <span className="font-mono text-[11px] text-muted-foreground truncate">{appInfo.databasePath}</span>
                   </div>
                 )}
               </div>

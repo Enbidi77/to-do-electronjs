@@ -208,6 +208,7 @@ export interface IpcApi {
     backupDatabase(): Promise<BackupInfo>
     getBackups(): Promise<BackupInfo[]>
     restoreBackup(filename: string): Promise<void>
+    showNotification(options: { title: string; body: string; taskId?: string }): Promise<void>
   }
 
   // Event listeners (main → renderer)

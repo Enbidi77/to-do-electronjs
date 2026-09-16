@@ -85,25 +85,20 @@ export default function TagViewPage() {
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <div className="p-6 pb-2 shrink-0">
-        <div className="flex items-center gap-3 mb-4">
+      <div className="p-5 pb-2 shrink-0">
+        <div className="flex items-center gap-3 mb-3">
           <Badge
             variant="outline"
-            className="text-base py-1 px-3 font-semibold"
-            style={{
-              backgroundColor: `${tag.color || '#3b82f6'}20`,
-              color: tag.color || '#3b82f6',
-              borderColor: 'transparent'
-            }}
+            className="text-xs py-0.5 px-2.5 font-medium rounded-md border-border/60 bg-muted/40 text-foreground"
           >
             #{tag.name}
           </Badge>
-          <span className="text-sm text-muted-foreground">
+          <span className="text-xs text-muted-foreground">
             {t('tasks:tasksCount', { count: tasks.length })}
           </span>
         </div>
       </div>
-      <div className="flex-1 overflow-hidden p-6 pt-2">
+      <div className="flex-1 overflow-hidden p-5 pt-2">
         <TaskList
           tasks={tasks}
           isLoading={loading}

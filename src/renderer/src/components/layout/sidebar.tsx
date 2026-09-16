@@ -46,17 +46,20 @@ export function Sidebar() {
                 key={item.id}
                 variant="ghost"
                 className={cn(
-                  "w-full justify-start h-8 px-2 text-xs font-normal relative transition-colors",
+                  "w-full justify-start h-8 px-2.5 text-xs font-normal relative transition-colors rounded-md",
                   isActive
-                    ? "bg-sidebar-accent text-foreground font-medium shadow-none before:absolute before:left-0 before:top-1.5 before:bottom-1.5 before:w-0.5 before:rounded-r before:bg-primary"
-                    : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
+                    ? "bg-primary/12 text-foreground font-medium shadow-none before:absolute before:left-0 before:top-2 before:bottom-2 before:w-0.5 before:rounded-r before:bg-primary"
+                    : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
                 )}
                 onClick={() => setView(item.id)}
               >
-                <item.icon className="mr-2 h-3.5 w-3.5 shrink-0" />
+                <item.icon className={cn("mr-2.5 h-3.5 w-3.5 shrink-0 transition-colors", isActive ? "text-primary" : "text-muted-foreground")} />
                 <span className="truncate">{item.label}</span>
                 {typeof item.count === 'number' && item.count > 0 && (
-                  <span className="ml-auto text-[10px] text-muted-foreground font-mono px-1 rounded bg-muted/40">
+                  <span className={cn(
+                    "ml-auto text-[10px] font-mono px-1.5 py-0.5 rounded",
+                    isActive ? "text-primary bg-primary/15" : "text-muted-foreground bg-muted/60"
+                  )}>
                     {item.count}
                   </span>
                 )}
@@ -67,12 +70,12 @@ export function Sidebar() {
       </div>
 
       <div className="px-2 py-1 mt-3">
-        <div className="flex items-center justify-between px-2 mb-1 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider">
+        <div className="flex items-center justify-between px-2 mb-1 text-[11px] font-medium text-muted-foreground uppercase tracking-wider">
           <span>{t('navigation:projects')}</span>
           <Button
             variant="ghost"
             size="icon"
-            className="h-5 w-5 hover:bg-sidebar-accent text-muted-foreground hover:text-foreground"
+            className="h-5 w-5 hover:bg-muted/60 text-muted-foreground hover:text-foreground"
             title={t('navigation:addProject')}
             aria-label={t('navigation:addProject')}
             onClick={() => setProjectDialogOpen(true)}
@@ -88,16 +91,16 @@ export function Sidebar() {
                 key={project.id}
                 variant="ghost"
                 className={cn(
-                  "w-full justify-start h-8 px-2 text-xs font-normal relative transition-colors",
+                  "w-full justify-start h-8 px-2.5 text-xs font-normal relative transition-colors rounded-md",
                   isActive
-                    ? "bg-sidebar-accent text-foreground font-medium shadow-none before:absolute before:left-0 before:top-1.5 before:bottom-1.5 before:w-0.5 before:rounded-r before:bg-primary"
-                    : "text-muted-foreground hover:bg-sidebar-accent hover:text-foreground"
+                    ? "bg-primary/12 text-foreground font-medium shadow-none before:absolute before:left-0 before:top-2 before:bottom-2 before:w-0.5 before:rounded-r before:bg-primary"
+                    : "text-muted-foreground hover:bg-muted/60 hover:text-foreground"
                 )}
                 onClick={() => setView('project', project.id)}
               >
                 <div 
-                  className="mr-2 h-2 w-2 rounded-full shrink-0" 
-                  style={{ backgroundColor: project.color || '#3b82f6' }} 
+                  className="mr-2.5 h-2 w-2 rounded-full shrink-0" 
+                  style={{ backgroundColor: project.color || '#8ab4f8' }} 
                 />
                 <span className="truncate">{project.name}</span>
               </Button>
@@ -108,7 +111,7 @@ export function Sidebar() {
 
       {tags.length > 0 && (
         <div className="px-2 py-1 mt-3">
-          <div className="px-2 mb-1.5 text-[11px] font-semibold text-muted-foreground uppercase tracking-wider flex items-center gap-1">
+          <div className="px-2 mb-1.5 text-[11px] font-medium text-muted-foreground uppercase tracking-wider flex items-center gap-1">
             <Hash className="h-3 w-3" /> {t('navigation:tags')}
           </div>
           <div className="flex flex-wrap gap-1 px-2">
@@ -119,12 +122,9 @@ export function Sidebar() {
                 className={cn(
                   "px-2 py-0.5 text-[11px] rounded-md border transition-colors",
                   currentView === 'tag' && currentTagId === tag.id
-                    ? "bg-primary text-primary-foreground border-transparent font-medium"
-                    : "bg-transparent text-muted-foreground hover:bg-sidebar-accent hover:text-foreground border-border/60"
+                    ? "bg-primary/15 text-primary border-primary/30 font-medium"
+                    : "bg-muted/40 text-muted-foreground hover:bg-muted/70 hover:text-foreground border-border/40"
                 )}
-                style={{
-                  borderColor: currentView === 'tag' && currentTagId === tag.id ? undefined : `${tag.color || '#3b82f6'}40`
-                }}
                 onClick={() => setView('tag', tag.id)}
               >
                 #{tag.name}

@@ -106,9 +106,9 @@ export default function TodayPage() {
 
         {/* Progress Bar */}
         {totalToday > 0 && (
-          <div className="mt-2.5 w-full bg-muted/60 rounded-full h-1.5 overflow-hidden">
+          <div className="mt-2.5 w-full bg-muted/40 rounded-full h-1 overflow-hidden">
             <div
-              className="bg-primary h-1.5 rounded-full transition-all duration-500"
+              className="bg-primary h-1 rounded-full transition-all duration-300"
               style={{ width: `${completionPercent}%` }}
             />
           </div>
@@ -116,43 +116,43 @@ export default function TodayPage() {
 
         {/* Statistics Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2.5 mt-3.5">
-          <div className="p-3 rounded-lg border border-border/80 bg-card text-card-foreground flex items-center justify-between shadow-none">
+          <div className="p-3 rounded-lg border border-border/60 bg-card text-card-foreground flex items-center justify-between shadow-none">
             <div>
-              <span className="text-[11px] font-medium text-muted-foreground">{t('navigation:inbox')}</span>
-              <div className="text-xl font-bold mt-0.5">{stats?.active ?? 0}</div>
+              <div className="text-lg font-semibold tracking-tight text-foreground">{stats?.dueToday ?? 0}</div>
+              <span className="text-[11px] text-muted-foreground">{t('tasks:groups.today')}</span>
             </div>
-            <div className="h-8 w-8 rounded-md bg-blue-500/10 text-blue-500 flex items-center justify-center">
-              <Clock className="h-4 w-4" />
+            <div className="h-7 w-7 rounded-md bg-muted/40 text-muted-foreground flex items-center justify-center">
+              <Calendar className="h-3.5 w-3.5 text-primary" />
             </div>
           </div>
 
-          <div className="p-3 rounded-lg border border-border/80 bg-card text-card-foreground flex items-center justify-between shadow-none">
+          <div className="p-3 rounded-lg border border-border/60 bg-card text-card-foreground flex items-center justify-between shadow-none">
             <div>
-              <span className="text-[11px] font-medium text-muted-foreground">{t('tasks:completed')}</span>
-              <div className="text-xl font-bold mt-0.5">{stats?.completed ?? 0}</div>
+              <div className="text-lg font-semibold tracking-tight text-foreground">{stats?.completed ?? 0}</div>
+              <span className="text-[11px] text-muted-foreground">{t('tasks:completed')}</span>
             </div>
-            <div className="h-8 w-8 rounded-md bg-emerald-500/10 text-emerald-500 flex items-center justify-center">
-              <CheckCircle2 className="h-4 w-4" />
+            <div className="h-7 w-7 rounded-md bg-muted/40 text-muted-foreground flex items-center justify-center">
+              <CheckCircle2 className="h-3.5 w-3.5 text-success" />
             </div>
           </div>
 
-          <div className="p-3 rounded-lg border border-border/80 bg-card text-card-foreground flex items-center justify-between shadow-none">
+          <div className="p-3 rounded-lg border border-border/60 bg-card text-card-foreground flex items-center justify-between shadow-none">
             <div>
-              <span className="text-[11px] font-medium text-muted-foreground">{t('tasks:groups.overdue')}</span>
-              <div className="text-xl font-bold mt-0.5 text-rose-500">{stats?.overdue ?? 0}</div>
+              <div className="text-lg font-semibold tracking-tight text-foreground">{stats?.overdue ?? 0}</div>
+              <span className="text-[11px] text-muted-foreground">{t('tasks:groups.overdue')}</span>
             </div>
-            <div className="h-8 w-8 rounded-md bg-rose-500/10 text-rose-500 flex items-center justify-center">
-              <AlertCircle className="h-4 w-4" />
+            <div className="h-7 w-7 rounded-md bg-muted/40 text-muted-foreground flex items-center justify-center">
+              <AlertCircle className="h-3.5 w-3.5 text-destructive" />
             </div>
           </div>
 
-          <div className="p-3 rounded-lg border border-border/80 bg-card text-card-foreground flex items-center justify-between shadow-none">
+          <div className="p-3 rounded-lg border border-border/60 bg-card text-card-foreground flex items-center justify-between shadow-none">
             <div>
-              <span className="text-[11px] font-medium text-muted-foreground">{t('tasks:groups.today')}</span>
-              <div className="text-xl font-bold mt-0.5">{stats?.dueToday ?? 0}</div>
+              <div className="text-lg font-semibold tracking-tight text-foreground">{stats?.dueThisWeek ?? 0}</div>
+              <span className="text-[11px] text-muted-foreground">{t('navigation:upcoming')}</span>
             </div>
-            <div className="h-8 w-8 rounded-md bg-amber-500/10 text-amber-500 flex items-center justify-center">
-              <Calendar className="h-4 w-4" />
+            <div className="h-7 w-7 rounded-md bg-muted/40 text-muted-foreground flex items-center justify-center">
+              <Clock className="h-3.5 w-3.5 text-warning" />
             </div>
           </div>
         </div>

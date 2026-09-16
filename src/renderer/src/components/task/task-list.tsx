@@ -54,8 +54,8 @@ export function TaskList({ tasks, isLoading, onComplete, onDelete, title }: Task
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {title && (
-        <div className="flex items-center justify-between px-3.5 py-1.5 border-b border-border/80 shrink-0 bg-background">
-          <h2 className="font-semibold text-sm tracking-tight text-foreground">{title}</h2>
+        <div className="flex items-center justify-between px-3.5 py-1.5 border-b border-border/60 shrink-0 bg-background">
+          <h2 className="font-semibold text-xs tracking-tight text-foreground">{title}</h2>
           <div className="flex items-center gap-1">
             <Button
               variant="ghost"

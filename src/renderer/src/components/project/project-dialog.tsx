@@ -84,7 +84,7 @@ export function ProjectDialog({ open, onOpenChange, project }: ProjectDialogProp
               {PROJECT_COLORS.map((hex) => (
                 <button
                   key={hex}
-                  className={`w-5 h-5 rounded-full cursor-pointer transition-transform ${color === hex ? 'ring-2 ring-offset-2 ring-primary scale-110' : 'hover:scale-105'}`}
+                  className={`w-5 h-5 rounded-full cursor-pointer transition-transform ${color === hex ? 'ring-2 ring-offset-2 ring-offset-background ring-primary scale-110' : 'hover:scale-105'}`}
                   style={{ backgroundColor: hex }}
                   onClick={() => setColor(hex)}
                   type="button"

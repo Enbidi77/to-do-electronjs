@@ -76,10 +76,10 @@ export default function CompletedPage() {
 
   return (
     <div className="flex flex-col h-full overflow-hidden">
-      <div className="p-6 pb-2 shrink-0 flex items-center justify-between border-b">
+      <div className="p-5 pb-2 shrink-0 flex items-center justify-between border-b border-border/60">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">{t('navigation:completed')}</h1>
-          <p className="text-sm text-muted-foreground">
+          <h1 className="text-xl font-bold tracking-tight text-foreground">{t('navigation:completed')}</h1>
+          <p className="text-xs text-muted-foreground mt-0.5">
             {t('tasks:tasksCount', { count: tasks.length })}
           </p>
         </div>
@@ -87,10 +87,10 @@ export default function CompletedPage() {
           <Button
             variant="outline"
             size="sm"
-            className="text-destructive hover:bg-destructive/10"
+            className="text-destructive hover:bg-destructive/15 border-border/70"
             onClick={handleClearAll}
           >
-            <Trash2 className="mr-1.5 h-4 w-4" /> {t('common:actions.clearAll')}
+            <Trash2 className="mr-1.5 h-3.5 w-3.5" /> {t('common:actions.clearAll')}
           </Button>
         )}
       </div>

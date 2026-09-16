@@ -32,8 +32,8 @@ export function SearchBar() {
 
   return (
     <Dialog open={searchOpen} onOpenChange={setSearchOpen}>
-      <DialogContent className="sm:max-w-[550px] p-0 overflow-hidden [&>button]:hidden rounded-lg border border-border/80 shadow-2xl bg-card">
-        <div className="flex items-center px-4 border-b border-border/80">
+      <DialogContent className="sm:max-w-[550px] p-0 overflow-hidden [&>button]:hidden rounded-xl border border-border shadow-2xl bg-popover text-popover-foreground">
+        <div className="flex items-center px-4 border-b border-border">
           <Search className="h-4 w-4 text-muted-foreground mr-2.5 shrink-0" />
           <Input 
             value={query}
@@ -62,9 +62,9 @@ export function SearchBar() {
                     openDetails(task.id)
                     setSearchOpen(false)
                   }}
-                  className="px-3 py-2 hover:bg-muted/60 rounded-md cursor-pointer flex flex-col gap-0.5 transition-colors"
+                  className="px-3 py-2 hover:bg-muted/60 rounded-md cursor-pointer flex flex-col gap-0.5 transition-colors text-xs"
                 >
-                  <div className={`text-xs font-medium ${task.completedAt ? 'line-through text-muted-foreground/80' : 'text-foreground'}`}>
+                  <div className={`font-medium ${task.completedAt ? 'line-through text-muted-foreground' : 'text-foreground'}`}>
                     {task.title}
                   </div>
                   {task.description && (

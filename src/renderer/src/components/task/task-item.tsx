@@ -41,17 +41,17 @@ export const TaskItem = memo(function TaskItem({ task, onComplete, onSelect, onD
     <div
       onClick={() => onSelect(task.id)}
       className={cn(
-        "group flex items-center gap-2.5 px-3.5 py-2 border-b border-border/60 cursor-pointer transition-colors select-none text-xs",
-        "hover:bg-muted/40",
-        isSelected && "bg-accent/50 text-foreground border-l-2 border-l-primary pl-[12px]",
-        task.completedAt && "bg-muted/10 opacity-75"
+        "group flex items-center gap-2.5 px-3.5 py-2 border-b border-border/50 cursor-pointer transition-colors select-none text-xs",
+        "hover:bg-muted/30",
+        isSelected && "bg-primary/10 text-foreground border-l-2 border-l-primary pl-[12px]",
+        task.completedAt && "opacity-65"
       )}
     >
       <div onClick={handleCheckboxClick} className="shrink-0 flex items-center justify-center">
         <Checkbox
           checked={!!task.completedAt}
           aria-label={task.completedAt ? t('tasks:reopen') : t('tasks:complete')}
-          className="h-4 w-4 rounded-[4px]"
+          className="h-4 w-4"
         />
       </div>
 
@@ -63,13 +63,13 @@ export const TaskItem = memo(function TaskItem({ task, onComplete, onSelect, onD
 
       <div className="flex-1 min-w-0 pr-2">
         <div className={cn(
-          "truncate text-xs font-normal tracking-tight transition-colors",
-          task.completedAt ? "line-through text-muted-foreground/80 font-normal" : "text-foreground font-medium"
+          "truncate text-xs tracking-tight transition-colors",
+          task.completedAt ? "line-through text-muted-foreground font-normal" : "text-foreground font-medium"
         )}>
           {task.title}
         </div>
         {task.description && !task.completedAt && (
-          <div className="truncate text-[11px] text-muted-foreground/80 mt-0.5 font-normal">
+          <div className="truncate text-[11px] text-muted-foreground mt-0.5 font-normal">
             {task.description}
           </div>
         )}
@@ -80,10 +80,10 @@ export const TaskItem = memo(function TaskItem({ task, onComplete, onSelect, onD
           <Badge 
             variant="outline" 
             className={cn(
-              "text-[11px] font-normal px-1.5 py-0 h-5 border-border/80",
-              isOverdue ? "text-destructive border-destructive/40 bg-destructive/5 font-medium" :
-              isDueToday ? "text-amber-600 dark:text-amber-400 border-amber-500/40 bg-amber-500/5 font-medium" : 
-              "text-muted-foreground bg-background/50"
+              "text-[11px] font-normal px-1.5 py-0 h-5 border-border/60",
+              isOverdue ? "text-destructive border-destructive/30 bg-destructive/10 font-medium" :
+              isDueToday ? "text-warning border-warning/30 bg-warning/10 font-medium" : 
+              "text-muted-foreground bg-muted/20"
             )}
           >
             {formatRelativeDueDate(task.dueDate)}
@@ -94,7 +94,7 @@ export const TaskItem = memo(function TaskItem({ task, onComplete, onSelect, onD
           <Button
             variant="ghost"
             size="icon"
-            className="h-6 w-6 text-muted-foreground hover:text-foreground hover:bg-muted"
+            className="h-6 w-6 text-muted-foreground hover:text-foreground hover:bg-muted/60"
             title={t('common:actions.edit')}
             aria-label={t('common:actions.edit')}
             onClick={(e) => {
@@ -107,7 +107,7 @@ export const TaskItem = memo(function TaskItem({ task, onComplete, onSelect, onD
           <Button
             variant="ghost"
             size="icon"
-            className="h-6 w-6 text-destructive/80 hover:text-destructive hover:bg-destructive/10"
+            className="h-6 w-6 text-destructive hover:bg-destructive/15"
             title={t('common:actions.delete')}
             aria-label={t('common:actions.delete')}
             onClick={handleDelete}

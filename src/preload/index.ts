@@ -88,7 +88,9 @@ const api: IpcApi = {
     importData: (filePath: string) => ipcRenderer.invoke(IPC_CHANNELS.APP_IMPORT_DATA, filePath),
     backupDatabase: () => ipcRenderer.invoke(IPC_CHANNELS.APP_BACKUP_DATABASE),
     getBackups: () => ipcRenderer.invoke(IPC_CHANNELS.APP_GET_BACKUPS),
-    restoreBackup: (filename: string) => ipcRenderer.invoke(IPC_CHANNELS.APP_RESTORE_BACKUP, filename)
+    restoreBackup: (filename: string) => ipcRenderer.invoke(IPC_CHANNELS.APP_RESTORE_BACKUP, filename),
+    showNotification: (options: { title: string; body: string; taskId?: string }) =>
+      ipcRenderer.invoke(IPC_CHANNELS.APP_SHOW_NOTIFICATION, options)
   },
   on: {
     taskUpdated: (callback: (task: Task) => void) => {

@@ -83,53 +83,53 @@ export function QuickAddDialog({ standalone = false }: QuickAddDialogProps) {
   }
 
   const content = (
-    <div className="bg-card rounded-xl shadow-2xl border border-border/80 flex flex-col overflow-hidden w-full">
+    <div className="bg-popover text-popover-foreground rounded-xl shadow-2xl border border-border flex flex-col overflow-hidden w-full">
       <Input
         value={input}
         onChange={e => setInput(e.target.value)}
         onKeyDown={handleKeyDown}
         placeholder={t('tasks:quickAddPlaceholder')}
-        className="text-sm border-0 focus-visible:ring-0 p-4 h-auto shadow-none text-foreground placeholder:text-muted-foreground"
+        className="text-sm border-0 focus-visible:ring-0 p-4 h-auto shadow-none text-foreground placeholder:text-muted-foreground bg-transparent"
         autoFocus
       />
 
       {input.trim() && (
-        <div className="bg-muted/30 p-2.5 border-t border-border/60 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
+        <div className="bg-muted/40 p-2.5 border-t border-border/60 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
           <span className="text-foreground font-medium truncate max-w-[180px]">
             {parsed.title || '...'}
           </span>
 
           {parsed.dueDate && (
-            <Badge variant="outline" className="gap-1 bg-background text-[11px] h-5 border-border/80">
-              <Calendar className="h-3 w-3 text-blue-500" />
+            <Badge variant="outline" className="gap-1 bg-muted/30 text-[11px] h-5 border-border/60 text-foreground font-normal">
+              <Calendar className="h-3 w-3 text-primary" />
               {formatRelativeDueDate(parsed.dueDate)}
-              {parsed.dueTime && ` lúc ${parsed.dueTime}`}
+              {parsed.dueTime && ` ${parsed.dueTime}`}
             </Badge>
           )}
 
           {parsed.projectName && (
-            <Badge variant="outline" className="gap-1 bg-background text-[11px] h-5 border-border/80">
-              <Folder className="h-3 w-3 text-emerald-500" />
+            <Badge variant="outline" className="gap-1 bg-muted/30 text-[11px] h-5 border-border/60 text-foreground font-normal">
+              <Folder className="h-3 w-3 text-success" />
               {parsed.projectName}
             </Badge>
           )}
 
           {parsed.tags.map(tag => (
-            <Badge key={tag} variant="outline" className="gap-1 bg-background text-[11px] h-5 border-border/80">
-              <TagIcon className="h-3 w-3 text-amber-500" />
+            <Badge key={tag} variant="outline" className="gap-1 bg-muted/30 text-[11px] h-5 border-border/60 text-foreground font-normal">
+              <TagIcon className="h-3 w-3 text-warning" />
               {tag}
             </Badge>
           ))}
 
           {parsed.priority !== 'none' && (
-            <Badge variant="outline" className="gap-1 bg-background text-[11px] h-5 border-border/80">
-              <Flag className="h-3 w-3 text-rose-500" />
+            <Badge variant="outline" className="gap-1 bg-muted/30 text-[11px] h-5 border-border/60 text-foreground font-normal">
+              <Flag className="h-3 w-3 text-destructive" />
               {t(`tasks:priorities.${parsed.priority}`)}
             </Badge>
           )}
 
           <div className="flex-1" />
-          <span className="text-[10px] text-muted-foreground/70">
+          <span className="text-[10px] text-muted-foreground/80">
             {t('common:shortcuts.pressEnterToSave')} • {t('common:shortcuts.escToCancel')}
           </span>
         </div>
