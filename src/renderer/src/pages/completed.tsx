@@ -23,6 +23,7 @@ export default function CompletedPage() {
           sort: { field: 'updatedAt', direction: 'desc' }
         })
         setTasks(data)
+        useTaskStore.getState().setTasks(data)
       }
     } catch (err) {
       console.error('Failed to load completed tasks', err)

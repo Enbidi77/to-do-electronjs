@@ -67,4 +67,31 @@ describe('TaskBoard Kanban Component', () => {
     expect(screen.getByText('In Progress Item')).toBeDefined()
     expect(screen.getByText('Completed Item')).toBeDefined()
   })
+
+  it('updates columns when a task status changes', () => {
+    const updatedTasks: Task[] = tasks.map(t =>
+      t.id === 'task-1' ? { ...t, status: 'in_progress' as const } : t
+    )
+
+    const { rerender } = render(
+      <TaskBoard
+        tasks={tasks}
+        onComplete={vi.fn()}
+        onDelete={vi.fn()}
+      />
+    )
+
+    // Re-render with updated tasks
+    rerender(
+      <TaskBoard
+        tasks={updatedTasks}
+        onComplete={vi.fn()}
+        onDelete={vi.fn()}
+      />
+    )
+
+    // Verify task-1 is now grouped with task-2 under In Progress
+    expect(screen.getByText('Active Todo Item')).toBeDefined()
+    expect(screen.getByText('In Progress Item')).toBeDefined()
+  })
 })

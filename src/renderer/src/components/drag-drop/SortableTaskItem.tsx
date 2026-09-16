@@ -6,6 +6,7 @@ import { TaskItem } from '@/components/task/task-item'
 import { DropIndicator, DropIndicatorPosition } from './DropIndicator'
 import { isCircularSubtask } from '@/lib/ordering'
 import { useTaskStore } from '@/stores/task-store'
+import { useTaskDnd } from './TaskDndContext'
 
 interface SortableTaskItemProps {
   task: Task
@@ -31,6 +32,7 @@ export const SortableTaskItem = memo(function SortableTaskItem({
   const itemRef = useRef<HTMLDivElement>(null)
   const [dropPosition, setDropPosition] = useState<DropIndicatorPosition>('none')
   const allTasks = useTaskStore(s => s.tasks)
+  const { setDropIntent } = useTaskDnd()
 
   const isInvalidDrop = useMemo(() => {
     if (!activeTaskId || activeTaskId === task.id) return false
@@ -63,7 +65,10 @@ export const SortableTaskItem = memo(function SortableTaskItem({
 
   const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
     if (!activeTaskId || activeTaskId === task.id || !itemRef.current) {
-      if (dropPosition !== 'none') setDropPosition('none')
+      if (dropPosition !== 'none') {
+        setDropPosition('none')
+        setDropIntent('none')
+      }
       return
     }
 
@@ -74,17 +79,22 @@ export const SortableTaskItem = memo(function SortableTaskItem({
     // Top 25%: reorder above
     // Middle 50%: make subtask (unless invalid)
     // Bottom 25%: reorder below
+    let newPos: DropIndicatorPosition = 'none'
     if (relativeY < height * 0.25) {
-      setDropPosition('top')
+      newPos = 'top'
     } else if (relativeY > height * 0.75) {
-      setDropPosition('bottom')
+      newPos = 'bottom'
     } else {
-      setDropPosition('subtask')
+      newPos = 'subtask'
     }
+
+    setDropPosition(newPos)
+    setDropIntent(newPos)
   }
 
   const handlePointerLeave = () => {
     setDropPosition('none')
+    setDropIntent('none')
   }
 
   const indicatorPos: DropIndicatorPosition =

@@ -22,16 +22,22 @@ import { toast } from 'sonner'
 import { isCircularSubtask, calculateFractionalSortOrder } from '@/lib/ordering'
 import { format, addDays } from 'date-fns'
 
+import { DropIndicatorPosition } from './DropIndicator'
+
 interface TaskDndContextType {
   activeTaskId: string | null
   activeTask: Task | null
   isDragging: boolean
+  dropIntent: DropIndicatorPosition
+  setDropIntent: (intent: DropIndicatorPosition) => void
 }
 
 const TaskDndStateContext = createContext<TaskDndContextType>({
   activeTaskId: null,
   activeTask: null,
-  isDragging: false
+  isDragging: false,
+  dropIntent: 'none',
+  setDropIntent: () => {}
 })
 
 export function useTaskDnd() {
@@ -44,10 +50,15 @@ interface TaskDndProviderProps {
 
 export function TaskDndProvider({ children }: TaskDndProviderProps) {
   const [activeTask, setActiveTask] = useState<Task | null>(null)
+  const [dropIntent, setDropIntent] = useState<DropIndicatorPosition>('none')
   const allTasks = useTaskStore(s => s.tasks)
   const updateTask = useTaskStore(s => s.updateTask)
   const completeTask = useTaskStore(s => s.completeTask)
   const uncompleteTask = useTaskStore(s => s.uncompleteTask)
+  const changeTaskStatus = useTaskStore(s => s.changeTaskStatus)
+  const moveTask = useTaskStore(s => s.moveTask)
+  const reorderTask = useTaskStore(s => s.reorderTask)
+  const makeSubtask = useTaskStore(s => s.makeSubtask)
   const projects = useProjectStore(s => s.projects)
 
   // Configure sensors with activation constraints to distinguish clicks from drags
@@ -105,7 +116,14 @@ export function TaskDndProvider({ children }: TaskDndProviderProps) {
 
     const restoreSnapshot = async (msg: string) => {
       try {
+        if (previousSnapshot.status && previousSnapshot.status !== activeTaskData.status) {
+          await changeTaskStatus({ taskId: sourceTaskId, status: previousSnapshot.status })
+        }
+        if (previousSnapshot.projectId !== undefined && previousSnapshot.projectId !== activeTaskData.projectId) {
+          await moveTask({ taskId: sourceTaskId, targetProjectId: previousSnapshot.projectId })
+        }
         await updateTask(sourceTaskId, previousSnapshot)
+        useTaskStore.getState().notifyTaskChanged()
         toast.info(msg)
       } catch (err) {
         console.error('Failed to undo', err)
@@ -121,11 +139,7 @@ export function TaskDndProvider({ children }: TaskDndProviderProps) {
       const projectName = targetProject?.name || 'Project'
 
       try {
-        if (window.api?.tasks?.move) {
-          await window.api.tasks.move({ taskId: sourceTaskId, targetProjectId })
-        } else {
-          await updateTask(sourceTaskId, { projectId: targetProjectId, parentTaskId: null })
-        }
+        await moveTask({ taskId: sourceTaskId, targetProjectId })
         useTaskStore.getState().notifyTaskChanged()
         toast.success(`Moved to "${projectName}"`, {
           action: {
@@ -166,11 +180,7 @@ export function TaskDndProvider({ children }: TaskDndProviderProps) {
         if (activeTaskData.projectId === null) return
 
         try {
-          if (window.api?.tasks?.move) {
-            await window.api.tasks.move({ taskId: sourceTaskId, targetProjectId: null })
-          } else {
-            await updateTask(sourceTaskId, { projectId: null })
-          }
+          await moveTask({ taskId: sourceTaskId, targetProjectId: null })
           useTaskStore.getState().notifyTaskChanged()
           toast.success('Moved to Inbox', {
             action: {
@@ -212,18 +222,7 @@ export function TaskDndProvider({ children }: TaskDndProviderProps) {
       if (activeTaskData.status === targetStatus) return
 
       try {
-        if (window.api?.tasks?.changeStatus) {
-          await window.api.tasks.changeStatus({ taskId: sourceTaskId, status: targetStatus })
-        } else {
-          if (targetStatus === 'completed') {
-            await completeTask(sourceTaskId)
-          } else {
-            if (activeTaskData.status === 'completed') {
-              await uncompleteTask(sourceTaskId)
-            }
-            await updateTask(sourceTaskId, { status: targetStatus })
-          }
-        }
+        await changeTaskStatus({ taskId: sourceTaskId, status: targetStatus })
         useTaskStore.getState().notifyTaskChanged()
         const statusLabel = targetStatus === 'in_progress' ? 'In Progress' : targetStatus === 'completed' ? 'Done' : 'To Do'
         toast.success(`Status changed to ${statusLabel}`, {
@@ -298,12 +297,33 @@ export function TaskDndProvider({ children }: TaskDndProviderProps) {
       return
     }
 
-    // 5. Dropped onto another task (Reordering or Subtask creation)
+    // 6. Dropped onto another task (Reordering or Subtask creation)
     const overTask = allTasks.find(t => t.id === overId)
     if (overTask && overTask.id !== sourceTaskId) {
-      const isCircular = isCircularSubtask(sourceTaskId, overTask.id, allTasks)
-      if (isCircular) {
-        toast.error('Cannot nest task inside its own subtask')
+      // If dropped onto a task with different status (e.g. In Progress column in board view), update status
+      if (overTask.status !== activeTaskData.status) {
+        await changeTaskStatus({ taskId: sourceTaskId, status: overTask.status })
+      }
+
+      if (dropIntent === 'subtask') {
+        const isCircular = isCircularSubtask(sourceTaskId, overTask.id, allTasks)
+        if (isCircular) {
+          toast.error('Cannot nest task inside its own subtask')
+          return
+        }
+
+        try {
+          await makeSubtask({ taskId: sourceTaskId, parentTaskId: overTask.id })
+          useTaskStore.getState().notifyTaskChanged()
+          toast.success(`Made subtask of "${overTask.title}"`, {
+            action: {
+              label: 'Undo',
+              onClick: () => restoreSnapshot('Restored task hierarchy')
+            }
+          })
+        } catch (err: any) {
+          toast.error(err.message || 'Failed to create subtask')
+        }
         return
       }
 
@@ -332,36 +352,31 @@ export function TaskDndProvider({ children }: TaskDndProviderProps) {
       const { newSortOrder } = calculateFractionalSortOrder(aboveOrder, belowOrder)
 
       try {
-        if (window.api?.tasks?.reorderTask) {
-          await window.api.tasks.reorderTask({
-            taskId: sourceTaskId,
-            targetSortOrder: newSortOrder,
-            parentTaskId: overTask.parentTaskId,
-            projectId: overTask.projectId
-          })
-        } else {
-          await updateTask(sourceTaskId, {
-            sortOrder: newSortOrder,
-            parentTaskId: overTask.parentTaskId,
-            projectId: overTask.projectId
-          })
-        }
+        await reorderTask({
+          taskId: sourceTaskId,
+          targetSortOrder: newSortOrder,
+          parentTaskId: overTask.parentTaskId,
+          projectId: overTask.projectId
+        })
         useTaskStore.getState().notifyTaskChanged()
       } catch (err: any) {
         console.error('Failed to reorder task', err)
       }
     }
-  }, [allTasks, updateTask, completeTask, uncompleteTask, projects])
+  }, [allTasks, updateTask, completeTask, uncompleteTask, changeTaskStatus, moveTask, reorderTask, makeSubtask, projects, dropIntent])
 
   const handleDragCancel = useCallback(() => {
     setActiveTask(null)
+    setDropIntent('none')
   }, [])
 
   const contextValue = useMemo(() => ({
     activeTaskId: activeTask?.id ?? null,
     activeTask,
-    isDragging: activeTask !== null
-  }), [activeTask])
+    isDragging: activeTask !== null,
+    dropIntent,
+    setDropIntent
+  }), [activeTask, dropIntent])
 
   return (
     <TaskDndStateContext.Provider value={contextValue}>

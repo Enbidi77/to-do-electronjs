@@ -19,6 +19,7 @@ export interface TaskState {
   stats: TaskStats | null
   tasksVersion: number
 
+  setTasks: (tasks: Task[]) => void
   fetchTasks: (options?: any) => Promise<void>
   fetchStats: () => Promise<void>
   notifyTaskChanged: () => void
@@ -46,6 +47,8 @@ export const useTaskStore = create<TaskState>((set, get) => ({
   sort: { field: 'createdAt', direction: 'desc' } as TaskSort,
   stats: null,
   tasksVersion: 0,
+
+  setTasks: (tasks) => set({ tasks }),
 
   fetchTasks: async (options) => {
     set({ loading: true, error: null })
@@ -244,7 +247,13 @@ export const useTaskStore = create<TaskState>((set, get) => ({
     // Optimistic local update
     set((state) => ({
       tasks: state.tasks.map((t) =>
-        t.id === input.taskId ? { ...t, status: input.status } : t
+        t.id === input.taskId
+          ? {
+              ...t,
+              status: input.status,
+              completedAt: input.status === 'completed' ? (t.completedAt || new Date().toISOString()) : null
+            }
+          : t
       ),
       tasksVersion: state.tasksVersion + 1
     }))

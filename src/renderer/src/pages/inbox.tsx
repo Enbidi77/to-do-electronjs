@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { TaskEditor } from '@/components/task/task-editor'
 import { TaskList } from '@/components/task/task-list'
 import { TaskBoard } from '@/components/task/task-board'
-import type { Task } from '@shared/types'
+import type { Task, TaskStatus } from '@shared/types'
 import { useTranslation } from 'react-i18next'
 import { useTaskStore } from '@/stores/task-store'
 import { useUiStore } from '@/stores/ui-store'
@@ -10,7 +10,8 @@ import { toast } from 'sonner'
 
 export default function InboxPage() {
   const { t } = useTranslation(['navigation', 'notifications', 'errors', 'common'])
-  const [tasks, setTasks] = useState<Task[]>([])
+  const tasks = useTaskStore(s => s.tasks)
+  const setTasks = useTaskStore(s => s.setTasks)
   const [loading, setLoading] = useState(true)
   const tasksVersion = useTaskStore(s => s.tasksVersion)
   const taskViewMode = useUiStore(s => s.taskViewMode)
@@ -21,8 +22,12 @@ export default function InboxPage() {
   const fetchTasks = useCallback(async () => {
     try {
       if (window.api?.tasks?.list) {
+        const statusFilter: TaskStatus[] = taskViewMode === 'board'
+          ? ['active', 'in_progress', 'completed']
+          : ['active', 'in_progress']
+
         const data = await window.api.tasks.list({
-          filter: { status: 'active', projectId: null },
+          filter: { status: statusFilter, projectId: null },
           sort: { field: 'sortOrder', direction: 'desc' }
         })
         setTasks(data)
@@ -32,11 +37,11 @@ export default function InboxPage() {
     } finally {
       setLoading(false)
     }
-  }, [])
+  }, [taskViewMode, setTasks])
 
   useEffect(() => {
     fetchTasks()
-  }, [fetchTasks, tasksVersion])
+  }, [fetchTasks, tasksVersion, taskViewMode])
 
   const handleComplete = async (id: string, completed: boolean) => {
     try {

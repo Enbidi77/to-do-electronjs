@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from 'react'
 import { TaskList } from '@/components/task/task-list'
 import { TaskBoard } from '@/components/task/task-board'
-import type { Task, TaskStats } from '@shared/types'
+import type { Task, TaskStats, TaskStatus } from '@shared/types'
 import { useTranslation } from 'react-i18next'
 import { useTaskStore } from '@/stores/task-store'
 import { useUiStore } from '@/stores/ui-store'
@@ -12,9 +12,11 @@ import { formatHeaderDate } from '@/lib/date-format'
 export default function TodayPage() {
   const { t } = useTranslation(['navigation', 'tasks', 'common', 'notifications', 'errors'])
   const [stats, setStats] = useState<TaskStats | null>(null)
-  const [tasks, setTasks] = useState<Task[]>([])
+  const tasks = useTaskStore(s => s.tasks)
+  const setTasks = useTaskStore(s => s.setTasks)
   const [loading, setLoading] = useState(true)
   const tasksVersion = useTaskStore(s => s.tasksVersion)
+  const taskViewMode = useUiStore(s => s.taskViewMode)
   const completeTask = useTaskStore(s => s.completeTask)
   const uncompleteTask = useTaskStore(s => s.uncompleteTask)
   const deleteTask = useTaskStore(s => s.deleteTask)
@@ -29,10 +31,14 @@ export default function TodayPage() {
       }
 
       if (window.api?.tasks?.list) {
-        // Fetch active tasks due today or overdue
+        const statusFilter: TaskStatus[] = taskViewMode === 'board'
+          ? ['active', 'in_progress', 'completed']
+          : ['active', 'in_progress']
+
+        // Fetch tasks due today or overdue
         const data = await window.api.tasks.list({
           filter: {
-            status: 'active',
+            status: statusFilter,
             dueDateTo: todayStr
           },
           sort: {
@@ -47,11 +53,11 @@ export default function TodayPage() {
     } finally {
       setLoading(false)
     }
-  }, [todayStr])
+  }, [todayStr, taskViewMode, setTasks])
 
   useEffect(() => {
     loadData()
-  }, [loadData, tasksVersion])
+  }, [loadData, tasksVersion, taskViewMode])
 
   const handleComplete = async (id: string, completed: boolean) => {
     try {
@@ -89,8 +95,6 @@ export default function TodayPage() {
 
   const totalToday = (stats?.dueToday ?? 0) + (stats?.completed ?? 0)
   const completionPercent = totalToday > 0 ? Math.round(((stats?.completed ?? 0) / totalToday) * 100) : 0
-
-  const taskViewMode = useUiStore(s => s.taskViewMode)
 
   return (
     <div className="flex flex-col h-full overflow-hidden">

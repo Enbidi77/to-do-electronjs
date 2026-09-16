@@ -2,7 +2,7 @@ import { useEffect, useState, useCallback } from 'react'
 import { TaskList } from '@/components/task/task-list'
 import { TaskBoard } from '@/components/task/task-board'
 import { TaskEditor } from '@/components/task/task-editor'
-import type { Task } from '@shared/types'
+import type { Task, TaskStatus } from '@shared/types'
 import { useUiStore } from '@/stores/ui-store'
 import { useProjectStore } from '@/stores/project-store'
 import { useTaskStore } from '@/stores/task-store'
@@ -20,7 +20,8 @@ export default function ProjectViewPage() {
   const deleteTask = useTaskStore(s => s.deleteTask)
   const tasksVersion = useTaskStore(s => s.tasksVersion)
 
-  const [tasks, setTasks] = useState<Task[]>([])
+  const tasks = useTaskStore(s => s.tasks)
+  const setTasks = useTaskStore(s => s.setTasks)
   const [loading, setLoading] = useState(true)
 
   const fetchTasks = useCallback(async () => {
@@ -32,8 +33,12 @@ export default function ProjectViewPage() {
 
     try {
       if (window.api?.tasks?.list) {
+        const statusFilter: TaskStatus[] = taskViewMode === 'board'
+          ? ['active', 'in_progress', 'completed']
+          : ['active', 'in_progress']
+
         const data = await window.api.tasks.list({
-          filter: { status: 'active', projectId: currentProjectId },
+          filter: { status: statusFilter, projectId: currentProjectId },
           sort: { field: 'sortOrder', direction: 'desc' }
         })
         setTasks(data)
@@ -43,11 +48,11 @@ export default function ProjectViewPage() {
     } finally {
       setLoading(false)
     }
-  }, [currentProjectId])
+  }, [currentProjectId, taskViewMode, setTasks])
 
   useEffect(() => {
     fetchTasks()
-  }, [fetchTasks, tasksVersion])
+  }, [fetchTasks, tasksVersion, taskViewMode])
 
   const handleComplete = async (id: string, completed: boolean) => {
     try {

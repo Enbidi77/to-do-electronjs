@@ -34,10 +34,11 @@ export default function UpcomingPage() {
     try {
       if (window.api?.tasks?.list) {
         const data = await window.api.tasks.list({
-          filter: { status: 'active' },
+          filter: { status: ['active', 'in_progress'] },
           sort: { field: 'dueDate', direction: 'asc' }
         })
         setTasks(data)
+        useTaskStore.getState().setTasks(data)
       }
     } catch (err) {
       console.error('Failed to load upcoming tasks', err)

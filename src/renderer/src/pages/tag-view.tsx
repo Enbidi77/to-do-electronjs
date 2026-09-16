@@ -31,10 +31,11 @@ export default function TagViewPage() {
     try {
       if (window.api?.tasks?.list) {
         const data = await window.api.tasks.list({
-          filter: { status: 'active', tagId: currentTagId },
+          filter: { status: ['active', 'in_progress'], tagId: currentTagId },
           sort: { field: 'sortOrder', direction: 'desc' }
         })
         setTasks(data)
+        useTaskStore.getState().setTasks(data)
       }
     } catch (err) {
       console.error('Failed to load tagged tasks', err)
