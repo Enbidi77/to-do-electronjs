@@ -1,0 +1,20 @@
+{
+  "reminder": "Lời nhắc",
+  "reminders": "Lời nhắc",
+  "snooze": "Báo lại",
+  "snoozed": "Đã báo lại",
+  "dueNow": "Đến hạn ngay bây giờ",
+  "openTask": "Mở công việc",
+  "completeTask": "Hoàn thành công việc",
+  "enableReminder": "Bật lời nhắc",
+  "reminderTime": "Thời gian nhắc",
+  "snoozeDurations": {
+    "5m": "5 phút",
+    "10m": "10 phút",
+    "15m": "15 phút",
+    "30m": "30 phút",
+    "1h": "1 giờ",
+    "1d": "1 ngày"
+  }
+}
+

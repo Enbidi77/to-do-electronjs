@@ -1,0 +1,76 @@
+{
+  "title": "Cài đặt",
+  "subtitle": "Quản lý tùy chọn ứng dụng và dữ liệu của bạn",
+  "tabs": {
+    "general": "Chung",
+    "notifications": "Thông báo",
+    "appearance": "Giao diện",
+    "language": "Ngôn ngữ",
+    "window": "Cửa sổ",
+    "data": "Dữ liệu & Sao lưu",
+    "about": "Giới thiệu"
+  },
+  "general": {
+    "startWithWindows": "Khởi động cùng Windows",
+    "startWithWindowsDesc": "Tự động khởi chạy Todo khi máy tính bật",
+    "closeToTray": "Đóng vào khay hệ thống",
+    "closeToTrayDesc": "Giữ ứng dụng và bộ lên lịch lời nhắc hoạt động trong khay hệ thống khi đóng cửa sổ",
+    "confirmBeforeDelete": "Xác nhận trước khi xóa",
+    "confirmBeforeDeleteDesc": "Hiển thị hộp thoại xác nhận trước khi xóa công việc",
+    "defaultProject": "Dự án mặc định",
+    "defaultProjectDesc": "Dự án mặc định được chọn cho công việc mới"
+  },
+  "appearance": {
+    "theme": "Chủ đề giao diện",
+    "themeDesc": "Chọn chủ đề giao diện bạn muốn sử dụng",
+    "themeLight": "Sáng",
+    "themeDark": "Tối",
+    "themeSystem": "Theo hệ thống",
+    "compactMode": "Chế độ thu gọn",
+    "compactModeDesc": "Hiển thị nhiều công việc hơn bằng cách giảm khoảng cách"
+  },
+  "language": {
+    "selectLanguage": "Ngôn ngữ",
+    "selectLanguageDesc": "Chọn ngôn ngữ hiển thị cho ứng dụng",
+    "en": "English",
+    "vi": "Tiếng Việt"
+  },
+  "window": {
+    "title": "Hành vi cửa sổ",
+    "closeToTray": "Đóng vào khay hệ thống",
+    "closeToTrayDesc": "Giữ ứng dụng và bộ lên lịch lời nhắc hoạt động trong khay hệ thống khi đóng cửa sổ",
+    "startWithWindows": "Khởi động cùng Windows",
+    "startWithWindowsDesc": "Tự động khởi chạy Todo khi máy tính bật"
+  },
+  "notifications": {
+    "enableNotifications": "Bật thông báo",
+    "enableNotificationsDesc": "Nhận thông báo trên màn hình cho lời nhắc công việc",
+    "sound": "Âm thanh thông báo",
+    "soundDesc": "Phát âm thanh khi có thông báo",
+    "defaultSnooze": "Thời gian báo lại mặc định",
+    "defaultSnoozeDesc": "Thời gian mặc định hoãn lời nhắc",
+    "overdueReminders": "Hiển thị lời nhắc quá hạn",
+    "overdueRemindersDesc": "Thông báo khi mở ứng dụng nếu có công việc quá hạn"
+  },
+  "data": {
+    "exportTitle": "Xuất dữ liệu",
+    "exportDesc": "Xuất công việc, dự án và thẻ sang JSON hoặc CSV",
+    "exportJSON": "Xuất JSON",
+    "exportCSV": "Xuất CSV",
+    "backupTitle": "Sao lưu cơ sở dữ liệu",
+    "backupDesc": "Tạo một bản sao lưu tức thì của cơ sở dữ liệu cục bộ",
+    "backupNow": "Sao lưu cơ sở dữ liệu",
+    "resetTitle": "Đặt lại ứng dụng",
+    "resetDesc": "Đặt lại tất cả cài đặt về giá trị mặc định (công việc và dự án được giữ nguyên)",
+    "resetSettings": "Đặt lại cài đặt"
+  },
+  "about": {
+    "version": "Phiên bản",
+    "electronVersion": "Phiên bản Electron",
+    "nodeVersion": "Phiên bản Node",
+    "chromeVersion": "Phiên bản Chrome",
+    "platform": "Nền tảng",
+    "databasePath": "Vị trí cơ sở dữ liệu"
+  }
+}
+

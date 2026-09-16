@@ -1,0 +1,52 @@
+{
+  "task": "Công việc",
+  "tasks": "Công việc",
+  "create": "Tạo công việc",
+  "edit": "Chỉnh sửa công việc",
+  "delete": "Xóa công việc",
+  "complete": "Hoàn thành",
+  "completed": "Đã hoàn thành",
+  "reopen": "Đánh dấu hoạt động",
+  "markCompleted": "Đánh dấu hoàn thành",
+  "archive": "Lưu trữ công việc",
+  "priority": "Mức độ ưu tiên",
+  "priorities": {
+    "none": "Không có",
+    "low": "Thấp",
+    "medium": "Trung bình",
+    "high": "Cao",
+    "urgent": "Khẩn cấp"
+  },
+  "dueDate": "Ngày hết hạn",
+  "dueTime": "Giờ hết hạn",
+  "reminder": "Lời nhắc",
+  "description": "Mô tả",
+  "subtasks": "Công việc phụ",
+  "addSubtask": "Thêm công việc phụ...",
+  "subtasksProgress": "{{completed}}/{{total}} đã hoàn thành",
+  "addPlaceholder": "Thêm công việc... Nhấn Enter để lưu",
+  "quickAddPlaceholder": "Cần làm gì? (vd: 'Hoàn thành báo cáo ngày mai lúc 15h #work ưu tiên:cao')",
+  "emptyTitle": "Không có công việc nào",
+  "emptyDescription": "Bạn đã hoàn thành tất cả!",
+  "selectDate": "Chọn một ngày để xem công việc",
+  "titlePlaceholder": "Tiêu đề công việc",
+  "descriptionPlaceholder": "Thêm ghi chú hoặc chi tiết...",
+  "todayProgress": "Tiến độ hôm nay",
+  "tasksCount": "{{count}} công việc",
+  "tasksScheduled": "{{count}} công việc đã lên lịch",
+  "details": "Chi tiết công việc",
+  "detailsEmpty": "Chọn một công việc để xem chi tiết",
+  "groups": {
+    "overdue": "Quá hạn",
+    "today": "Hôm nay",
+    "tomorrow": "Ngày mai",
+    "thisWeek": "Tuần này",
+    "nextWeek": "Tuần tới",
+    "later": "Sau này",
+    "noDate": "Không có ngày"
+  },
+  "contextMenu": {
+    "editDetails": "Chỉnh sửa chi tiết",
+    "setPriority": "Đặt mức độ ưu tiên"
+  }
+}

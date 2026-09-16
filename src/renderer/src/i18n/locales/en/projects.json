@@ -1,0 +1,16 @@
+{
+  "project": "Project",
+  "projects": "Projects",
+  "create": "Create project",
+  "edit": "Edit project",
+  "delete": "Delete project",
+  "rename": "Rename project",
+  "name": "Name",
+  "namePlaceholder": "Project name",
+  "description": "Description",
+  "descriptionPlaceholder": "Optional description",
+  "color": "Color",
+  "selectProject": "Select or create a project from the sidebar",
+  "noProjects": "No projects yet"
+}
+

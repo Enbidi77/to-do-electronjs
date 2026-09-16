@@ -1,0 +1,302 @@
+[2026-09-16T02:12:36.266Z] [INFO] [Database] Initializing database at :memory:
+[2026-09-16T02:12:36.266Z] [INFO] [Database] Initializing database at :memory:
+[2026-09-16T02:12:36.304Z] [ERROR] [Database] Failed to initialize database
+Error: Could not locate the bindings file. Tried:
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\build\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\build\Debug\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\build\Release\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\out\Debug\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\Debug\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\out\Release\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\Release\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\build\default\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\compiled\24.14.0\win32\x64\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\addon-build\release\install-root\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\addon-build\debug\install-root\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\addon-build\default\install-root\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\lib\binding\node-v137-win32-x64\better_sqlite3.node
+    at bindings (D:\data\Doc\.content\to-do\node_modules\bindings\bindings.js:126:9)
+    at new Database (D:\data\Doc\.content\to-do\node_modules\better-sqlite3\lib\database.js:48:64)
+    at Module.initializeDatabase (D:\data\Doc\.content\to-do\src\main\database\connection.ts:36:14)
+    at D:\data\Doc\.content\to-do\tests\main\reminder-scheduler.test.ts:14:5
+    at runWithTimeout (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:39:7)
+    at callSuiteHook (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:964:28)
+    at runSuite (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:1175:35)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-09-16T02:12:36.304Z] [ERROR] [Database] Failed to initialize database
+Error: Could not locate the bindings file. Tried:
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\build\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\build\Debug\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\build\Release\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\out\Debug\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\Debug\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\out\Release\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\Release\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\build\default\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\compiled\24.14.0\win32\x64\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\addon-build\release\install-root\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\addon-build\debug\install-root\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\addon-build\default\install-root\better_sqlite3.node
+ → D:\data\Doc\.content\to-do\node_modules\better-sqlite3\lib\binding\node-v137-win32-x64\better_sqlite3.node
+    at bindings (D:\data\Doc\.content\to-do\node_modules\bindings\bindings.js:126:9)
+    at new Database (D:\data\Doc\.content\to-do\node_modules\better-sqlite3\lib\database.js:48:64)
+    at Module.initializeDatabase (D:\data\Doc\.content\to-do\src\main\database\connection.ts:36:14)
+    at D:\data\Doc\.content\to-do\tests\main\task-service.test.ts:10:5
+    at runWithTimeout (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:39:7)
+    at callSuiteHook (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:964:28)
+    at runSuite (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:1175:35)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+[2026-09-16T02:14:12.271Z] [INFO] [Database] Initializing database at :memory:
+[2026-09-16T02:14:12.280Z] [INFO] [Database] Database initialized successfully
+[2026-09-16T02:14:12.282Z] [INFO] [TaskService] Task created: weNHANe3Ql9zVgrB6KrIt - Complete financial report
+[2026-09-16T02:14:12.285Z] [INFO] [TaskService] Task created: 9fflhgdB_YARqPYOQEXlq - Task to update
+[2026-09-16T02:14:12.284Z] [INFO] [Database] Initializing database at :memory:
+[2026-09-16T02:14:12.287Z] [INFO] [TaskService] Task updated: 9fflhgdB_YARqPYOQEXlq
+[2026-09-16T02:14:12.288Z] [INFO] [TaskService] Task created: kXGuKqcI4kEdb3D9ou4zR - Task to complete
+[2026-09-16T02:14:12.290Z] [INFO] [TaskService] Task updated: kXGuKqcI4kEdb3D9ou4zR
+[2026-09-16T02:14:12.291Z] [INFO] [TaskService] Task updated: kXGuKqcI4kEdb3D9ou4zR
+[2026-09-16T02:14:12.292Z] [INFO] [TaskService] Task created: D_fQjsQK2ugNOAE8zEFAV - Daily Standup
+[2026-09-16T02:14:12.292Z] [INFO] [Database] Database initialized successfully
+[2026-09-16T02:14:12.295Z] [INFO] [TaskService] Task created: HMaAvYmTNyK8X6PY9Kbb0 - Daily Standup
+[2026-09-16T02:14:12.294Z] [INFO] [TaskService] Task created: iGtdBy-xNN0AeIIzyHiG_ - Task with reminder
+[2026-09-16T02:14:12.296Z] [INFO] [TaskService] Created next recurrence for task: D_fQjsQK2ugNOAE8zEFAV
+[2026-09-16T02:14:12.296Z] [INFO] [TaskService] Task updated: D_fQjsQK2ugNOAE8zEFAV
+[2026-09-16T02:14:12.297Z] [INFO] [TaskService] Task created: wMvxR-HZtmpN6_K5ILsX_ - Alpha search target
+[2026-09-16T02:14:12.298Z] [INFO] [TaskService] Task created: BsySa-B0gY_XrgsR7voWj - Beta item
+[2026-09-16T02:14:12.297Z] [INFO] [Scheduler] Found 1 overdue reminders
+[2026-09-16T02:14:12.300Z] [INFO] [TaskService] Task created: MJgwUnpqGO523S-31pz3V - Task to be deleted
+[2026-09-16T02:14:12.301Z] [INFO] [TaskService] Task deleted: MJgwUnpqGO523S-31pz3V
+[2026-09-16T02:14:12.303Z] [INFO] [TaskService] Task created: jQws8y4dNU83vgYPzjfvn - One-off reminder task
+[2026-09-16T02:14:12.305Z] [INFO] [Scheduler] Found 1 overdue reminders
+[2026-09-16T02:14:12.306Z] [INFO] [TaskService] Task created: gzBoqQ7u25Hpt00Se6scX - Missed wake task
+[2026-09-16T02:14:12.307Z] [INFO] [Scheduler] System wake detected, running immediate tick
+[2026-09-16T02:14:12.308Z] [INFO] [Scheduler] Found 1 overdue reminders
+[2026-09-16T02:15:17.011Z] [INFO] [Database] Initializing database at :memory:
+[2026-09-16T02:15:17.019Z] [INFO] [Database] Database initialized successfully
+[2026-09-16T02:15:17.021Z] [INFO] [TaskService] Task created: TbHvWl84sHcAKt9pSvsar - Complete financial report
+[2026-09-16T02:15:17.025Z] [INFO] [TaskService] Task created: nRQOaMAGjQ9MxFTc6gDcJ - Task to update
+[2026-09-16T02:15:17.024Z] [INFO] [Database] Initializing database at :memory:
+[2026-09-16T02:15:17.026Z] [INFO] [TaskService] Task updated: nRQOaMAGjQ9MxFTc6gDcJ
+[2026-09-16T02:15:17.027Z] [INFO] [TaskService] Task created: 86l7bTPsKDMiFB_c6UN-6 - Task to complete
+[2026-09-16T02:15:17.029Z] [INFO] [TaskService] Task updated: 86l7bTPsKDMiFB_c6UN-6
+[2026-09-16T02:15:17.030Z] [INFO] [TaskService] Task updated: 86l7bTPsKDMiFB_c6UN-6
+[2026-09-16T02:15:17.031Z] [INFO] [TaskService] Task created: UJJtyrKXVnoADXmr4nY2O - Daily Standup
+[2026-09-16T02:15:17.032Z] [INFO] [Database] Database initialized successfully
+[2026-09-16T02:15:17.033Z] [INFO] [TaskService] Task created: 3Nj8iEwBepBPAMLx8193z - Daily Standup
+[2026-09-16T02:15:17.034Z] [INFO] [TaskService] Created next recurrence for task: UJJtyrKXVnoADXmr4nY2O
+[2026-09-16T02:15:17.034Z] [INFO] [TaskService] Task created: -p_pVyw0mrnJAtLamZJ9u - Task with reminder
+[2026-09-16T02:15:17.034Z] [INFO] [TaskService] Task updated: UJJtyrKXVnoADXmr4nY2O
+[2026-09-16T02:15:17.036Z] [INFO] [TaskService] Task created: k3Udd3PIoYGL4VRNhnba- - Alpha search target
+[2026-09-16T02:15:17.036Z] [INFO] [TaskService] Task created: E5ZHDK36wdRSoXRUIaW3k - Beta item
+[2026-09-16T02:15:17.037Z] [INFO] [Scheduler] Found 1 overdue reminders
+[2026-09-16T02:15:17.038Z] [INFO] [TaskService] Task created: hFViqtsOZEEzEAQcpliBG - Task to be deleted
+[2026-09-16T02:15:17.039Z] [INFO] [TaskService] Task deleted: hFViqtsOZEEzEAQcpliBG
+[2026-09-16T02:15:17.037Z] [ERROR] [Scheduler] Error during scheduler tick
+ReferenceError: NotificationService is not defined
+    at ReminderScheduler.tick (D:\data\Doc\.content\to-do\src\main\scheduler\reminder-scheduler.ts:47:9)
+    at D:\data\Doc\.content\to-do\tests\main\reminder-scheduler.test.ts:43:15
+    at file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:146:14
+    at file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:533:11
+    at runWithTimeout (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:39:7)
+    at runTest (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:1056:17)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at runSuite (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:1205:15)
+    at runSuite (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:1205:15)
+    at runFiles (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:1262:5)
+[2026-09-16T02:15:17.044Z] [INFO] [TaskService] Task created: 8q7mL1P4lM6Lau9ma1zVh - One-off reminder task
+[2026-09-16T02:15:17.045Z] [INFO] [Scheduler] Found 2 overdue reminders
+[2026-09-16T02:15:17.045Z] [ERROR] [Scheduler] Error during scheduler tick
+ReferenceError: NotificationService is not defined
+    at ReminderScheduler.tick (D:\data\Doc\.content\to-do\src\main\scheduler\reminder-scheduler.ts:47:9)
+    at D:\data\Doc\.content\to-do\tests\main\reminder-scheduler.test.ts:67:15
+    at file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:146:14
+    at file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:533:11
+    at runWithTimeout (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:39:7)
+    at runTest (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:1056:17)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at runSuite (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:1205:15)
+    at runSuite (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:1205:15)
+    at runFiles (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:1262:5)
+[2026-09-16T02:15:17.047Z] [INFO] [TaskService] Task created: ffOIiv2TzeZvT0qkfXSjw - Missed wake task
+[2026-09-16T02:15:17.049Z] [INFO] [Scheduler] System wake detected, running immediate tick
+[2026-09-16T02:15:17.049Z] [INFO] [Scheduler] Found 3 overdue reminders
+[2026-09-16T02:15:17.050Z] [ERROR] [Scheduler] Error during scheduler tick
+ReferenceError: NotificationService is not defined
+    at ReminderScheduler.tick (D:\data\Doc\.content\to-do\src\main\scheduler\reminder-scheduler.ts:47:9)
+    at ReminderScheduler.onResume (D:\data\Doc\.content\to-do\src\main\scheduler\reminder-scheduler.ts:57:10)
+    at D:\data\Doc\.content\to-do\tests\main\reminder-scheduler.test.ts:90:15
+    at file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:146:14
+    at file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:533:11
+    at runWithTimeout (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:39:7)
+    at runTest (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:1056:17)
+    at processTicksAndRejections (node:internal/process/task_queues:104:5)
+    at runSuite (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:1205:15)
+    at runSuite (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:1205:15)
+[2026-09-16T02:15:43.079Z] [INFO] [Database] Initializing database at :memory:
+[2026-09-16T02:15:43.087Z] [INFO] [Database] Database initialized successfully
+[2026-09-16T02:15:43.089Z] [INFO] [TaskService] Task created: dXOGikRp15L7jwnTjj-R- - Complete financial report
+[2026-09-16T02:15:43.092Z] [INFO] [TaskService] Task created: S1X4BkOlvtypHAB1AJUJk - Task to update
+[2026-09-16T02:15:43.093Z] [INFO] [TaskService] Task updated: S1X4BkOlvtypHAB1AJUJk
+[2026-09-16T02:15:43.092Z] [INFO] [Database] Initializing database at :memory:
+[2026-09-16T02:15:43.094Z] [INFO] [TaskService] Task created: jWv4afN-CqnIsTkPNg688 - Task to complete
+[2026-09-16T02:15:43.095Z] [INFO] [TaskService] Task updated: jWv4afN-CqnIsTkPNg688
+[2026-09-16T02:15:43.096Z] [INFO] [TaskService] Task updated: jWv4afN-CqnIsTkPNg688
+[2026-09-16T02:15:43.097Z] [INFO] [TaskService] Task created: -FUPb9wZpRfJ1UrJ8Chq3 - Daily Standup
+[2026-09-16T02:15:43.099Z] [INFO] [Database] Database initialized successfully
+[2026-09-16T02:15:43.100Z] [INFO] [TaskService] Task created: ODuIdpa0cXjdEFvErdzHb - Daily Standup
+[2026-09-16T02:15:43.101Z] [INFO] [TaskService] Created next recurrence for task: -FUPb9wZpRfJ1UrJ8Chq3
+[2026-09-16T02:15:43.101Z] [INFO] [TaskService] Task updated: -FUPb9wZpRfJ1UrJ8Chq3
+[2026-09-16T02:15:43.102Z] [INFO] [TaskService] Task created: _jjukD4UJqUXyqqHAPEAn - Task with reminder
+[2026-09-16T02:15:43.103Z] [INFO] [TaskService] Task created: uE1ZsQ-KxZc9FBrzoEkOl - Alpha search target
+[2026-09-16T02:15:43.103Z] [INFO] [TaskService] Task created: giHWzvD2ROQ_kRhrF-_qJ - Beta item
+[2026-09-16T02:15:43.105Z] [INFO] [TaskService] Task created: UdFpAxGeg1pvS8KOxJPc4 - Task to be deleted
+[2026-09-16T02:15:43.105Z] [INFO] [Scheduler] Found 1 overdue reminders
+[2026-09-16T02:15:43.106Z] [INFO] [TaskService] Task deleted: UdFpAxGeg1pvS8KOxJPc4
+[2026-09-16T02:15:43.107Z] [INFO] [TaskService] Task created: 8Ghhx6DdnUSPBPBoFGg85 - One-off reminder task
+[2026-09-16T02:15:43.108Z] [INFO] [Scheduler] Found 1 overdue reminders
+[2026-09-16T02:15:43.109Z] [INFO] [TaskService] Task created: 4_BIrjOdVmyBGz0RABcQV - Missed wake task
+[2026-09-16T02:15:43.110Z] [INFO] [Scheduler] System wake detected, running immediate tick
+[2026-09-16T02:15:43.111Z] [INFO] [Scheduler] Found 1 overdue reminders
+[2026-09-16T02:15:59.183Z] [INFO] [Database] Initializing database at :memory:
+[2026-09-16T02:15:59.195Z] [INFO] [Database] Database initialized successfully
+[2026-09-16T02:15:59.198Z] [INFO] [TaskService] Task created: LhEBMqpPqfwfDtarhJzVI - Complete financial report
+[2026-09-16T02:15:59.201Z] [INFO] [Database] Initializing database at :memory:
+[2026-09-16T02:15:59.203Z] [INFO] [TaskService] Task created: EsVcFNvWo2wTqItHNB33c - Task to update
+[2026-09-16T02:15:59.205Z] [INFO] [TaskService] Task updated: EsVcFNvWo2wTqItHNB33c
+[2026-09-16T02:15:59.207Z] [INFO] [TaskService] Task created: vjQZP8nl_N1kxCNpzb6N2 - Task to complete
+[2026-09-16T02:15:59.211Z] [INFO] [TaskService] Task updated: vjQZP8nl_N1kxCNpzb6N2
+[2026-09-16T02:15:59.212Z] [INFO] [TaskService] Task updated: vjQZP8nl_N1kxCNpzb6N2
+[2026-09-16T02:15:59.215Z] [INFO] [TaskService] Task created: ZvkwJaZ3xZ1czPGoLiO2h - Daily Standup
+[2026-09-16T02:15:59.220Z] [INFO] [Database] Database initialized successfully
+[2026-09-16T02:15:59.226Z] [INFO] [TaskService] Task created: tfujWQaVXxcZnbrM2VwE2 - Task with reminder
+[2026-09-16T02:15:59.227Z] [INFO] [TaskService] Task created: FhhkV6hN6JcCkqS0cjHso - Daily Standup
+[2026-09-16T02:15:59.229Z] [INFO] [TaskService] Created next recurrence for task: ZvkwJaZ3xZ1czPGoLiO2h
+[2026-09-16T02:15:59.230Z] [INFO] [TaskService] Task updated: ZvkwJaZ3xZ1czPGoLiO2h
+[2026-09-16T02:15:59.232Z] [INFO] [Scheduler] Found 1 overdue reminders
+[2026-09-16T02:15:59.234Z] [INFO] [TaskService] Task created: UB-DazruFqEeme6ziW73e - Alpha search target
+[2026-09-16T02:15:59.236Z] [INFO] [TaskService] Task created: snh7g5gkl_QQabpVBVHbo - Beta item
+[2026-09-16T02:15:59.237Z] [INFO] [TaskService] Task created: J725QF7AEsUHTvasfUU8W - One-off reminder task
+[2026-09-16T02:15:59.240Z] [INFO] [Scheduler] Found 1 overdue reminders
+[2026-09-16T02:15:59.241Z] [INFO] [TaskService] Task created: xsM08iVIwAAZumcBrG5nb - Task to be deleted
+[2026-09-16T02:15:59.242Z] [INFO] [TaskService] Task created: 1CBXMIh8pg8CT1h8_zX-J - Missed wake task
+[2026-09-16T02:15:59.243Z] [INFO] [TaskService] Task deleted: xsM08iVIwAAZumcBrG5nb
+[2026-09-16T02:15:59.244Z] [INFO] [Scheduler] System wake detected, running immediate tick
+[2026-09-16T02:15:59.244Z] [INFO] [Scheduler] Found 1 overdue reminders
+[2026-09-16T02:24:07.639Z] [INFO] [Database] Initializing database at :memory:
+[2026-09-16T02:24:07.645Z] [ERROR] [Database] Failed to initialize database
+Error: The module '\\?\D:\data\Doc\.content\to-do\node_modules\better-sqlite3\build\Release\better_sqlite3.node'
+was compiled against a different Node.js version using
+NODE_MODULE_VERSION 128. This version of Node.js requires
+NODE_MODULE_VERSION 137. Please try re-compiling or re-installing
+the module (for instance, using `npm rebuild` or `npm install`).
+    at Object..node (node:internal/modules/cjs/loader:1970:18)
+    at Module.load (node:internal/modules/cjs/loader:1533:32)
+    at Module._load (node:internal/modules/cjs/loader:1335:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1556:12)
+    at require (node:internal/modules/helpers:152:16)
+    at bindings (D:\data\Doc\.content\to-do\node_modules\bindings\bindings.js:112:48)
+    at new Database (D:\data\Doc\.content\to-do\node_modules\better-sqlite3\lib\database.js:48:64)
+    at Module.initializeDatabase (D:\data\Doc\.content\to-do\src\main\database\connection.ts:36:14)
+    at D:\data\Doc\.content\to-do\tests\main\task-service.test.ts:10:5
+[2026-09-16T02:24:07.654Z] [INFO] [Database] Initializing database at :memory:
+[2026-09-16T02:24:07.659Z] [ERROR] [Database] Failed to initialize database
+Error: The module '\\?\D:\data\Doc\.content\to-do\node_modules\better-sqlite3\build\Release\better_sqlite3.node'
+was compiled against a different Node.js version using
+NODE_MODULE_VERSION 128. This version of Node.js requires
+NODE_MODULE_VERSION 137. Please try re-compiling or re-installing
+the module (for instance, using `npm rebuild` or `npm install`).
+    at Object..node (node:internal/modules/cjs/loader:1970:18)
+    at Module.load (node:internal/modules/cjs/loader:1533:32)
+    at Module._load (node:internal/modules/cjs/loader:1335:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1556:12)
+    at require (node:internal/modules/helpers:152:16)
+    at bindings (D:\data\Doc\.content\to-do\node_modules\bindings\bindings.js:112:48)
+    at new Database (D:\data\Doc\.content\to-do\node_modules\better-sqlite3\lib\database.js:48:64)
+    at Module.initializeDatabase (D:\data\Doc\.content\to-do\src\main\database\connection.ts:36:14)
+    at D:\data\Doc\.content\to-do\tests\main\reminder-scheduler.test.ts:14:5
+[2026-09-16T02:39:11.599Z] [INFO] [Database] Initializing database at :memory:
+[2026-09-16T02:39:11.608Z] [ERROR] [Database] Failed to initialize database
+Error: The module '\\?\D:\data\Doc\.content\to-do\node_modules\better-sqlite3\build\Release\better_sqlite3.node'
+was compiled against a different Node.js version using
+NODE_MODULE_VERSION 128. This version of Node.js requires
+NODE_MODULE_VERSION 137. Please try re-compiling or re-installing
+the module (for instance, using `npm rebuild` or `npm install`).
+    at Object..node (node:internal/modules/cjs/loader:1970:18)
+    at Module.load (node:internal/modules/cjs/loader:1533:32)
+    at Module._load (node:internal/modules/cjs/loader:1335:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1556:12)
+    at require (node:internal/modules/helpers:152:16)
+    at bindings (D:\data\Doc\.content\to-do\node_modules\bindings\bindings.js:112:48)
+    at new Database (D:\data\Doc\.content\to-do\node_modules\better-sqlite3\lib\database.js:48:64)
+    at Module.initializeDatabase (D:\data\Doc\.content\to-do\src\main\database\connection.ts:36:14)
+    at D:\data\Doc\.content\to-do\tests\main\task-service.test.ts:10:5
+[2026-09-16T02:39:11.620Z] [INFO] [Database] Initializing database at :memory:
+[2026-09-16T02:39:11.626Z] [ERROR] [Database] Failed to initialize database
+Error: The module '\\?\D:\data\Doc\.content\to-do\node_modules\better-sqlite3\build\Release\better_sqlite3.node'
+was compiled against a different Node.js version using
+NODE_MODULE_VERSION 128. This version of Node.js requires
+NODE_MODULE_VERSION 137. Please try re-compiling or re-installing
+the module (for instance, using `npm rebuild` or `npm install`).
+    at Object..node (node:internal/modules/cjs/loader:1970:18)
+    at Module.load (node:internal/modules/cjs/loader:1533:32)
+    at Module._load (node:internal/modules/cjs/loader:1335:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1556:12)
+    at require (node:internal/modules/helpers:152:16)
+    at bindings (D:\data\Doc\.content\to-do\node_modules\bindings\bindings.js:112:48)
+    at new Database (D:\data\Doc\.content\to-do\node_modules\better-sqlite3\lib\database.js:48:64)
+    at Module.initializeDatabase (D:\data\Doc\.content\to-do\src\main\database\connection.ts:36:14)
+    at D:\data\Doc\.content\to-do\tests\main\reminder-scheduler.test.ts:14:5
+[2026-09-16T02:40:56.721Z] [INFO] [Database] Initializing database at :memory:
+[2026-09-16T02:40:56.735Z] [INFO] [Database] Database initialized successfully
+[2026-09-16T02:40:56.739Z] [INFO] [TaskService] Task created: H82N6K6qWzRtdTONRJzaV - Complete financial report
+[2026-09-16T02:40:56.744Z] [INFO] [TaskService] Task created: 9M6rCXdSsF3HaDy-PplDR - Task to update
+[2026-09-16T02:40:56.746Z] [INFO] [TaskService] Task updated: 9M6rCXdSsF3HaDy-PplDR
+[2026-09-16T02:40:56.748Z] [INFO] [TaskService] Task created: XaxTerQWexSL01IQ9jU1a - Task to complete
+[2026-09-16T02:40:56.750Z] [INFO] [TaskService] Task updated: XaxTerQWexSL01IQ9jU1a
+[2026-09-16T02:40:56.754Z] [INFO] [TaskService] Task updated: XaxTerQWexSL01IQ9jU1a
+[2026-09-16T02:40:56.756Z] [INFO] [TaskService] Task created: G_1taoR9Sbys5y52C34QL - Daily Standup
+[2026-09-16T02:40:56.760Z] [INFO] [TaskService] Task created: UED4F9_5n8xPoy0skep8h - Daily Standup
+[2026-09-16T02:40:56.761Z] [INFO] [TaskService] Created next recurrence for task: G_1taoR9Sbys5y52C34QL
+[2026-09-16T02:40:56.762Z] [INFO] [TaskService] Task updated: G_1taoR9Sbys5y52C34QL
+[2026-09-16T02:40:56.764Z] [INFO] [TaskService] Task created: WpTVlIi2DKOrQRBPBoceI - Alpha search target
+[2026-09-16T02:40:56.765Z] [INFO] [TaskService] Task created: RnxRA_ZP4-9N-0lgGfonW - Beta item
+[2026-09-16T02:40:56.768Z] [INFO] [TaskService] Task created: hrHBtHU-ihUC5nRb52WSJ - Task to be deleted
+[2026-09-16T02:40:56.770Z] [INFO] [TaskService] Task deleted: hrHBtHU-ihUC5nRb52WSJ
+[2026-09-16T02:40:56.770Z] [INFO] [Database] Initializing database at :memory:
+[2026-09-16T02:40:56.781Z] [INFO] [Database] Database initialized successfully
+[2026-09-16T02:40:56.784Z] [INFO] [TaskService] Task created: DeoDcllhfs4uXJnbANwlc - Task with reminder
+[2026-09-16T02:40:56.788Z] [INFO] [Scheduler] Found 1 overdue reminders
+[2026-09-16T02:40:56.790Z] [INFO] [TaskService] Task created: k8kro15JEqgWDCgpPC6zO - One-off reminder task
+[2026-09-16T02:40:56.792Z] [INFO] [Scheduler] Found 1 overdue reminders
+[2026-09-16T02:40:56.794Z] [INFO] [TaskService] Task created: ZAkPsaYuCGJ2FpzKlUODU - Missed wake task
+[2026-09-16T02:40:56.795Z] [INFO] [Scheduler] System wake detected, running immediate tick
+[2026-09-16T02:40:56.795Z] [INFO] [Scheduler] Found 1 overdue reminders
+[2026-09-16T02:57:39.699Z] [INFO] [Database] Initializing database at :memory:
+[2026-09-16T02:57:39.712Z] [INFO] [Database] Initializing database at :memory:
+[2026-09-16T02:57:39.716Z] [INFO] [Database] Database initialized successfully
+[2026-09-16T02:57:39.719Z] [INFO] [TaskService] Task created: oRIYdb9Zuxk_ObpeaFgbo - Complete financial report
+[2026-09-16T02:57:39.719Z] [INFO] [Database] Database initialized successfully
+[2026-09-16T02:57:39.722Z] [INFO] [TaskService] Task created: 9mVtbTXs6_2CRMStyvgMj - Task with reminder
+[2026-09-16T02:57:39.724Z] [INFO] [TaskService] Task created: 8KKU7mwGV9c5nr4sxoE3D - Task to update
+[2026-09-16T02:57:39.726Z] [INFO] [TaskService] Task updated: 8KKU7mwGV9c5nr4sxoE3D
+[2026-09-16T02:57:39.725Z] [INFO] [Scheduler] Found 1 overdue reminders
+[2026-09-16T02:57:39.727Z] [INFO] [TaskService] Task created: lD3xp1mianZjK6OzanqYC - Task to complete
+[2026-09-16T02:57:39.727Z] [INFO] [TaskService] Task created: Y7CiC9eVPj8FAdPday-E1 - One-off reminder task
+[2026-09-16T02:57:39.729Z] [INFO] [TaskService] Task updated: lD3xp1mianZjK6OzanqYC
+[2026-09-16T02:57:39.729Z] [INFO] [Scheduler] Found 1 overdue reminders
+[2026-09-16T02:57:39.730Z] [INFO] [TaskService] Task updated: lD3xp1mianZjK6OzanqYC
+[2026-09-16T02:57:39.730Z] [INFO] [TaskService] Task created: p-FBI2s-u0cBG5R3OZAic - Missed wake task
+[2026-09-16T02:57:39.732Z] [INFO] [TaskService] Task created: k4bof7fzmESPTBZp8eB4_ - Daily Standup
+[2026-09-16T02:57:39.733Z] [INFO] [Scheduler] System wake detected, running immediate tick
+[2026-09-16T02:57:39.733Z] [INFO] [Scheduler] Found 1 overdue reminders
+[2026-09-16T02:57:39.736Z] [INFO] [TaskService] Task created: aDTgLV6hMRgNgrfkzpr9B - Daily Standup
+[2026-09-16T02:57:39.737Z] [INFO] [TaskService] Created next recurrence for task: k4bof7fzmESPTBZp8eB4_
+[2026-09-16T02:57:39.738Z] [INFO] [TaskService] Task updated: k4bof7fzmESPTBZp8eB4_
+[2026-09-16T02:57:39.740Z] [INFO] [TaskService] Task created: MigBAhZz8QxWGeHT7kWNd - Alpha search target
+[2026-09-16T02:57:39.741Z] [INFO] [TaskService] Task created: qQykS1C440qeWGN3sXQlH - Beta item
+[2026-09-16T02:57:39.743Z] [INFO] [TaskService] Task created: -om8ZquPZoWV7KMTWh3OX - Task to be deleted
+[2026-09-16T02:57:39.744Z] [INFO] [TaskService] Task deleted: -om8ZquPZoWV7KMTWh3OX

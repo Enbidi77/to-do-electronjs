@@ -1,0 +1,17 @@
+{
+  "loadTasksFailed": "Không thể tải danh sách công việc",
+  "saveTaskFailed": "Không thể lưu công việc",
+  "deleteTaskFailed": "Không thể xóa công việc",
+  "completeTaskFailed": "Không thể hoàn thành công việc",
+  "archiveTaskFailed": "Không thể lưu trữ công việc",
+  "loadDetailsFailed": "Không thể tải chi tiết công việc",
+  "updatePriorityFailed": "Không thể cập nhật mức độ ưu tiên",
+  "exportFailed": "Không thể xuất dữ liệu",
+  "backupFailed": "Không thể tạo bản sao lưu",
+  "resetSettingsFailed": "Không thể đặt lại cài đặt",
+  "databaseError": "Đã xảy ra lỗi cơ sở dữ liệu",
+  "genericError": "Đã xảy ra lỗi không mong muốn",
+  "searchMinChars": "Nhập ít nhất 3 ký tự để tìm kiếm",
+  "noResults": "Không tìm thấy kết quả nào"
+}
+

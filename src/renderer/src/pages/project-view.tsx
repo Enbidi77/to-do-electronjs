@@ -1,0 +1,113 @@
+import { useEffect, useState, useCallback } from 'react'
+import { TaskList } from '@/components/task/task-list'
+import { TaskEditor } from '@/components/task/task-editor'
+import type { Task } from '@shared/types'
+import { useUiStore } from '@/stores/ui-store'
+import { useProjectStore } from '@/stores/project-store'
+import { useTaskStore } from '@/stores/task-store'
+import { useTranslation } from 'react-i18next'
+import { toast } from 'sonner'
+import { Folder } from 'lucide-react'
+
+export default function ProjectViewPage() {
+  const { t } = useTranslation(['projects', 'tasks', 'common', 'notifications', 'errors'])
+  const currentProjectId = useUiStore(s => s.currentProjectId)
+  const project = useProjectStore(s => s.projects.find(p => p.id === currentProjectId))
+  const completeTask = useTaskStore(s => s.completeTask)
+  const uncompleteTask = useTaskStore(s => s.uncompleteTask)
+  const deleteTask = useTaskStore(s => s.deleteTask)
+
+  const [tasks, setTasks] = useState<Task[]>([])
+  const [loading, setLoading] = useState(true)
+
+  const fetchTasks = useCallback(async () => {
+    if (!currentProjectId) {
+      setTasks([])
+      setLoading(false)
+      return
+    }
+
+    try {
+      setLoading(true)
+      if (window.api?.tasks?.list) {
+        const data = await window.api.tasks.list({
+          filter: { status: 'active', projectId: currentProjectId },
+          sort: { field: 'sortOrder', direction: 'desc' }
+        })
+        setTasks(data)
+      }
+    } catch (err) {
+      console.error('Failed to load project tasks', err)
+    } finally {
+      setLoading(false)
+    }
+  }, [currentProjectId])
+
+  useEffect(() => {
+    fetchTasks()
+  }, [fetchTasks])
+
+  const handleComplete = async (id: string, completed: boolean) => {
+    try {
+      if (completed) {
+        await completeTask(id)
+        toast.success(t('notifications:taskCompleted'))
+      } else {
+        await uncompleteTask(id)
+        toast.info(t('notifications:taskReopened'))
+      }
+      fetchTasks()
+    } catch {
+      toast.error(t('errors:saveTaskFailed'))
+    }
+  }
+
+  const handleDelete = async (id: string) => {
+    if (window.confirm(t('common:dialogs.confirmDeleteTask'))) {
+      try {
+        await deleteTask(id)
+        toast.success(t('notifications:taskDeleted'))
+        fetchTasks()
+      } catch {
+        toast.error(t('errors:deleteTaskFailed'))
+      }
+    }
+  }
+
+  if (!project) {
+    return (
+      <div className="h-full flex items-center justify-center p-6 text-muted-foreground">
+        <Folder className="h-8 w-8 mr-2 opacity-50" />
+        <span>{t('projects:selectProject')}</span>
+      </div>
+    )
+  }
+
+  return (
+    <div className="flex flex-col h-full overflow-hidden">
+      <div className="p-6 pb-2 shrink-0">
+        <div className="flex items-center gap-3 mb-4">
+          <div
+            className="w-4 h-4 rounded-full shrink-0"
+            style={{ backgroundColor: project.color || '#3b82f6' }}
+          />
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">{project.name}</h1>
+            {project.description && (
+              <p className="text-sm text-muted-foreground mt-0.5">{project.description}</p>
+            )}
+          </div>
+        </div>
+        <TaskEditor projectId={project.id} onCreated={fetchTasks} />
+      </div>
+      <div className="flex-1 overflow-hidden p-6 pt-2">
+        <TaskList
+          tasks={tasks}
+          isLoading={loading}
+          onComplete={handleComplete}
+          onDelete={handleDelete}
+        />
+      </div>
+    </div>
+  )
+}

@@ -1,0 +1,12 @@
+node_modules/
+out/
+release/
+dist/
+*.sqlite
+*.sqlite-journal
+*.sqlite-wal
+*.sqlite-shm
+.env
+.env.local
+dev.sqlite
+

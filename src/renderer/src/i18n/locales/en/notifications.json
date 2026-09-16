@@ -1,0 +1,15 @@
+{
+  "taskCreated": "Task created",
+  "taskUpdated": "Task updated",
+  "taskDeleted": "Task deleted",
+  "taskCompleted": "Task completed",
+  "taskReopened": "Task marked active",
+  "taskArchived": "Task archived",
+  "allCompletedDeleted": "All completed tasks deleted",
+  "prioritySet": "Priority set to {{priority}}",
+  "exportedData": "Exported data to {{path}}",
+  "exportedCSV": "Exported CSV to {{path}}",
+  "backupCreated": "Database backed up: {{filename}}",
+  "settingsReset": "Settings reset to defaults"
+}
+

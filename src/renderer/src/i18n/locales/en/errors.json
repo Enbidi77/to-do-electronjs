@@ -1,0 +1,17 @@
+{
+  "loadTasksFailed": "Failed to load tasks",
+  "saveTaskFailed": "Failed to save task",
+  "deleteTaskFailed": "Failed to delete task",
+  "completeTaskFailed": "Failed to complete task",
+  "archiveTaskFailed": "Failed to archive task",
+  "loadDetailsFailed": "Failed to load task details",
+  "updatePriorityFailed": "Failed to update priority",
+  "exportFailed": "Failed to export data",
+  "backupFailed": "Failed to create backup",
+  "resetSettingsFailed": "Failed to reset settings",
+  "databaseError": "Database error occurred",
+  "genericError": "An unexpected error occurred",
+  "searchMinChars": "Type at least 3 characters to search",
+  "noResults": "No results found"
+}
+

@@ -1,0 +1,31 @@
+{
+  "inbox": "Inbox",
+  "today": "Today",
+  "upcoming": "Upcoming",
+  "completed": "Completed",
+  "projects": "Projects",
+  "tags": "Tags",
+  "settings": "Settings",
+  "calendar": "Calendar",
+  "addProject": "Create project",
+  "addTag": "Create tag...",
+  "addTags": "Add tags...",
+  "searchTasks": "Search tasks...",
+  "searchPlaceholder": "Search tasks (Ctrl+F)...",
+  "toggleSidebar": "Toggle sidebar",
+  "quickAdd": "Quick Add",
+  "commandPalette": "Command Palette",
+  "commandPrompt": "Type a command or search...",
+  "actionsHeading": "Actions",
+  "navigationHeading": "Navigation",
+  "goToInbox": "Go to Inbox",
+  "goToToday": "Go to Today",
+  "goToUpcoming": "Go to Upcoming",
+  "goToSettings": "Settings",
+  "greetings": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening"
+  },
+  "selectTag": "Select or create a tag from the sidebar"
+}

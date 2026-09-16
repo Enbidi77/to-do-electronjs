@@ -1,0 +1,76 @@
+{
+  "title": "Settings",
+  "subtitle": "Manage your application preferences and data",
+  "tabs": {
+    "general": "General",
+    "notifications": "Notifications",
+    "appearance": "Appearance",
+    "language": "Language",
+    "window": "Window",
+    "data": "Data & Backup",
+    "about": "About"
+  },
+  "general": {
+    "startWithWindows": "Start with Windows",
+    "startWithWindowsDesc": "Automatically launch Todo when your PC starts",
+    "closeToTray": "Close to tray",
+    "closeToTrayDesc": "Keep app and reminder scheduler active in the system tray when window is closed",
+    "confirmBeforeDelete": "Confirm before deleting",
+    "confirmBeforeDeleteDesc": "Show a confirmation prompt before deleting a task",
+    "defaultProject": "Default Project",
+    "defaultProjectDesc": "Default project selected for new tasks"
+  },
+  "appearance": {
+    "theme": "Theme",
+    "themeDesc": "Select your preferred interface theme",
+    "themeLight": "Light",
+    "themeDark": "Dark",
+    "themeSystem": "System",
+    "compactMode": "Compact Mode",
+    "compactModeDesc": "Display more tasks by reducing padding and margins"
+  },
+  "language": {
+    "selectLanguage": "Language",
+    "selectLanguageDesc": "Choose the display language for the application",
+    "en": "English",
+    "vi": "Tiếng Việt"
+  },
+  "window": {
+    "title": "Window Behavior",
+    "closeToTray": "Close to tray",
+    "closeToTrayDesc": "Keep app and reminder scheduler active in the system tray when window is closed",
+    "startWithWindows": "Start with Windows",
+    "startWithWindowsDesc": "Automatically launch Todo when your PC starts"
+  },
+  "notifications": {
+    "enableNotifications": "Enable notifications",
+    "enableNotificationsDesc": "Receive desktop notifications for task reminders",
+    "sound": "Notification sound",
+    "soundDesc": "Play a sound effect when notifications trigger",
+    "defaultSnooze": "Default snooze duration",
+    "defaultSnoozeDesc": "How long reminders are postponed by default",
+    "overdueReminders": "Show overdue reminders",
+    "overdueRemindersDesc": "Alert when opening the app if tasks are overdue"
+  },
+  "data": {
+    "exportTitle": "Export Data",
+    "exportDesc": "Export your tasks, projects, and tags to JSON or CSV",
+    "exportJSON": "Export JSON",
+    "exportCSV": "Export CSV",
+    "backupTitle": "Database Backup",
+    "backupDesc": "Create an immediate backup copy of your local database",
+    "backupNow": "Backup Database",
+    "resetTitle": "Reset Application",
+    "resetDesc": "Reset all settings to default values (tasks and projects are preserved)",
+    "resetSettings": "Reset Settings"
+  },
+  "about": {
+    "version": "Version",
+    "electronVersion": "Electron Version",
+    "nodeVersion": "Node Version",
+    "chromeVersion": "Chrome Version",
+    "platform": "Platform",
+    "databasePath": "Database Location"
+  }
+}
+

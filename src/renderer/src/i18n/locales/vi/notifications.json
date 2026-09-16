@@ -1,0 +1,15 @@
+{
+  "taskCreated": "Đã tạo công việc",
+  "taskUpdated": "Đã cập nhật công việc",
+  "taskDeleted": "Đã xóa công việc",
+  "taskCompleted": "Đã hoàn thành công việc",
+  "taskReopened": "Đã chuyển công việc sang hoạt động",
+  "taskArchived": "Đã lưu trữ công việc",
+  "allCompletedDeleted": "Đã xóa tất cả công việc đã hoàn thành",
+  "prioritySet": "Đã đặt mức độ ưu tiên thành {{priority}}",
+  "exportedData": "Đã xuất dữ liệu sang {{path}}",
+  "exportedCSV": "Đã xuất CSV sang {{path}}",
+  "backupCreated": "Đã sao lưu cơ sở dữ liệu: {{filename}}",
+  "settingsReset": "Đã đặt lại cài đặt về mặc định"
+}
+

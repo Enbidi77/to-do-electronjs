@@ -1,0 +1,55 @@
+{
+  "appName": "Todo",
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "close": "Close",
+    "undo": "Undo",
+    "confirm": "Confirm",
+    "clearAll": "Clear all",
+    "search": "Search",
+    "filter": "Filter",
+    "sort": "Sort",
+    "back": "Back",
+    "refresh": "Refresh",
+    "reset": "Reset",
+    "select": "Select",
+    "remove": "Remove",
+    "add": "Add",
+    "archive": "Archive"
+  },
+  "time": {
+    "justNow": "just now",
+    "minutesAgo": "{{count}} minute ago",
+    "minutesAgo_other": "{{count}} minutes ago",
+    "hoursAgo": "{{count}} hour ago",
+    "hoursAgo_other": "{{count}} hours ago",
+    "yesterday": "yesterday",
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "now": "Now",
+    "overdue": "Overdue"
+  },
+  "dialogs": {
+    "confirmDeleteTitle": "Confirm deletion",
+    "confirmDeleteTask": "Are you sure you want to delete this task?",
+    "confirmClearAllCompleted": "Permanently delete all {{count}} completed tasks?",
+    "confirmResetSettings": "Are you sure you want to reset all settings to defaults?",
+    "warning": "Warning"
+  },
+  "windowControls": {
+    "minimize": "Minimize",
+    "maximize": "Maximize",
+    "restore": "Restore",
+    "close": "Close"
+  },
+  "shortcuts": {
+    "pressEnterToSave": "Press Enter to save",
+    "escToCancel": "Esc to cancel",
+    "searchPlaceholder": "Search tasks..."
+  }
+}
+

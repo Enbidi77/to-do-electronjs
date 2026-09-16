@@ -1,0 +1,20 @@
+{
+  "reminder": "Reminder",
+  "reminders": "Reminders",
+  "snooze": "Snooze",
+  "snoozed": "Snoozed",
+  "dueNow": "Due now",
+  "openTask": "Open task",
+  "completeTask": "Complete task",
+  "enableReminder": "Enable reminder",
+  "reminderTime": "Reminder time",
+  "snoozeDurations": {
+    "5m": "5 minutes",
+    "10m": "10 minutes",
+    "15m": "15 minutes",
+    "30m": "30 minutes",
+    "1h": "1 hour",
+    "1d": "1 day"
+  }
+}
+

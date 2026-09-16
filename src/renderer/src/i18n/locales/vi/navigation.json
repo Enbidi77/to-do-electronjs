@@ -1,0 +1,31 @@
+{
+  "inbox": "Hộp thư đến",
+  "today": "Hôm nay",
+  "upcoming": "Sắp tới",
+  "completed": "Đã hoàn thành",
+  "projects": "Dự án",
+  "tags": "Thẻ",
+  "settings": "Cài đặt",
+  "calendar": "Lịch",
+  "addProject": "Tạo dự án",
+  "addTag": "Tạo thẻ...",
+  "addTags": "Thêm thẻ...",
+  "searchTasks": "Tìm kiếm công việc...",
+  "searchPlaceholder": "Tìm kiếm công việc (Ctrl+F)...",
+  "toggleSidebar": "Bật/tắt thanh bên",
+  "quickAdd": "Thêm nhanh",
+  "commandPalette": "Bảng lệnh",
+  "commandPrompt": "Nhập lệnh hoặc tìm kiếm...",
+  "actionsHeading": "Hành động",
+  "navigationHeading": "Điều hướng",
+  "goToInbox": "Đến Hộp thư đến",
+  "goToToday": "Đến Hôm nay",
+  "goToUpcoming": "Đến Sắp tới",
+  "goToSettings": "Cài đặt",
+  "greetings": {
+    "morning": "Chào buổi sáng",
+    "afternoon": "Chào buổi chiều",
+    "evening": "Chào buổi tối"
+  },
+  "selectTag": "Chọn hoặc tạo thẻ từ thanh bên"
+}

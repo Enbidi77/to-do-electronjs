@@ -1,0 +1,53 @@
+{
+  "appName": "Todo",
+  "actions": {
+    "save": "Lưu",
+    "cancel": "Hủy",
+    "delete": "Xóa",
+    "edit": "Chỉnh sửa",
+    "create": "Tạo",
+    "close": "Đóng",
+    "undo": "Hoàn tác",
+    "confirm": "Xác nhận",
+    "clearAll": "Xóa tất cả",
+    "search": "Tìm kiếm",
+    "filter": "Bộ lọc",
+    "sort": "Sắp xếp",
+    "back": "Quay lại",
+    "refresh": "Làm mới",
+    "reset": "Đặt lại",
+    "select": "Chọn",
+    "remove": "Gỡ bỏ",
+    "add": "Thêm",
+    "archive": "Lưu trữ"
+  },
+  "time": {
+    "justNow": "vừa xong",
+    "minutesAgo": "{{count}} phút trước",
+    "hoursAgo": "{{count}} giờ trước",
+    "yesterday": "hôm qua",
+    "today": "Hôm nay",
+    "tomorrow": "Ngày mai",
+    "now": "Bây giờ",
+    "overdue": "Quá hạn"
+  },
+  "dialogs": {
+    "confirmDeleteTitle": "Xác nhận xóa",
+    "confirmDeleteTask": "Bạn có chắc chắn muốn xóa công việc này?",
+    "confirmClearAllCompleted": "Xóa vĩnh viễn tất cả {{count}} công việc đã hoàn thành?",
+    "confirmResetSettings": "Bạn có chắc chắn muốn đặt lại tất cả cài đặt về mặc định?",
+    "warning": "Cảnh báo"
+  },
+  "windowControls": {
+    "minimize": "Thu nhỏ",
+    "maximize": "Phóng to",
+    "restore": "Khôi phục",
+    "close": "Đóng"
+  },
+  "shortcuts": {
+    "pressEnterToSave": "Nhấn Enter để lưu",
+    "escToCancel": "Esc để hủy",
+    "searchPlaceholder": "Tìm kiếm công việc..."
+  }
+}
+

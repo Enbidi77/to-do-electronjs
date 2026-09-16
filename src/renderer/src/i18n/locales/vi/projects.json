@@ -1,0 +1,16 @@
+{
+  "project": "Dự án",
+  "projects": "Dự án",
+  "create": "Tạo dự án",
+  "edit": "Chỉnh sửa dự án",
+  "delete": "Xóa dự án",
+  "rename": "Đổi tên dự án",
+  "name": "Tên",
+  "namePlaceholder": "Tên dự án",
+  "description": "Mô tả",
+  "descriptionPlaceholder": "Mô tả tùy chọn",
+  "color": "Màu sắc",
+  "selectProject": "Chọn hoặc tạo dự án từ thanh bên",
+  "noProjects": "Chưa có dự án nào"
+}
+
