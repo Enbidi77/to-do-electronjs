@@ -14,10 +14,12 @@ import {
   CollisionDetection
 } from '@dnd-kit/core'
 import { sortableKeyboardCoordinates } from '@dnd-kit/sortable'
-import type { Task, TaskStatus } from '@shared/types'
+import type { Task, TaskStatus, Stage } from '@shared/types'
 import { TaskDragPreview } from './TaskDragPreview'
+import { StageDragPreview } from './StageDragPreview'
 import { useTaskStore } from '@/stores/task-store'
 import { useProjectStore } from '@/stores/project-store'
+import { useStageStore } from '@/stores/stage-store'
 import { toast } from 'sonner'
 import { isCircularSubtask, calculateFractionalSortOrder } from '@/lib/ordering'
 import { format, addDays } from 'date-fns'
@@ -27,6 +29,8 @@ import { DropIndicatorPosition } from './DropIndicator'
 interface TaskDndContextType {
   activeTaskId: string | null
   activeTask: Task | null
+  activeStageId: string | null
+  activeStage: Stage | null
   isDragging: boolean
   dropIntent: DropIndicatorPosition
   setDropIntent: (intent: DropIndicatorPosition) => void
@@ -35,6 +39,8 @@ interface TaskDndContextType {
 const TaskDndStateContext = createContext<TaskDndContextType>({
   activeTaskId: null,
   activeTask: null,
+  activeStageId: null,
+  activeStage: null,
   isDragging: false,
   dropIntent: 'none',
   setDropIntent: () => {}
@@ -50,6 +56,7 @@ interface TaskDndProviderProps {
 
 export function TaskDndProvider({ children }: TaskDndProviderProps) {
   const [activeTask, setActiveTask] = useState<Task | null>(null)
+  const [activeStage, setActiveStage] = useState<Stage | null>(null)
   const [dropIntent, setDropIntent] = useState<DropIndicatorPosition>('none')
   const allTasks = useTaskStore(s => s.tasks)
   const updateTask = useTaskStore(s => s.updateTask)
@@ -86,6 +93,12 @@ export function TaskDndProvider({ children }: TaskDndProviderProps) {
     const task = event.active.data.current?.task as Task | undefined
     if (task) {
       setActiveTask(task)
+      return
+    }
+    const stage = event.active.data.current?.stage as Stage | undefined
+    if (stage) {
+      setActiveStage(stage)
+      return
     }
   }, [])
 
@@ -96,8 +109,42 @@ export function TaskDndProvider({ children }: TaskDndProviderProps) {
   const handleDragEnd = useCallback(async (event: DragEndEvent) => {
     const { active, over } = event
     setActiveTask(null)
+    setActiveStage(null)
 
     if (!over || !active) return
+
+    // 0. Stage Reordering:
+    const isStageActive = active.data.current?.type === 'stage' || String(active.id).startsWith('stage:')
+    if (isStageActive) {
+      const activeStageId = (active.data.current?.stage?.id as string) || String(active.id).replace('stage:', '')
+
+      let overStageId: string | null = null
+      if (over.data.current?.stage?.id) {
+        overStageId = over.data.current.stage.id
+      } else if (String(over.id).startsWith('stage:')) {
+        overStageId = String(over.id).replace('stage:', '')
+      } else if (String(over.id).startsWith('status:')) {
+        overStageId = String(over.id).replace('status:', '')
+      } else {
+        const overTask = allTasks.find(t => t.id === String(over.id))
+        if (overTask) {
+          overStageId = overTask.status
+        }
+      }
+
+      if (activeStageId && overStageId && activeStageId !== overStageId) {
+        const stages = useStageStore.getState().stages
+        const oldIndex = stages.findIndex(s => s.id === activeStageId)
+        const newIndex = stages.findIndex(s => s.id === overStageId)
+        if (oldIndex !== -1 && newIndex !== -1 && oldIndex !== newIndex) {
+          const newStages = [...stages]
+          const [moved] = newStages.splice(oldIndex, 1)
+          newStages.splice(newIndex, 0, moved)
+          useStageStore.getState().reorderStages(newStages.map(s => s.id))
+        }
+      }
+      return
+    }
 
     const activeTaskData = active.data.current?.task as Task | undefined
     if (!activeTaskData) return
@@ -224,7 +271,8 @@ export function TaskDndProvider({ children }: TaskDndProviderProps) {
       try {
         await changeTaskStatus({ taskId: sourceTaskId, status: targetStatus })
         useTaskStore.getState().notifyTaskChanged()
-        const statusLabel = targetStatus === 'in_progress' ? 'In Progress' : targetStatus === 'completed' ? 'Done' : 'To Do'
+        const stage = useStageStore.getState().stages.find(s => s.id === targetStatus)
+        const statusLabel = stage ? stage.name : (targetStatus === 'in_progress' ? 'In Progress' : targetStatus === 'completed' ? 'Done' : 'To Do')
         toast.success(`Status changed to ${statusLabel}`, {
           action: {
             label: 'Undo',
@@ -367,16 +415,19 @@ export function TaskDndProvider({ children }: TaskDndProviderProps) {
 
   const handleDragCancel = useCallback(() => {
     setActiveTask(null)
+    setActiveStage(null)
     setDropIntent('none')
   }, [])
 
   const contextValue = useMemo(() => ({
     activeTaskId: activeTask?.id ?? null,
     activeTask,
-    isDragging: activeTask !== null,
+    activeStageId: activeStage?.id ?? null,
+    activeStage,
+    isDragging: activeTask !== null || activeStage !== null,
     dropIntent,
     setDropIntent
-  }), [activeTask, dropIntent])
+  }), [activeTask, activeStage, dropIntent])
 
   return (
     <TaskDndStateContext.Provider value={contextValue}>
@@ -392,6 +443,7 @@ export function TaskDndProvider({ children }: TaskDndProviderProps) {
         {children}
         <DragOverlay dropAnimation={{ duration: 180, easing: 'cubic-bezier(0.25, 1, 0.5, 1)' }}>
           {activeTask ? <TaskDragPreview task={activeTask} /> : null}
+          {activeStage ? <StageDragPreview stage={activeStage} /> : null}
         </DragOverlay>
       </DndContext>
     </TaskDndStateContext.Provider>

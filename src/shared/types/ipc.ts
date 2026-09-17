@@ -15,6 +15,7 @@ import type {
 } from './task'
 import type { Project, CreateProjectInput, UpdateProjectInput } from './project'
 import type { Tag, CreateTagInput, UpdateTagInput } from './tag'
+import type { Stage, CreateStageInput, UpdateStageInput } from './stage'
 import type {
   Reminder,
   CreateReminderInput,
@@ -28,6 +29,13 @@ import type { AppSettings, SettingKey } from './settings'
 // ============================================================================
 
 export const IPC_CHANNELS = {
+  // Stages
+  STAGES_LIST: 'stages:list',
+  STAGES_GET: 'stages:get',
+  STAGES_CREATE: 'stages:create',
+  STAGES_UPDATE: 'stages:update',
+  STAGES_DELETE: 'stages:delete',
+  STAGES_REORDER: 'stages:reorder',
   // Tasks
   TASKS_LIST: 'tasks:list',
   TASKS_GET: 'tasks:get',
@@ -99,6 +107,7 @@ export const IPC_CHANNELS = {
 
   // Events (main → renderer)
   EVENT_TASK_UPDATED: 'event:taskUpdated',
+  EVENT_STAGES_UPDATED: 'event:stagesUpdated',
   EVENT_REMINDER_FIRED: 'event:reminderFired',
   EVENT_NOTIFICATION_CLICKED: 'event:notificationClicked',
   EVENT_NAVIGATE_TO_TASK: 'event:navigateToTask',
@@ -172,6 +181,15 @@ export interface IpcApi {
     search(query: string): Promise<Task[]>
   }
 
+  stages: {
+    list(): Promise<Stage[]>
+    get(id: string): Promise<Stage | null>
+    create(input: CreateStageInput): Promise<Stage>
+    update(id: string, input: UpdateStageInput): Promise<Stage>
+    delete(id: string, fallbackStageId?: string): Promise<void>
+    reorder(ids: string[]): Promise<void>
+  }
+
   projects: {
     list(): Promise<Project[]>
     get(id: string): Promise<Project | null>
@@ -226,6 +244,7 @@ export interface IpcApi {
   // Event listeners (main → renderer)
   on: {
     taskUpdated(callback: (task: Task) => void): () => void
+    stagesUpdated(callback: (stages: Stage[]) => void): () => void
     reminderFired(callback: (reminder: Reminder) => void): () => void
     notificationClicked(callback: (taskId: string) => void): () => void
     navigateToTask(callback: (taskId: string) => void): () => void

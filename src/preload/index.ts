@@ -19,7 +19,10 @@ import type {
   ChangeTaskStatusInput,
   MakeSubtaskInput,
   Task,
-  Reminder
+  Reminder,
+  Stage,
+  CreateStageInput,
+  UpdateStageInput
 } from '@shared/types'
 import { IPC_CHANNELS } from '@shared/types'
 
@@ -41,6 +44,14 @@ const api: IpcApi = {
     getSubtasks: (parentId: string) => ipcRenderer.invoke(IPC_CHANNELS.TASKS_GET_SUBTASKS, parentId),
     getStats: () => ipcRenderer.invoke(IPC_CHANNELS.TASKS_GET_STATS),
     search: (query: string) => ipcRenderer.invoke(IPC_CHANNELS.TASKS_SEARCH, query)
+  },
+  stages: {
+    list: () => ipcRenderer.invoke(IPC_CHANNELS.STAGES_LIST),
+    get: (id: string) => ipcRenderer.invoke(IPC_CHANNELS.STAGES_GET, id),
+    create: (input: CreateStageInput) => ipcRenderer.invoke(IPC_CHANNELS.STAGES_CREATE, input),
+    update: (id: string, input: UpdateStageInput) => ipcRenderer.invoke(IPC_CHANNELS.STAGES_UPDATE, id, input),
+    delete: (id: string, fallbackStageId?: string) => ipcRenderer.invoke(IPC_CHANNELS.STAGES_DELETE, id, fallbackStageId),
+    reorder: (ids: string[]) => ipcRenderer.invoke(IPC_CHANNELS.STAGES_REORDER, ids)
   },
   projects: {
     list: () => ipcRenderer.invoke(IPC_CHANNELS.PROJECTS_LIST),
@@ -106,6 +117,13 @@ const api: IpcApi = {
       ipcRenderer.on(IPC_CHANNELS.EVENT_TASK_UPDATED, handler)
       return () => {
         ipcRenderer.removeListener(IPC_CHANNELS.EVENT_TASK_UPDATED, handler)
+      }
+    },
+    stagesUpdated: (callback: (stages: Stage[]) => void) => {
+      const handler = (_event: IpcRendererEvent, stages: Stage[]) => callback(stages)
+      ipcRenderer.on(IPC_CHANNELS.EVENT_STAGES_UPDATED, handler)
+      return () => {
+        ipcRenderer.removeListener(IPC_CHANNELS.EVENT_STAGES_UPDATED, handler)
       }
     },
     reminderFired: (callback: (reminder: Reminder) => void) => {

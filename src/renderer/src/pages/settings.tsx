@@ -9,8 +9,12 @@ import { useTheme } from '@/components/theme-provider'
 import type { AppInfo } from '@shared/types'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
-import { Download, Database, Globe, Bell, Keyboard } from 'lucide-react'
+import { Download, Database, Globe, Bell, Keyboard, Layers, Plus, Pencil, Trash2, ArrowUp, ArrowDown, Circle } from 'lucide-react'
 import { KEYBOARD_SHORTCUTS } from '@shared/constants'
+import { useStageStore } from '@/stores/stage-store'
+import { StageDialog, STAGE_ICONS } from '@/components/stage/stage-dialog'
+import { DeleteStageDialog } from '@/components/stage/delete-stage-dialog'
+import type { Stage } from '@shared/types'
 
 export default function SettingsPage() {
   const { t } = useTranslation(['settings', 'common', 'notifications', 'errors', 'reminders', 'navigation'])
@@ -18,6 +22,18 @@ export default function SettingsPage() {
   const projects = useProjectStore(s => s.projects)
   const { theme, setTheme } = useTheme()
   const [appInfo, setAppInfo] = useState<AppInfo | null>(null)
+
+  const stages = useStageStore(s => s.stages)
+  const fetchStages = useStageStore(s => s.fetchStages)
+  const reorderStages = useStageStore(s => s.reorderStages)
+  const [stageDialogOpen, setStageDialogOpen] = useState(false)
+  const [editingStage, setEditingStage] = useState<Stage | null>(null)
+  const [deleteDialogOpen, setDeleteDialogOpen] = useState(false)
+  const [deletingStage, setDeletingStage] = useState<Stage | null>(null)
+
+  useEffect(() => {
+    fetchStages()
+  }, [fetchStages])
 
   useEffect(() => {
     if (window.api?.app?.getInfo) {
@@ -111,8 +127,9 @@ export default function SettingsPage() {
         </div>
 
         <Tabs defaultValue="general" className="w-full">
-          <TabsList className="mb-6 grid grid-cols-6 w-full h-8 p-0.5 bg-muted/40 border border-border/50">
+          <TabsList className="mb-6 grid grid-cols-7 w-full h-8 p-0.5 bg-muted/40 border border-border/50">
             <TabsTrigger value="general" className="text-xs">{t('settings:tabs.general')}</TabsTrigger>
+            <TabsTrigger value="stages" className="text-xs">Stages</TabsTrigger>
             <TabsTrigger value="notifications" className="text-xs">{t('settings:tabs.notifications')}</TabsTrigger>
             <TabsTrigger value="appearance" className="text-xs">{t('settings:tabs.appearance')}</TabsTrigger>
             <TabsTrigger value="keyboard" className="text-xs">{t('common:shortcuts.title', { defaultValue: 'Keyboard' })}</TabsTrigger>
@@ -198,6 +215,125 @@ export default function SettingsPage() {
                   ))}
                 </SelectContent>
               </Select>
+            </div>
+          </TabsContent>
+
+          {/* STAGES */}
+          <TabsContent value="stages" className="space-y-4">
+            <div className="flex items-center justify-between border-b pb-4">
+              <div className="space-y-0.5">
+                <div className="flex items-center gap-2">
+                  <Layers className="h-4 w-4 text-muted-foreground" />
+                  <h3 className="font-medium text-sm">Kanban Stages</h3>
+                </div>
+                <p className="text-xs text-muted-foreground">
+                  Customize workflow stages for your Kanban board columns.
+                </p>
+              </div>
+              <Button
+                size="sm"
+                onClick={() => {
+                  setEditingStage(null)
+                  setStageDialogOpen(true)
+                }}
+                className="h-8 text-xs gap-1.5"
+              >
+                <Plus className="h-3.5 w-3.5" />
+                <span>New Stage</span>
+              </Button>
+            </div>
+
+            <div className="space-y-2">
+              {stages.map((stage, index) => {
+                const IconComp = (stage.icon && STAGE_ICONS[stage.icon]) || Circle
+                return (
+                  <div
+                    key={stage.id}
+                    className="flex items-center justify-between p-3 rounded-lg border border-border/60 bg-card hover:border-border transition-all"
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className="flex flex-col gap-0.5">
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-4 w-4 text-muted-foreground hover:text-foreground disabled:opacity-30"
+                          disabled={index === 0}
+                          onClick={() => {
+                            const newStages = [...stages]
+                            const temp = newStages[index]
+                            newStages[index] = newStages[index - 1]
+                            newStages[index - 1] = temp
+                            reorderStages(newStages.map(s => s.id))
+                          }}
+                          title="Move up"
+                        >
+                          <ArrowUp className="h-3 w-3" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          className="h-4 w-4 text-muted-foreground hover:text-foreground disabled:opacity-30"
+                          disabled={index === stages.length - 1}
+                          onClick={() => {
+                            const newStages = [...stages]
+                            const temp = newStages[index]
+                            newStages[index] = newStages[index + 1]
+                            newStages[index + 1] = temp
+                            reorderStages(newStages.map(s => s.id))
+                          }}
+                          title="Move down"
+                        >
+                          <ArrowDown className="h-3 w-3" />
+                        </Button>
+                      </div>
+
+                      <div className="flex items-center gap-2.5">
+                        <span
+                          className="w-3.5 h-3.5 rounded-full shrink-0"
+                          style={{ backgroundColor: stage.color }}
+                        />
+                        <IconComp className="h-4 w-4 text-muted-foreground" />
+                        <span className="font-medium text-xs text-foreground truncate">
+                          {stage.name}
+                        </span>
+                        {stage.isCompleted && (
+                          <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 font-medium">
+                            Completed
+                          </span>
+                        )}
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-1">
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 text-muted-foreground hover:text-foreground"
+                        onClick={() => {
+                          setEditingStage(stage)
+                          setStageDialogOpen(true)
+                        }}
+                        title="Edit Stage"
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                      </Button>
+                      <Button
+                        variant="ghost"
+                        size="icon"
+                        className="h-7 w-7 text-destructive hover:bg-destructive/15 disabled:opacity-30"
+                        disabled={stages.length <= 1}
+                        onClick={() => {
+                          setDeletingStage(stage)
+                          setDeleteDialogOpen(true)
+                        }}
+                        title="Delete Stage"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </Button>
+                    </div>
+                  </div>
+                )
+              })}
             </div>
           </TabsContent>
 
@@ -427,6 +563,18 @@ export default function SettingsPage() {
             </div>
           </TabsContent>
         </Tabs>
+
+        <StageDialog
+          open={stageDialogOpen}
+          onOpenChange={setStageDialogOpen}
+          stage={editingStage}
+        />
+
+        <DeleteStageDialog
+          open={deleteDialogOpen}
+          onOpenChange={setDeleteDialogOpen}
+          stage={deletingStage}
+        />
       </div>
     </div>
   )

@@ -1,6 +1,7 @@
 import { ipcMain, BrowserWindow } from 'electron'
 import { IPC_CHANNELS } from '@shared/types'
 import { TaskService } from '../services/task-service'
+import { StageService } from '../services/stage-service'
 import { ProjectService } from '../services/project-service'
 import { TagService } from '../services/tag-service'
 import { ReminderService } from '../services/reminder-service'
@@ -14,6 +15,63 @@ function broadcastTaskUpdated(task?: any): void {
     if (!win.isDestroyed()) {
       win.webContents.send(IPC_CHANNELS.EVENT_TASK_UPDATED, task)
     }
+  })
+}
+
+function broadcastStagesUpdated(stages?: any): void {
+  BrowserWindow.getAllWindows().forEach((win) => {
+    if (!win.isDestroyed()) {
+      win.webContents.send(IPC_CHANNELS.EVENT_STAGES_UPDATED, stages)
+    }
+  })
+}
+
+function registerStageHandlers(): void {
+  const service = new StageService()
+
+  ipcMain.handle(IPC_CHANNELS.STAGES_LIST, async () => {
+    try { return service.list() }
+    catch (error) { logger.error('stages:list failed', error); throw error }
+  })
+
+  ipcMain.handle(IPC_CHANNELS.STAGES_GET, async (_event, id: string) => {
+    try { return service.get(id) }
+    catch (error) { logger.error('stages:get failed', error); throw error }
+  })
+
+  ipcMain.handle(IPC_CHANNELS.STAGES_CREATE, async (_event, input) => {
+    try {
+      const result = service.create(input)
+      broadcastStagesUpdated(service.list())
+      return result
+    }
+    catch (error) { logger.error('stages:create failed', error); throw error }
+  })
+
+  ipcMain.handle(IPC_CHANNELS.STAGES_UPDATE, async (_event, id: string, input) => {
+    try {
+      const result = service.update(id, input)
+      broadcastStagesUpdated(service.list())
+      return result
+    }
+    catch (error) { logger.error('stages:update failed', error); throw error }
+  })
+
+  ipcMain.handle(IPC_CHANNELS.STAGES_DELETE, async (_event, id: string, fallbackStageId?: string) => {
+    try {
+      service.delete(id, fallbackStageId)
+      broadcastStagesUpdated(service.list())
+      broadcastTaskUpdated()
+    }
+    catch (error) { logger.error('stages:delete failed', error); throw error }
+  })
+
+  ipcMain.handle(IPC_CHANNELS.STAGES_REORDER, async (_event, ids: string[]) => {
+    try {
+      service.reorder(ids)
+      broadcastStagesUpdated(service.list())
+    }
+    catch (error) { logger.error('stages:reorder failed', error); throw error }
   })
 }
 
@@ -410,6 +468,7 @@ function registerAppHandlers(): void {
 /** Register all IPC handlers for the application */
 export function registerAllIpcHandlers(): void {
   logger.info('Registering IPC handlers...')
+  registerStageHandlers()
   registerTaskHandlers()
   registerProjectHandlers()
   registerTagHandlers()

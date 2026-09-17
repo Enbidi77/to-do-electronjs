@@ -39,6 +39,18 @@ const mockApi = {
     update: vi.fn(),
     delete: vi.fn()
   },
+  stages: {
+    list: vi.fn().mockResolvedValue([
+      { id: 'active', name: 'To Do', color: '#94a3b8', icon: 'circle', sortOrder: 1000, isCompleted: false, createdAt: '', updatedAt: '' },
+      { id: 'in_progress', name: 'In Progress', color: '#f59e0b', icon: 'clock', sortOrder: 2000, isCompleted: false, createdAt: '', updatedAt: '' },
+      { id: 'completed', name: 'Done', color: '#10b981', icon: 'check-circle-2', sortOrder: 3000, isCompleted: true, createdAt: '', updatedAt: '' }
+    ]),
+    get: vi.fn(),
+    create: vi.fn(),
+    update: vi.fn(),
+    delete: vi.fn(),
+    reorder: vi.fn()
+  },
   settings: {
     getAll: vi.fn().mockResolvedValue({}),
     get: vi.fn(),

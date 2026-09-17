@@ -6,7 +6,7 @@ import type { Project } from './project'
 import type { Tag } from './tag'
 import type { Reminder } from './reminder'
 
-export type TaskStatus = 'active' | 'in_progress' | 'completed' | 'archived'
+export type TaskStatus = 'active' | 'in_progress' | 'completed' | 'archived' | (string & {})
 export type TaskPriority = 'none' | 'low' | 'medium' | 'high' | 'urgent'
 
 export interface Task {

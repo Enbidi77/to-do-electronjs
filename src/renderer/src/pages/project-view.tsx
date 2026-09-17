@@ -2,10 +2,11 @@ import { useEffect, useState, useCallback } from 'react'
 import { TaskList } from '@/components/task/task-list'
 import { TaskBoard } from '@/components/task/task-board'
 import { TaskEditor } from '@/components/task/task-editor'
-import type { Task, TaskStatus } from '@shared/types'
+import type { TaskStatus } from '@shared/types'
 import { useUiStore } from '@/stores/ui-store'
 import { useProjectStore } from '@/stores/project-store'
 import { useTaskStore } from '@/stores/task-store'
+import { useStageStore } from '@/stores/stage-store'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 import { Folder } from 'lucide-react'
@@ -19,6 +20,7 @@ export default function ProjectViewPage() {
   const uncompleteTask = useTaskStore(s => s.uncompleteTask)
   const deleteTask = useTaskStore(s => s.deleteTask)
   const tasksVersion = useTaskStore(s => s.tasksVersion)
+  const stages = useStageStore(s => s.stages)
 
   const tasks = useTaskStore(s => s.tasks)
   const setTasks = useTaskStore(s => s.setTasks)
@@ -34,8 +36,8 @@ export default function ProjectViewPage() {
     try {
       if (window.api?.tasks?.list) {
         const statusFilter: TaskStatus[] = taskViewMode === 'board'
-          ? ['active', 'in_progress', 'completed']
-          : ['active', 'in_progress']
+          ? (stages.length > 0 ? stages.map(s => s.id) : ['active', 'in_progress', 'completed'])
+          : (stages.length > 0 ? stages.filter(s => !s.isCompleted).map(s => s.id) : ['active', 'in_progress'])
 
         const data = await window.api.tasks.list({
           filter: { status: statusFilter, projectId: currentProjectId },
@@ -48,7 +50,7 @@ export default function ProjectViewPage() {
     } finally {
       setLoading(false)
     }
-  }, [currentProjectId, taskViewMode, setTasks])
+  }, [currentProjectId, taskViewMode, stages, setTasks])
 
   useEffect(() => {
     fetchTasks()

@@ -1,10 +1,11 @@
 import { useEffect, useState, useCallback } from 'react'
 import { TaskList } from '@/components/task/task-list'
 import { TaskBoard } from '@/components/task/task-board'
-import type { Task, TaskStats, TaskStatus } from '@shared/types'
+import type { TaskStats, TaskStatus } from '@shared/types'
 import { useTranslation } from 'react-i18next'
 import { useTaskStore } from '@/stores/task-store'
 import { useUiStore } from '@/stores/ui-store'
+import { useStageStore } from '@/stores/stage-store'
 import { toast } from 'sonner'
 import { CheckCircle2, Clock, AlertCircle, Calendar } from 'lucide-react'
 import { formatHeaderDate } from '@/lib/date-format'
@@ -20,6 +21,7 @@ export default function TodayPage() {
   const completeTask = useTaskStore(s => s.completeTask)
   const uncompleteTask = useTaskStore(s => s.uncompleteTask)
   const deleteTask = useTaskStore(s => s.deleteTask)
+  const stages = useStageStore(s => s.stages)
 
   const todayStr = new Date().toISOString().split('T')[0]
 
@@ -32,8 +34,8 @@ export default function TodayPage() {
 
       if (window.api?.tasks?.list) {
         const statusFilter: TaskStatus[] = taskViewMode === 'board'
-          ? ['active', 'in_progress', 'completed']
-          : ['active', 'in_progress']
+          ? (stages.length > 0 ? stages.map(s => s.id) : ['active', 'in_progress', 'completed'])
+          : (stages.length > 0 ? stages.filter(s => !s.isCompleted).map(s => s.id) : ['active', 'in_progress'])
 
         // Fetch tasks due today or overdue
         const data = await window.api.tasks.list({
@@ -53,7 +55,7 @@ export default function TodayPage() {
     } finally {
       setLoading(false)
     }
-  }, [todayStr, taskViewMode, setTasks])
+  }, [todayStr, taskViewMode, stages, setTasks])
 
   useEffect(() => {
     loadData()

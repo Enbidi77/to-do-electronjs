@@ -76,3 +76,16 @@ export const settings = sqliteTable('settings', {
 }, (table) => ({
   keyIdx: index('settings_key_idx').on(table.key),
 }));
+
+export const stages = sqliteTable('stages', {
+  id: text('id').primaryKey(),
+  name: text('name').notNull(),
+  color: text('color').default('#64748b'),
+  icon: text('icon').default('circle'),
+  sortOrder: integer('sort_order').default(0),
+  isCompleted: integer('is_completed').default(0),
+  createdAt: text('created_at'),
+  updatedAt: text('updated_at'),
+}, (table) => ({
+  sortOrderIdx: index('stages_sort_order_idx').on(table.sortOrder),
+}));

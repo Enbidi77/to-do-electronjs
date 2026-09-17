@@ -30,6 +30,8 @@ import { useUiStore } from '@/stores/ui-store'
 import { useSettingsStore } from '@/stores/settings-store'
 import { useTaskStore } from '@/stores/task-store'
 import { useProjectStore } from '@/stores/project-store'
+import { useStageStore } from '@/stores/stage-store'
+import { STAGE_ICONS } from '@/components/stage/stage-dialog'
 import { toast } from 'sonner'
 import { addDays, format } from 'date-fns'
 
@@ -54,6 +56,7 @@ export function TaskContextMenu({ task, children }: TaskContextMenuProps) {
   const reorderTask = useTaskStore(s => s.reorderTask)
   const allTasks = useTaskStore(s => s.tasks)
   const projects = useProjectStore(s => s.projects)
+  const stages = useStageStore(s => s.stages)
 
   const handleToggleComplete = async () => {
     try {
@@ -180,21 +183,40 @@ export function TaskContextMenu({ task, children }: TaskContextMenuProps) {
         <ContextMenuSub>
           <ContextMenuSubTrigger className="gap-2">
             <Layers className="h-3.5 w-3.5 text-muted-foreground" />
-            <span>Change Status</span>
+            <span>Change Stage</span>
           </ContextMenuSubTrigger>
-          <ContextMenuSubContent className="w-40 text-xs">
-            <ContextMenuItem onClick={() => handleChangeStatus('active')} className="gap-2">
-              <Circle className="h-3 w-3 text-muted-foreground" />
-              <span>To Do</span>
-            </ContextMenuItem>
-            <ContextMenuItem onClick={() => handleChangeStatus('in_progress')} className="gap-2">
-              <Circle className="h-3 w-3 text-amber-500" />
-              <span>In Progress</span>
-            </ContextMenuItem>
-            <ContextMenuItem onClick={() => handleChangeStatus('completed')} className="gap-2">
-              <CheckCircle className="h-3 w-3 text-emerald-500" />
-              <span>Done</span>
-            </ContextMenuItem>
+          <ContextMenuSubContent className="w-44 text-xs">
+            {stages.length > 0 ? (
+              stages.map((stage) => {
+                const IconComp = (stage.icon && STAGE_ICONS[stage.icon]) || Circle
+                const isCurrent = task.status === stage.id
+                return (
+                  <ContextMenuItem
+                    key={stage.id}
+                    onClick={() => handleChangeStatus(stage.id)}
+                    className={`gap-2 ${isCurrent ? 'font-semibold text-primary' : ''}`}
+                  >
+                    <IconComp className="h-3 w-3 shrink-0" style={{ color: stage.color }} />
+                    <span className="truncate">{stage.name}</span>
+                  </ContextMenuItem>
+                )
+              })
+            ) : (
+              <>
+                <ContextMenuItem onClick={() => handleChangeStatus('active')} className="gap-2">
+                  <Circle className="h-3 w-3 text-muted-foreground" />
+                  <span>To Do</span>
+                </ContextMenuItem>
+                <ContextMenuItem onClick={() => handleChangeStatus('in_progress')} className="gap-2">
+                  <Circle className="h-3 w-3 text-amber-500" />
+                  <span>In Progress</span>
+                </ContextMenuItem>
+                <ContextMenuItem onClick={() => handleChangeStatus('completed')} className="gap-2">
+                  <CheckCircle className="h-3 w-3 text-emerald-500" />
+                  <span>Done</span>
+                </ContextMenuItem>
+              </>
+            )}
           </ContextMenuSubContent>
         </ContextMenuSub>
 

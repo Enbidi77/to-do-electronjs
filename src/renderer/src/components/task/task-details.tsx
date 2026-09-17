@@ -7,8 +7,9 @@ import { useTranslation } from 'react-i18next'
 import { useUiStore } from '@/stores/ui-store'
 import { useTaskStore } from '@/stores/task-store'
 import { useProjectStore } from '@/stores/project-store'
+import { useStageStore } from '@/stores/stage-store'
 import type { TaskWithRelations, TaskPriority } from '@shared/types'
-import { Trash2, Archive, CheckCircle2, Calendar, Folder, Flag } from 'lucide-react'
+import { Trash2, Archive, CheckCircle2, Calendar, Folder, Flag, Layers } from 'lucide-react'
 import { SubtaskList } from './subtask-list'
 import { TaskPrioritySelector } from './task-priority'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -24,6 +25,8 @@ export function TaskDetails() {
   const deleteTask = useTaskStore(s => s.deleteTask)
   const completeTask = useTaskStore(s => s.completeTask)
   const archiveTask = useTaskStore(s => s.archiveTask)
+  const changeTaskStatus = useTaskStore(s => s.changeTaskStatus)
+  const stages = useStageStore(s => s.stages)
 
   useEffect(() => {
     if (detailsPanelOpen && selectedTaskId) {
@@ -59,6 +62,17 @@ export function TaskDetails() {
     const pId = projectId === 'none' ? null : projectId
     setTask({ ...task, projectId: pId })
     updateTask(task.id, { projectId: pId }).catch(console.error)
+  }
+
+  const handleStageChange = async (stageId: string) => {
+    try {
+      await changeTaskStatus({ taskId: task.id, status: stageId })
+      setTask({ ...task, status: stageId })
+      useTaskStore.getState().notifyTaskChanged()
+      toast.success('Stage updated')
+    } catch {
+      toast.error('Failed to update stage')
+    }
   }
 
   const handleDueDateChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -160,6 +174,28 @@ export function TaskDetails() {
 
           {/* Properties grid */}
           <div className="space-y-2.5 pt-3 border-t border-border/60 text-xs">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-muted-foreground">
+                <Layers className="h-3.5 w-3.5" />
+                <span>Stage</span>
+              </div>
+              <Select value={task.status || 'active'} onValueChange={handleStageChange}>
+                <SelectTrigger className="w-[170px] h-7 text-xs border-border/70 bg-muted/30">
+                  <SelectValue placeholder="Select stage" />
+                </SelectTrigger>
+                <SelectContent>
+                  {stages.map(s => (
+                    <SelectItem key={s.id} value={s.id}>
+                      <div className="flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: s.color }} />
+                        <span className="truncate">{s.name}</span>
+                      </div>
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2 text-muted-foreground">
                 <Folder className="h-3.5 w-3.5" />

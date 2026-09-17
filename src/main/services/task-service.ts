@@ -20,6 +20,7 @@ import type {
 import { createLogger } from '../system/logger'
 import { reminderService } from './reminder-service'
 import { ReminderScheduler } from '../scheduler/reminder-scheduler'
+import { stageService } from './stage-service'
 
 const logger = createLogger('TaskService')
 
@@ -511,15 +512,18 @@ export class TaskService {
     const task = this.get(input.taskId)
     if (!task) throw new Error(`Task not found: ${input.taskId}`)
 
-    if (input.status === 'completed') {
+    const stage = stageService.get(input.status)
+    const isTargetCompleted = input.status === 'completed' || Boolean(stage?.isCompleted)
+
+    if (isTargetCompleted) {
       return this.complete(input.taskId)
     }
 
-    if (task.status === 'completed') {
+    if (task.completedAt) {
       this.uncomplete(input.taskId)
     }
 
-    return this.update(input.taskId, { status: input.status })
+    return this.update(input.taskId, { status: input.status, completedAt: null })
   }
 
   /** Make a task a subtask of another task, preventing circular hierarchies */
