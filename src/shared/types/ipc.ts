@@ -98,6 +98,11 @@ export const IPC_CHANNELS = {
   APP_GET_BACKUPS: 'app:getBackups',
   APP_RESTORE_BACKUP: 'app:restoreBackup',
 
+  // Startup
+  STARTUP_GET_STATE: 'startup:getState',
+  STARTUP_RETRY: 'startup:retry',
+  STARTUP_QUIT: 'startup:quit',
+
   // Window controls
   WINDOW_MINIMIZE: 'window:minimize',
   WINDOW_MAXIMIZE: 'window:maximize',
@@ -113,7 +118,8 @@ export const IPC_CHANNELS = {
   EVENT_NAVIGATE_TO_TASK: 'event:navigateToTask',
   EVENT_QUICK_ADD: 'event:quickAdd',
   EVENT_THEME_CHANGED: 'event:themeChanged',
-  EVENT_WINDOW_MAXIMIZE_CHANGED: 'event:windowMaximizeChanged'
+  EVENT_WINDOW_MAXIMIZE_CHANGED: 'event:windowMaximizeChanged',
+  EVENT_STARTUP_STATUS: 'event:startupStatus'
 } as const
 
 export type IpcChannel = (typeof IPC_CHANNELS)[keyof typeof IPC_CHANNELS]
@@ -241,6 +247,8 @@ export interface IpcApi {
     showNotification(options: { title: string; body: string; taskId?: string }): Promise<void>
   }
 
+  startup: StartupApi
+
   // Event listeners (main → renderer)
   on: {
     taskUpdated(callback: (task: Task) => void): () => void
@@ -251,7 +259,37 @@ export interface IpcApi {
     quickAdd(callback: () => void): () => void
     themeChanged(callback: (theme: string) => void): () => void
     windowMaximizeChanged(callback: (isMaximized: boolean) => void): () => void
+    startupStatusChanged(callback: (state: StartupState) => void): () => void
   }
+}
+
+export type StartupPhase =
+  | 'initializing'
+  | 'database'
+  | 'migrations'
+  | 'settings'
+  | 'scheduler'
+  | 'tray'
+  | 'window'
+  | 'ready'
+  | 'error'
+
+export interface StartupState {
+  phase: StartupPhase
+  message?: string
+  error?: string | null
+  version: string
+  appName: string
+  theme: 'light' | 'dark' | 'system'
+  systemIsDark: boolean
+  language: 'en' | 'vi'
+}
+
+export interface StartupApi {
+  getState(): Promise<StartupState>
+  retry(): Promise<void>
+  quit(): Promise<void>
+  onStatusChange(callback: (state: StartupState) => void): () => void
 }
 
 export interface TodoWindowApi {
@@ -265,6 +303,7 @@ export interface TodoWindowApi {
 export interface TodoApi {
   window: TodoWindowApi
   tasks: IpcApi['tasks']
+  startup?: StartupApi
 }
 
 

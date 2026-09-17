@@ -1,4 +1,4 @@
-import { BrowserWindow, app } from 'electron';
+import { BrowserWindow, app, nativeTheme } from 'electron';
 import path from 'path';
 import { settingsService } from '../services/settings-service';
 import { IPC_CHANNELS } from '@shared/types';
@@ -9,10 +9,21 @@ export function setIsQuitting(quitting: boolean): void {
   isQuitting = quitting;
 }
 
-export function createMainWindow(): BrowserWindow {
+export function createMainWindow(showOnReady = true): BrowserWindow {
   const iconPath = app.isPackaged
     ? path.join(process.resourcesPath, 'icon.ico')
     : path.join(__dirname, '../../resources/icon.ico');
+
+  // Determine initial theme to prevent any white flash
+  let isDark = nativeTheme.shouldUseDarkColors;
+  try {
+    const savedTheme = settingsService.get('theme');
+    if (savedTheme === 'dark') isDark = true;
+    else if (savedTheme === 'light') isDark = false;
+  } catch {
+    // Fall back to system preference
+  }
+  const initialBgColor = isDark ? '#1f2023' : '#f8fafc';
 
   const mainWindow = new BrowserWindow({
     width: 1024,
@@ -23,7 +34,7 @@ export function createMainWindow(): BrowserWindow {
     frame: false,
     titleBarStyle: 'hidden',
     resizable: true,
-    backgroundColor: '#f8fafc',
+    backgroundColor: initialBgColor,
     icon: iconPath,
     webPreferences: {
       contextIsolation: true,
@@ -32,9 +43,11 @@ export function createMainWindow(): BrowserWindow {
     }
   });
 
-  mainWindow.on('ready-to-show', () => {
-    mainWindow.show();
-  });
+  if (showOnReady) {
+    mainWindow.on('ready-to-show', () => {
+      mainWindow.show();
+    });
+  }
 
   mainWindow.on('maximize', () => {
     if (!mainWindow.isDestroyed()) {

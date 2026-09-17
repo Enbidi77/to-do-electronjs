@@ -46,6 +46,9 @@ export const PRIORITY_CONFIG = {
 export const SCHEDULER_TICK_INTERVAL_MS = 30_000 // 30 seconds
 export const SCHEDULER_LOOK_AHEAD_MINUTES = 60
 
+// Splash Screen
+export const MIN_SPLASH_DURATION_MS = 1200 // 1.2s minimum display time to avoid jarring flash
+
 // Pagination
 export const DEFAULT_PAGE_SIZE = 50
 

@@ -13,11 +13,9 @@ import { useUiStore } from '@/stores/ui-store'
 import { useTaskStore } from '@/stores/task-store'
 import { useKeyboardShortcuts } from '@/hooks/use-keyboard-shortcuts'
 
-export default function App() {
-  const [isQuickAddWindow, setIsQuickAddWindow] = useState(() =>
-    window.location.hash.includes('quick-add')
-  )
+import { SplashScreen } from '@/components/splash/splash-screen'
 
+function MainApp() {
   const fetchProjects = useProjectStore(s => s.fetchProjects)
   const fetchTags = useTagStore(s => s.fetchTags)
   const fetchSettings = useSettingsStore(s => s.fetchSettings)
@@ -27,11 +25,6 @@ export default function App() {
   useKeyboardShortcuts()
 
   useEffect(() => {
-    const handleHashChange = () => {
-      setIsQuickAddWindow(window.location.hash.includes('quick-add'))
-    }
-    window.addEventListener('hashchange', handleHashChange)
-
     // Setup initial data fetch
     fetchProjects().catch(console.error)
     fetchTags().catch(console.error)
@@ -57,21 +50,9 @@ export default function App() {
     }
 
     return () => {
-      window.removeEventListener('hashchange', handleHashChange)
       cleanups.forEach(fn => fn())
     }
   }, [fetchProjects, fetchTags, fetchSettings, fetchStats])
-
-  if (isQuickAddWindow) {
-    return (
-      <ThemeProvider defaultTheme="system" storageKey="todo-theme">
-        <div className="h-screen w-screen overflow-hidden bg-background/90 backdrop-blur-md flex items-center justify-center p-2">
-          <QuickAddDialog standalone />
-          <Toaster richColors position="bottom-center" />
-        </div>
-      </ThemeProvider>
-    )
-  }
 
   return (
     <ThemeProvider defaultTheme="system" storageKey="todo-theme">
@@ -84,4 +65,39 @@ export default function App() {
       </div>
     </ThemeProvider>
   )
+}
+
+export default function App() {
+  const [hash, setHash] = useState(() => window.location.hash)
+
+  useEffect(() => {
+    const handleHashChange = () => {
+      setHash(window.location.hash)
+    }
+    window.addEventListener('hashchange', handleHashChange)
+    return () => {
+      window.removeEventListener('hashchange', handleHashChange)
+    }
+  }, [])
+
+  if (hash.includes('splash')) {
+    return (
+      <ThemeProvider defaultTheme="system" storageKey="todo-theme">
+        <SplashScreen />
+      </ThemeProvider>
+    )
+  }
+
+  if (hash.includes('quick-add')) {
+    return (
+      <ThemeProvider defaultTheme="system" storageKey="todo-theme">
+        <div className="h-screen w-screen overflow-hidden bg-background/90 backdrop-blur-md flex items-center justify-center p-2">
+          <QuickAddDialog standalone />
+          <Toaster richColors position="bottom-center" />
+        </div>
+      </ThemeProvider>
+    )
+  }
+
+  return <MainApp />
 }

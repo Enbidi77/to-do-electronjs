@@ -12,6 +12,12 @@ vi.mock('electron', () => {
       quit: vi.fn(),
       setLoginItemSettings: vi.fn(),
       requestSingleInstanceLock: vi.fn(() => true),
+      getLocale: vi.fn(() => 'en'),
+      on: vi.fn()
+    },
+    nativeTheme: {
+      shouldUseDarkColors: false,
+      themeSource: 'system',
       on: vi.fn()
     },
     Notification: class {
@@ -20,7 +26,11 @@ vi.mock('electron', () => {
       show() {}
     },
     BrowserWindow: class {
+      static getAllWindows() { return [] }
+      static fromWebContents() { return null }
+      static getFocusedWindow() { return null }
       isMinimized() { return false }
+      isDestroyed() { return false }
       restore() {}
       focus() {}
       show() {}

@@ -6,6 +6,8 @@ import { ProjectService } from '../services/project-service'
 import { TagService } from '../services/tag-service'
 import { ReminderService } from '../services/reminder-service'
 import { SettingsService } from '../services/settings-service'
+import { NotificationService } from '../notifications/notification-service'
+import { StartupCoordinator } from '../system/startup-coordinator'
 import { createLogger } from '../system/logger'
 
 const logger = createLogger('IPC')
@@ -456,7 +458,6 @@ function registerAppHandlers(): void {
 
   ipcMain.handle(IPC_CHANNELS.APP_SHOW_NOTIFICATION, async (_event, options: { title: string; body: string; taskId?: string }) => {
     try {
-      const { NotificationService } = await import('../notifications/notification-service')
       NotificationService.getInstance().show(options.title, options.body, options.taskId)
     } catch (error) {
       logger.error('app:showNotification failed', error)
@@ -465,9 +466,30 @@ function registerAppHandlers(): void {
   })
 }
 
+function registerStartupHandlers(): void {
+  ipcMain.handle(IPC_CHANNELS.STARTUP_GET_STATE, async () => {
+    return StartupCoordinator.getInstance().getState()
+  })
+
+  ipcMain.handle(IPC_CHANNELS.STARTUP_RETRY, async () => {
+    await StartupCoordinator.getInstance().retry()
+  })
+
+  ipcMain.handle(IPC_CHANNELS.STARTUP_QUIT, async () => {
+    await StartupCoordinator.getInstance().quit()
+  })
+}
+
+let areHandlersRegistered = false
+
 /** Register all IPC handlers for the application */
 export function registerAllIpcHandlers(): void {
+  if (areHandlersRegistered) {
+    logger.info('IPC handlers already registered, skipping')
+    return
+  }
   logger.info('Registering IPC handlers...')
+  registerStartupHandlers()
   registerStageHandlers()
   registerTaskHandlers()
   registerProjectHandlers()
@@ -475,6 +497,7 @@ export function registerAllIpcHandlers(): void {
   registerReminderHandlers()
   registerSettingsHandlers()
   registerAppHandlers()
+  areHandlersRegistered = true
   logger.info('All IPC handlers registered')
 }
 

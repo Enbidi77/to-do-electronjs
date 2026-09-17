@@ -75,6 +75,13 @@ export class TrayManager {
     logger.info('Toggled notifications from tray');
     // Implementation would hook into settingsService
   }
+
+  destroy(): void {
+    if (this.tray) {
+      this.tray.destroy();
+      this.tray = null;
+    }
+  }
 }
 
 export function createTrayManager(mainWindow: BrowserWindow): TrayManager {

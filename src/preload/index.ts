@@ -22,7 +22,8 @@ import type {
   Reminder,
   Stage,
   CreateStageInput,
-  UpdateStageInput
+  UpdateStageInput,
+  StartupState
 } from '@shared/types'
 import { IPC_CHANNELS } from '@shared/types'
 
@@ -111,6 +112,18 @@ const api: IpcApi = {
     showNotification: (options: { title: string; body: string; taskId?: string }) =>
       ipcRenderer.invoke(IPC_CHANNELS.APP_SHOW_NOTIFICATION, options)
   },
+  startup: {
+    getState: () => ipcRenderer.invoke(IPC_CHANNELS.STARTUP_GET_STATE),
+    retry: () => ipcRenderer.invoke(IPC_CHANNELS.STARTUP_RETRY),
+    quit: () => ipcRenderer.invoke(IPC_CHANNELS.STARTUP_QUIT),
+    onStatusChange: (callback: (state: StartupState) => void) => {
+      const handler = (_event: IpcRendererEvent, state: StartupState) => callback(state)
+      ipcRenderer.on(IPC_CHANNELS.EVENT_STARTUP_STATUS, handler)
+      return () => {
+        ipcRenderer.removeListener(IPC_CHANNELS.EVENT_STARTUP_STATUS, handler)
+      }
+    }
+  },
   on: {
     taskUpdated: (callback: (task: Task) => void) => {
       const handler = (_event: IpcRendererEvent, task: Task) => callback(task)
@@ -167,6 +180,13 @@ const api: IpcApi = {
       return () => {
         ipcRenderer.removeListener(IPC_CHANNELS.EVENT_WINDOW_MAXIMIZE_CHANGED, handler)
       }
+    },
+    startupStatusChanged: (callback: (state: StartupState) => void) => {
+      const handler = (_event: IpcRendererEvent, state: StartupState) => callback(state)
+      ipcRenderer.on(IPC_CHANNELS.EVENT_STARTUP_STATUS, handler)
+      return () => {
+        ipcRenderer.removeListener(IPC_CHANNELS.EVENT_STARTUP_STATUS, handler)
+      }
     }
   }
 }
@@ -174,7 +194,7 @@ const api: IpcApi = {
 if (process.contextIsolated) {
   try {
     contextBridge.exposeInMainWorld('api', api)
-    contextBridge.exposeInMainWorld('todo', { window: api.window, tasks: api.tasks })
+    contextBridge.exposeInMainWorld('todo', { window: api.window, tasks: api.tasks, startup: api.startup })
   } catch (error) {
     console.error('Failed to expose context bridge in main world', error)
   }
@@ -182,5 +202,5 @@ if (process.contextIsolated) {
   // @ts-ignore
   window.api = api
   // @ts-ignore
-  window.todo = { window: api.window, tasks: api.tasks }
+  window.todo = { window: api.window, tasks: api.tasks, startup: api.startup }
 }

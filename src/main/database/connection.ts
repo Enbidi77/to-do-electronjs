@@ -33,6 +33,14 @@ export function initializeDatabase(customPath?: string) {
 
     logger.info(`Initializing database at ${dbPath}`);
     
+    if (sqlite) {
+      try {
+        sqlite.close();
+      } catch (closeErr) {
+        logger.warn('Previous sqlite connection failed to close cleanly', closeErr);
+      }
+    }
+
     sqlite = new Database(dbPath);
     if (dbPath !== ':memory:') {
       sqlite.pragma('journal_mode = WAL');
@@ -88,5 +96,15 @@ export function initializeDatabase(customPath?: string) {
   } catch (error) {
     logger.error('Failed to initialize database', error);
     throw error;
+  }
+}
+
+export function closeDatabase(): void {
+  if (sqlite) {
+    try {
+      sqlite.close();
+    } catch {}
+    sqlite = null as any;
+    db = null as any;
   }
 }

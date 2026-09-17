@@ -71,9 +71,25 @@ const mockApi = {
     minimize: vi.fn(),
     maximize: vi.fn()
   },
-    on: {
+  startup: {
+    getState: vi.fn().mockResolvedValue({
+      phase: 'initializing',
+      message: 'Preparing your workspace...',
+      error: null,
+      version: 'v1.0.0',
+      appName: 'Todo',
+      theme: 'system',
+      systemIsDark: false,
+      language: 'en'
+    }),
+    retry: vi.fn().mockResolvedValue(undefined),
+    quit: vi.fn().mockResolvedValue(undefined),
+    onStatusChange: vi.fn(() => () => {})
+  },
+  on: {
     taskUpdated: vi.fn(() => () => {}),
-    reminderFired: vi.fn(() => () => {})
+    reminderFired: vi.fn(() => () => {}),
+    startupStatusChanged: vi.fn(() => () => {})
   },
   window: {
     minimize: vi.fn().mockResolvedValue(undefined),
@@ -90,7 +106,8 @@ window.api = mockApi
 // @ts-ignore
 window.todo = {
   window: mockApi.window,
-  tasks: mockApi.tasks
+  tasks: mockApi.tasks,
+  startup: mockApi.startup
 }
 
 Object.defineProperty(window, 'matchMedia', {

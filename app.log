@@ -572,3 +572,105 @@ the module (for instance, using `npm rebuild` or `npm install`).
     at new Database (D:\data\Doc\.content\to-do\node_modules\better-sqlite3\lib\database.js:48:64)
     at Module.initializeDatabase (D:\data\Doc\.content\to-do\src\main\database\connection.ts:36:14)
     at D:\data\Doc\.content\to-do\tests\main\reminder-scheduler.test.ts:14:5
+[2026-09-17T02:32:55.063Z] [INFO] [Database] Initializing database at :memory:
+[2026-09-17T02:32:55.070Z] [INFO] [Database] Initializing database at :memory:
+[2026-09-17T02:32:55.107Z] [ERROR] [Database] Failed to initialize database
+Error: The module '\\?\D:\data\Doc\.content\to-do\node_modules\better-sqlite3\build\Release\better_sqlite3.node'
+was compiled against a different Node.js version using
+NODE_MODULE_VERSION 128. This version of Node.js requires
+NODE_MODULE_VERSION 137. Please try re-compiling or re-installing
+the module (for instance, using `npm rebuild` or `npm install`).
+    at Object..node (node:internal/modules/cjs/loader:1970:18)
+    at Module.load (node:internal/modules/cjs/loader:1533:32)
+    at Module._load (node:internal/modules/cjs/loader:1335:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1556:12)
+    at require (node:internal/modules/helpers:152:16)
+    at bindings (D:\data\Doc\.content\to-do\node_modules\bindings\bindings.js:112:48)
+    at new Database (D:\data\Doc\.content\to-do\node_modules\better-sqlite3\lib\database.js:48:64)
+    at Module.initializeDatabase (D:\data\Doc\.content\to-do\src\main\database\connection.ts:36:14)
+    at D:\data\Doc\.content\to-do\tests\main\reminder-scheduler.test.ts:14:5
+[2026-09-17T02:32:55.107Z] [ERROR] [Database] Failed to initialize database
+Error: The module '\\?\D:\data\Doc\.content\to-do\node_modules\better-sqlite3\build\Release\better_sqlite3.node'
+was compiled against a different Node.js version using
+NODE_MODULE_VERSION 128. This version of Node.js requires
+NODE_MODULE_VERSION 137. Please try re-compiling or re-installing
+the module (for instance, using `npm rebuild` or `npm install`).
+    at Object..node (node:internal/modules/cjs/loader:1970:18)
+    at Module.load (node:internal/modules/cjs/loader:1533:32)
+    at Module._load (node:internal/modules/cjs/loader:1335:12)
+    at wrapModuleLoad (node:internal/modules/cjs/loader:255:19)
+    at Module.require (node:internal/modules/cjs/loader:1556:12)
+    at require (node:internal/modules/helpers:152:16)
+    at bindings (D:\data\Doc\.content\to-do\node_modules\bindings\bindings.js:112:48)
+    at new Database (D:\data\Doc\.content\to-do\node_modules\better-sqlite3\lib\database.js:48:64)
+    at Module.initializeDatabase (D:\data\Doc\.content\to-do\src\main\database\connection.ts:36:14)
+    at D:\data\Doc\.content\to-do\tests\main\task-service.test.ts:10:5
+[2026-09-17T02:43:02.252Z] [INFO] [StartupCoordinator] Starting application initialization...
+[2026-09-17T02:43:02.253Z] [INFO] [StartupCoordinator] Phase: database
+[2026-09-17T02:43:02.254Z] [INFO] [StartupCoordinator] Phase: settings
+[2026-09-17T02:43:02.254Z] [INFO] [StartupCoordinator] Phase: scheduler
+[2026-09-17T02:43:02.254Z] [INFO] [StartupCoordinator] Phase: window
+[2026-09-17T02:43:02.254Z] [INFO] [StartupCoordinator] Phase: tray
+[2026-09-17T02:43:02.259Z] [INFO] [StartupCoordinator] Application ready, transitioning from splash
+[2026-09-17T02:43:02.260Z] [INFO] [StartupCoordinator] Starting application initialization...
+[2026-09-17T02:43:02.260Z] [INFO] [StartupCoordinator] Phase: database
+[2026-09-17T02:43:02.260Z] [ERROR] [StartupCoordinator] Startup failed during phase: database
+Error: SQLite disk I/O error
+    at Proxy.<anonymous> (D:\data\Doc\.content\to-do\tests\main\startup-coordinator.test.ts:95:13)
+    at Proxy.mockCall (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/spy/dist/index.js:61:17)
+    at Proxy.spy (file:///D:/data/Doc/.content/to-do/node_modules/tinyspy/dist/index.js:45:80)
+    at StartupCoordinator.start (D:\data\Doc\.content\to-do\src\main\system\startup-coordinator.ts:150:7)
+    at D:\data\Doc\.content\to-do\tests\main\startup-coordinator.test.ts:99:23
+    at file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:533:5
+    at runTest (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:1056:11)
+    at runSuite (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:1205:15)
+    at runSuite (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:1205:15)
+    at runFiles (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:1262:5)
+[2026-09-17T02:43:02.265Z] [INFO] [StartupCoordinator] Retrying startup initialization...
+[2026-09-17T02:43:02.265Z] [INFO] [StartupCoordinator] Starting application initialization...
+[2026-09-17T02:43:02.265Z] [INFO] [StartupCoordinator] Phase: database
+[2026-09-17T02:43:02.265Z] [INFO] [StartupCoordinator] Phase: settings
+[2026-09-17T02:43:02.265Z] [INFO] [StartupCoordinator] Phase: scheduler
+[2026-09-17T02:43:02.266Z] [INFO] [StartupCoordinator] Phase: window
+[2026-09-17T02:43:02.267Z] [INFO] [StartupCoordinator] Phase: tray
+[2026-09-17T02:43:02.274Z] [INFO] [StartupCoordinator] Application ready, transitioning from splash
+[2026-09-17T02:43:02.275Z] [INFO] [StartupCoordinator] Quitting application from startup...
+[2026-09-17T03:45:41.383Z] [INFO] [StartupCoordinator] Starting application initialization...
+[2026-09-17T03:45:41.385Z] [INFO] [StartupCoordinator] Phase: database
+[2026-09-17T03:45:41.386Z] [INFO] [StartupCoordinator] Phase: settings
+[2026-09-17T03:45:41.386Z] [INFO] [StartupCoordinator] Phase: scheduler
+[2026-09-17T03:45:41.386Z] [INFO] [StartupCoordinator] Phase: window
+[2026-09-17T03:45:41.386Z] [INFO] [StartupCoordinator] Phase: tray
+[2026-09-17T03:45:41.403Z] [INFO] [StartupCoordinator] Application ready, transitioning from splash
+[2026-09-17T03:45:41.404Z] [INFO] [StartupCoordinator] Starting application initialization...
+[2026-09-17T03:45:41.404Z] [INFO] [StartupCoordinator] Phase: database
+[2026-09-17T03:45:41.404Z] [INFO] [StartupCoordinator] Phase: settings
+[2026-09-17T03:45:41.404Z] [INFO] [StartupCoordinator] Phase: scheduler
+[2026-09-17T03:45:41.404Z] [INFO] [StartupCoordinator] Phase: window
+[2026-09-17T03:45:41.405Z] [INFO] [StartupCoordinator] Phase: tray
+[2026-09-17T03:45:41.419Z] [INFO] [StartupCoordinator] Holding splash screen for remaining 135ms (min duration: 150ms)
+[2026-09-17T03:45:41.560Z] [INFO] [StartupCoordinator] Application ready, transitioning from splash
+[2026-09-17T03:45:41.561Z] [INFO] [StartupCoordinator] Starting application initialization...
+[2026-09-17T03:45:41.561Z] [INFO] [StartupCoordinator] Phase: database
+[2026-09-17T03:45:41.561Z] [ERROR] [StartupCoordinator] Startup failed during phase: database
+Error: SQLite disk I/O error
+    at Proxy.<anonymous> (D:\data\Doc\.content\to-do\tests\main\startup-coordinator.test.ts:107:13)
+    at Proxy.mockCall (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/spy/dist/index.js:61:17)
+    at Proxy.spy (file:///D:/data/Doc/.content/to-do/node_modules/tinyspy/dist/index.js:45:80)
+    at StartupCoordinator.start (D:\data\Doc\.content\to-do\src\main\system\startup-coordinator.ts:156:7)
+    at D:\data\Doc\.content\to-do\tests\main\startup-coordinator.test.ts:111:23
+    at file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:533:5
+    at runTest (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:1056:11)
+    at runSuite (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:1205:15)
+    at runSuite (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:1205:15)
+    at runFiles (file:///D:/data/Doc/.content/to-do/node_modules/@vitest/runner/dist/index.js:1262:5)
+[2026-09-17T03:45:41.568Z] [INFO] [StartupCoordinator] Retrying startup initialization...
+[2026-09-17T03:45:41.568Z] [INFO] [StartupCoordinator] Starting application initialization...
+[2026-09-17T03:45:41.568Z] [INFO] [StartupCoordinator] Phase: database
+[2026-09-17T03:45:41.569Z] [INFO] [StartupCoordinator] Phase: settings
+[2026-09-17T03:45:41.569Z] [INFO] [StartupCoordinator] Phase: scheduler
+[2026-09-17T03:45:41.569Z] [INFO] [StartupCoordinator] Phase: window
+[2026-09-17T03:45:41.569Z] [INFO] [StartupCoordinator] Phase: tray
+[2026-09-17T03:45:41.575Z] [INFO] [StartupCoordinator] Application ready, transitioning from splash
+[2026-09-17T03:45:41.576Z] [INFO] [StartupCoordinator] Quitting application from startup...
